@@ -1,0 +1,18 @@
+{
+  "name": "uidconstruct",
+  "version": "2.2.0",
+  "description": "Turn any website URL into a buildable UI specification.",
+  "main": "api/deconstruct.js",
+  "scripts": {
+    "start": "node api/deconstruct.js",
+    "dev": "node api/deconstruct.js"
+  },
+  "keywords": ["ui", "design", "spec", "ai", "frontend"],
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.12",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "node-fetch": "^2.7.0"
+  }
+}

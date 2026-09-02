@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>uidconstruct — Turn URLs into buildable specs</title>
+    <meta name="description" content="Turn any website URL into a buildable UI specification with layout, typography, colors, spacing, and responsive rules." />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- Skip to content for accessibility -->
+    <a href="#main" class="skip-link">Skip to content</a>
+
+    <!-- NAVIGATION -->
+    <header class="navbar" id="navbar" role="banner">
+        <div class="container">
+            <a href="#" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+
+            <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span aria-hidden="true">☰</span>
+            </button>
+
+            <nav class="nav-links" id="navLinks" role="navigation" aria-label="Main navigation">
+                <a href="#steps">How it works</a>
+                <a href="#pricing">Pricing</a>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+                    <span id="themeIcon" aria-hidden="true"></span>
+                    <span id="themeLabel">Dark</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main id="main">
+
+        <!-- HERO -->
+        <section class="hero" aria-labelledby="hero-headline">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-badge fade-in">
+                        <span class="badge-dot"></span>
+                        UIDCONSTRUCT · v2
+                    </div>
+
+                    <h1 class="fade-in fade-in-d1" id="hero-headline">
+                        Turn any URL<br />
+                        <span class="highlight">into a buildable spec.</span>
+                    </h1>
+
+                    <p class="subhead fade-in fade-in-d2">
+                        Paste a website. Get its visual system — colors, typography,
+                        spacing, layout, and responsive rules — ready for your AI editor.
+                    </p>
+
+                    <!-- INPUT AREA -->
+                    <div class="input-area fade-in fade-in-d3">
+                        <div class="input-row">
+                            <label for="urlInput" class="sr-only">Website URL to analyze</label>
+                            <input
+                                type="url"
+                                id="urlInput"
+                                placeholder="https://linear.app"
+                                value="https://linear.app"
+                                aria-describedby="url-error"
+                                autocomplete="url"
+                                spellcheck="false"
+                            />
+                            <button class="btn-primary" id="deconstructBtn">
+                                <span id="btnText">Generate prompt</span>
+                                <span id="btnSpinner" class="spinner" style="display:none;" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                        <div id="url-error" class="error-message" role="alert" aria-live="assertive"></div>
+
+                        <!-- Usage stats -->
+                        <div class="usage-stats">
+                            <span class="stat">
+                                <span class="num" id="dailyCount">1</span> free site / day
+                            </span>
+                            <span class="stat">
+                                <span class="num">∞</span> on Pro
+                            </span>
+                            <span class="stat">
+                                <span class="num">~120</span> design signals
+                            </span>
+                        </div>
+
+                        <!-- RESULT PANEL -->
+                        <div class="result-panel" id="resultPanel" role="status" aria-live="polite">
+                            <div class="panel-header">
+                                <span class="panel-label" id="resultLabel">Sample output</span>
+                                <span class="panel-status" id="resultStatus">Ready</span>
+                            </div>
+                            <div class="prompt-box" id="promptContent">
+                                "Replicate the UI of linear.app with:
+
+                                • Layout: 12‑column grid, 24px gutters, max‑width 1200px
+                                • Colors: background #0A0A0A, surface #111111, primary #5E6AD2
+                                • Typography: Inter, 14px base, 24px line‑height
+                                • Components: 8px radius, 1px subtle borders
+                                • Navigation: fixed top, transparent, backdrop blur on scroll
+                                • Responsive: sidebar collapses below 768px"
+                            </div>
+                            <div class="panel-actions">
+                                <button class="copy-btn" id="copyBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                    Copy prompt
+                                </button>
+                                <button class="btn-secondary" id="reconstructBtn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <polyline points="23 4 23 10 17 10"></polyline>
+                                        <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                    </svg>
+                                    Try again
+                                </button>
+                            </div>
+                            <div class="panel-note">
+                                Paste this into v0, Bolt, or Cursor to rebuild the layout.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- HOW IT WORKS -->
+        <section class="section-steps" id="steps" aria-labelledby="steps-heading">
+            <div class="container">
+                <h2 class="section-title" id="steps-heading">How it works</h2>
+
+                <div class="steps-grid">
+                    <div class="step-item">
+                        <span class="number">01</span>
+                        <div class="content">
+                            <h3>Paste the URL</h3>
+                            <p>We inspect the site's available HTML/CSS signals and analyse its structure.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <span class="number">02</span>
+                        <div class="content">
+                            <h3>Extract the spec</h3>
+                            <p>We identify colors, typography, spacing, layout, responsive behaviour, and interaction patterns.</p>
+                        </div>
+                    </div>
+
+                    <div class="step-item">
+                        <span class="number">03</span>
+                        <div class="content">
+                            <h3>Paste into your editor</h3>
+                            <p>Use the generated specification with v0, Bolt, Cursor, or your preferred AI coding tool.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECHNICAL NOTE -->
+        <section class="section-note" aria-labelledby="note-heading">
+            <div class="container">
+                <blockquote id="note-heading">
+                    We don't read every pixel <span>— yet.</span>
+                </blockquote>
+                <div class="note-body">
+                    <strong>Why we're upfront:</strong> We extract computed DOM styles — colors, spacing,
+                    typography, and layout rules — but we don't capture everything such as complex
+                    SVG paths or canvas animations yet.
+                    <br /><br />
+                    This works best for websites where the design is represented through standard HTML/CSS.
+                    <a href="#">SVG & canvas are in private beta</a>.
+                </div>
+                <span class="note-tag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Currently optimised for HTML/CSS interfaces
+                </span>
+            </div>
+        </section>
+
+        <!-- SOCIAL PROOF -->
+        <section class="section-social" aria-labelledby="social-heading">
+            <div class="container">
+                <h2 class="sr-only" id="social-heading">What people say</h2>
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <p class="testimonial-text">"Saved me 10 hours on my last project. The spec it generates is incredibly accurate."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">JS</div>
+                            <div class="author-info">
+                                <strong>Jane Smith</strong>
+                                <span>Designer at Acme</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <p class="testimonial-text">"I use this daily for client mockups. It turns any reference site into actionable specs instantly."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">MR</div>
+                            <div class="author-info">
+                                <strong>Mike Ross</strong>
+                                <span>Freelance Developer</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="testimonial-card">
+                        <div class="testimonial-stars" aria-label="5 out of 5 stars">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                        </div>
+                        <p class="testimonial-text">"Finally, a tool that actually understands design intent. Not just pixel values, but the system behind it."</p>
+                        <div class="testimonial-author">
+                            <div class="author-avatar">AL</div>
+                            <div class="author-info">
+                                <strong>Alex Lee</strong>
+                                <span>Product Designer at TechCorp</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PRICING -->
+        <section class="section-pricing" id="pricing" aria-labelledby="pricing-heading">
+            <div class="container">
+                <h2 class="section-title" id="pricing-heading">Fair pricing</h2>
+                <p class="pricing-sub">Free tier proves it works. Pro exists because you'll need more.</p>
+
+                <!-- Pricing toggle -->
+                <div class="pricing-toggle">
+                    <span class="toggle-label" id="monthlyLabel">Monthly</span>
+                    <button class="toggle-switch" id="pricingToggle" role="switch" aria-checked="false" aria-labelledby="pricingToggleLabel">
+                        <span class="toggle-thumb"></span>
+                    </button>
+                    <span class="toggle-label" id="yearlyLabel">
+                        Yearly
+                        <span class="discount-badge">-20%</span>
+                    </span>
+                </div>
+
+                <div class="pricing-grid">
+                    <!-- Free -->
+                    <div class="pricing-card">
+                        <div class="plan-label">Free</div>
+                        <div class="price">
+                            $0
+                        </div>
+                        <div class="plan-desc">For tinkerers and quick validations.</div>
+                        <ul class="pricing-features">
+                            <li>1 site deconstruction / day</li>
+                            <li>Full layout + colors + spacing</li>
+                            <li>Export as JSON or plain prompt</li>
+                            <li>Community support</li>
+                        </ul>
+                        <button class="btn-secondary">No card needed</button>
+                    </div>
+
+                    <!-- Pro -->
+                    <div class="pricing-card pro">
+                        <div class="card-top">
+                            <div class="plan-label">Pro</div>
+                            <span class="pro-badge">Most popular</span>
+                        </div>
+                        <div class="price" id="proPrice">
+                            $9 <small>/ month</small>
+                        </div>
+                        <div class="plan-desc">For builders who ship daily.</div>
+                        <ul class="pricing-features">
+                            <li>Up to 500 sites / day, no hourly cap</li>
+                            <li>Batch export up to 50 URLs</li>
+                            <li>Framer & Webflow export formats</li>
+                            <li>Priority email support (2-hour reply)</li>
+                            <li>Advanced reconstruction signals</li>
+                        </ul>
+                        <button class="btn-secondary">Start 7-day trial</button>
+                        <span class="trial-note">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            Day 8: we email you. No auto-charge unless you confirm.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CTA BANNER -->
+        <section class="section-cta" aria-labelledby="cta-heading">
+            <div class="container">
+                <div class="cta-box">
+                    <div class="cta-content">
+                        <h2 class="cta-title" id="cta-heading">Ready to deconstruct?</h2>
+                        <p class="cta-text">Join thousands of designers and developers who ship faster with uidconstruct.</p>
+                    </div>
+                    <div class="cta-actions">
+                        <button class="btn-primary cta-btn" id="ctaBtn">
+                            Try it free
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                        </button>
+                        <span class="cta-note">No signup required</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-top">
+                <span class="logo">uid<span>construct</span></span>
+                <div class="links">
+                    <a href="#">Terms</a>
+                    <a href="#">Privacy</a>
+                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span class="tagline">No tracking pixels. No cookies. Try it without an account.</span>
+                <span class="made-with">
+                    Made with care in India
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+</html>
