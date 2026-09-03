@@ -444,17 +444,37 @@ module.exports = async (req, res) => {
 
     try {
         // 1. Fetch the target page
-        const pageRes = await fetch(cleanUrl, {
-            headers: {
-                'User-Agent': 'Mozilla/5.0 (compatible; UIDConstruct/1.0)',
-                'Accept': 'text/html,application/xhtml+xml',
-                'Accept-Language': 'en-US,en;q=0.9'
-            },
-            signal: AbortSignal.timeout(10000)
-        });
+        // Browser-like UA: many sites (and CDNs) block non-browser agents outright
+        let pageRes;
+        try {
+            pageRes = await fetch(cleanUrl, {
+                headers: {
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+                    'Accept-Language': 'en-US,en;q=0.9'
+                },
+                signal: AbortSignal.timeout(10000),
+                redirect: 'follow'
+            });
+        } catch (fetchErr) {
+            const isTimeout = fetchErr.name === 'TimeoutError' || /abort|timeout/i.test(String(fetchErr.message));
+            return res.status(504).json({
+                error: isTimeout
+                    ? 'That site took too long to respond. It may be down or blocking automated access. Try another URL.'
+                    : 'Could not reach that site. Check the URL and try again.'
+            });
+        }
 
         if (!pageRes.ok) {
-            return res.status(502).json({ error: `Failed to fetch URL (status ${pageRes.status}). The site may be blocking requests.` });
+            const status = pageRes.status;
+            const friendly = {
+                401: 'That page requires a login, so it can\'t be analyzed. Try a public page.',
+                403: 'That site blocks automated analysis. Try a different page on the same site.',
+                404: 'Page not found — check the URL for typos.',
+                429: 'That site is rate-limiting us right now. Try again in a few minutes.',
+                999: 'That site blocks automated analysis (LinkedIn-style protection).'
+            }[status] || `The site responded with an error (HTTP ${status}). Try another URL.`;
+            return res.status(502).json({ error: friendly });
         }
 
         const html = await pageRes.text();
