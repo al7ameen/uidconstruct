@@ -443,6 +443,8 @@ module.exports = async (req, res) => {
         const domain = extractDomain(cleanUrl);
 
     try {
+        const timings = { start: Date.now(), fetchMs: 0, aiMs: 0, aiChars: 0 };
+
         // 1. Fetch the target page
         // Browser-like UA: many sites (and CDNs) block non-browser agents outright
         let pageRes;
@@ -478,6 +480,7 @@ module.exports = async (req, res) => {
         }
 
         const html = await pageRes.text();
+        timings.fetchMs = Date.now() - timings.start;
         const $ = cheerio.load(html);
 
         // 2. Build analysis data
@@ -486,21 +489,31 @@ module.exports = async (req, res) => {
         // 3. Call AI
         const prompt = USER_PROMPT(analysis);
 
+        const tAI0 = Date.now();
         const aiResponse = await callAI([
             { role: 'system', content: SYSTEM_PROMPT },
             { role: 'user', content: prompt }
         ]);
+        timings.aiMs = Date.now() - tAI0;
+        timings.aiChars = aiResponse.length;
+        console.log('perf:', JSON.stringify({ domain, ...timings, totalMs: Date.now() - timings.start }));
 
         // 4. Return result
         return res.status(200).json({
             url: cleanUrl,
             domain,
             prompt: aiResponse,
-            signals: analysis.extracted
+            signals: analysis.extracted,
+            timings: {
+                fetchMs: timings.fetchMs,
+                aiMs: timings.aiMs,
+                totalMs: Date.now() - timings.start,
+                outputChars: timings.aiChars
+            }
         });
 
     } catch (err) {
-        console.error('Deconstruct error:', err.message);
+        console.error('Deconstruct error:', err.message, JSON.stringify(timings || {}));
         return res.status(500).json({ error: (err && err.name === 'TimeoutError') ? 'The website or AI took too long to respond (60s). Please try again or use a faster site.' : (err.message || 'Internal server error.') });
     }
 };

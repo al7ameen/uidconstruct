@@ -189,7 +189,7 @@
         }
     }
 
-    function showResult(promptText) {
+    function showResult(promptText, timings) {
         promptBox.textContent = promptText;
         resultPanel.classList.add('visible');
         copyBtn.innerHTML = `
@@ -200,7 +200,10 @@
             Copy prompt`;
         copyBtn.classList.remove('copied');
         resultStatus.textContent = 'Generated';
-        resultLabel.textContent = 'Generated spec';
+        const secs = timings && timings.totalMs ? (timings.totalMs / 1000).toFixed(1) : null;
+        resultLabel.textContent = secs
+            ? 'Generated spec in ' + secs + 's (fetch ' + Math.round((timings.fetchMs || 0) / 100) / 10 + 's · AI ' + Math.round((timings.aiMs || 0) / 100) / 10 + 's)'
+            : 'Generated spec';
         if (window.innerWidth < 768) {
             resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
@@ -276,7 +279,7 @@
 
         try {
             const result = await deconstructWebsite(url);
-            showResult(result.prompt);
+            showResult(result.prompt, result.timings);
         } catch (err) {
             showError(err.message || 'Something went wrong. Please try again.');
             resultStatus.textContent = 'Error';

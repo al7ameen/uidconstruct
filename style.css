@@ -151,16 +151,19 @@ img, svg {
 
 .skip-link {
     position: absolute;
-    top: -40px;
+    top: 0;
     left: 0;
+    /* translateY hides fully at ANY text height (negative top leaked on mobile
+       when text-size-adjust made the link taller than 40px) */
+    transform: translateY(-110%);
     background: var(--text);
     color: var(--bg);
     padding: 8px 16px;
     z-index: var(--z-modal);
     border-radius: 0 0 var(--radius-sm) 0;
-    transition: top var(--duration-fast) var(--ease);
+    transition: transform var(--duration-fast) var(--ease);
 }
-.skip-link:focus { top: 0; color: var(--bg); }
+.skip-link:focus { transform: translateY(0); color: var(--bg); }
 
 .text-muted { color: var(--text-muted); }
 .text-secondary { color: var(--text-secondary); }
