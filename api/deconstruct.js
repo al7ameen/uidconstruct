@@ -229,7 +229,144 @@ function extractResponsive($) {
     return [...new Set(breakpoints)].slice(0, 10);
 }
 
-function buildAnalysisPrompt(html, $, url, domain) {
+// ============================================================
+// REAL CSS EXTRACTION
+// cheerio has no computed-style engine (it is a parser, not a browser),
+// so $(el).css() only ever sees inline style="" attributes. Modern sites
+// put every value in EXTERNAL stylesheets (Tailwind v4: @theme tokens),
+// which we never fetched — hence "not detectable". Fix: fetch + mine them.
+// ============================================================
+const BROWSER_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
+const CSS_LINK_LIMIT = 4;
+const CSS_MAX_BYTES = 400000;   // ceiling so a huge file can't blow memory
+const CSS_FETCH_MS = 10000;     // generous; a failed CSS fetch is non-fatal
+
+function extractCssHrefs($, baseUrl) {
+    const hrefs = [];
+    const seen = new Set();
+    $('link[rel="stylesheet"]').each((_, el) => {
+        const raw = $(el).attr('href');
+        if (!raw) return;
+        let abs;
+        try { abs = new URL(raw, baseUrl).href; } catch { return; }
+        const safe = sanitizeUrl(abs);              // SSRF guard applies to CSS too
+        if (!safe || seen.has(safe)) return;
+        seen.add(safe);
+        hrefs.push(safe);
+    });
+    return hrefs.slice(0, CSS_LINK_LIMIT);
+}
+
+async function fetchCssFiles($, baseUrl) {
+    const hrefs = extractCssHrefs($, baseUrl);
+    if (!hrefs.length) return '';
+    const results = await Promise.allSettled(hrefs.map(h =>
+        fetch(h, {
+            headers: { 'User-Agent': BROWSER_UA, 'Accept': 'text/css,*/*;q=0.1' },
+            signal: AbortSignal.timeout(CSS_FETCH_MS)
+        }).then(r => (r && r.ok ? r.text() : ''))
+    ));
+    let out = '';
+    for (const r of results) {
+        if (r.status === 'fulfilled' && r.value) {
+            out += '\n' + r.value;
+            if (out.length > CSS_MAX_BYTES) break;
+        }
+    }
+    return out;
+}
+
+// Mine named design tokens from the FULL stylesheet.
+// Order matters: real design tokens first, and Tailwind's internal --tw-*
+// plumbing (translate/scale/content/gradient) is deliberately excluded —
+// those are implementation details, not design values.
+const INTERNAL_TOKEN = /^--(tw|el|ant|chakra|mui|radix|sh-|dl-|vs-)/i;
+const TOKEN_PRIORITY = [
+    /^--(color|colour|bg|text|border|ring|fill|stroke|accent|primary|secondary|muted|surface|foreground|background)/i,
+    /^--(font|text|leading|tracking|letter)/i,
+    /^--(spacing|radius|rounded|shadow|blur|opacity|z|size|width|height|gap|inset|padding|margin)/i
+];
+const VALUE_RE = /(#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(|\boklch\(|\boklab\(|\blch\(|\blab\(|\bcolor-mix\(|\b\d+(?:\.\d+)?(?:px|rem|em|%)\b|['"][^'"]{1,30}['"]|^\d+(?:\.\d+)?$)/i;
+
+
+// Which utility classes does the page ACTUALLY use? This is what turns a
+// 690KB Tailwind palette into the ~15 colours the site really displays.
+function collectUsedClasses($) {
+    const set = new Set();
+    $('[class]').each((_, el) => {
+        const c = (el.attribs && el.attribs.class) || '';
+        c.split(/\s+/).forEach(x => { if (x) set.add(x); });
+    });
+    return set;
+}
+
+function tokenRank(name, usedClasses) {
+    if (!usedClasses || !usedClasses.size) return priorityRank(name);
+    // A token can be referenced by several class shapes:
+    //   --color-gray-950 -> used by "bg-gray-950", "text-gray-950", "dark:hover:bg-gray-950"
+    //   --text-xs        -> used by "text-xs"
+    //   --shadow-sm      -> used by "shadow-sm"
+    const keys = [name.replace(/^--/, '')];
+    if (/^--color-/.test(name)) keys.push(name.replace(/^--color-/, ''));
+    for (const cls of usedClasses) {
+        const bare = cls.split(':').pop().replace(/^[!\-]/, '').split('/').shift();
+        for (const k of keys) {
+            if (bare === k || bare.endsWith('-' + k)) return -1;
+        }
+    }
+    return priorityRank(name);
+}
+
+function priorityRank(name) {
+    for (let i = 0; i < TOKEN_PRIORITY.length; i++) {
+        if (TOKEN_PRIORITY[i].test(name)) return i;
+    }
+    return 9;
+}
+
+function mineDesignTokens(css, usedClasses) {
+    const found = new Map();   // name -> first value
+    const re = /(--[a-zA-Z][\w-]*)\s*:\s*([^;{}]{1,60})/g;
+    let m;
+    while ((m = re.exec(css))) {
+        const name = m[1];
+        if (found.has(name) || INTERNAL_TOKEN.test(name)) continue;
+        const val = m[2].trim().replace(/\s+/g, ' ');
+        if (!val || !VALUE_RE.test(val)) continue;
+        found.set(name, val);
+    }
+    return Array.from(found.entries())
+        .sort((a, b) => tokenRank(a[0], usedClasses) - tokenRank(b[0], usedClasses))
+        .slice(0, 40)
+        .map(([k, v]) => k + ': ' + v);
+}
+
+function mineFonts(css) {
+    const GENERIC = /^(system-ui|ui-[a-z-]+|-apple-system|blinkmacsystemfont|segoe ui|roboto|helvetica|arial|sans-serif|serif|monospace|ui-monospace|cursive|fantasy|emoji|math|fangsong|songti|pingfang)/i;
+    const fonts = new Set();
+    const re = /font-family\s*:\s*([^;{}!]{1,120})/g;
+    let m;
+    while ((m = re.exec(css))) {
+        m[1].split(',').forEach(f => {
+            f = f.trim().replace(/^['"]|['"]$/g, '');
+            if (!f || f.length > 40 || /^var\(/i.test(f)) return;
+            if (/^<.*>$/.test(f) || /^(liberation mono|courier new|menlo|monaco|dejavu|noto sans mono|andale mono)/i.test(f)) return;
+            if (GENERIC.test(f)) return;
+            fonts.add(f);
+        });
+    }
+    return Array.from(fonts).slice(0, 10);
+}
+
+function mineBreakpoints(css) {
+    const bps = new Set();
+    const re = /@media[^{]*?\(\s*(?:min|max)-width\s*:\s*(\d+(?:\.\d+)?)(px|rem)/g;
+    let m;
+    while ((m = re.exec(css))) bps.add(m[1] + m[2]);
+    return Array.from(bps).slice(0, 12);
+}
+
+async function buildAnalysisPrompt(html, $, url, domain) {
     const styles = extractStyles($);
     const inlineStyles = extractInlineStyles($);
     const typography = extractTypography($);
@@ -237,6 +374,10 @@ function buildAnalysisPrompt(html, $, url, domain) {
     const layouts = extractLayout($);
     const components = extractComponents($);
     const responsive = extractResponsive($);
+    const css = await fetchCssFiles($, url);
+    const designTokens = mineDesignTokens(css, collectUsedClasses($));
+    const cssFonts = mineFonts(css);
+    const cssBreakpoints = mineBreakpoints(css);
     const cleanHtml = stripStyles(html).substring(0, 2500);
 
     return {
@@ -248,7 +389,10 @@ function buildAnalysisPrompt(html, $, url, domain) {
             colors: colors.slice(0, 20),
             layoutPatterns: layouts,
             componentPatterns: components,
-            responsiveBreakpoints: responsive
+            responsiveBreakpoints: responsive,
+            designTokens: designTokens,
+            cssFonts: cssFonts,
+            cssBreakpoints: cssBreakpoints
         },
         rawHtml: cleanHtml,
         cssStyles: styles.substring(0, 3500)
@@ -374,6 +518,15 @@ ${data.extracted.responsiveBreakpoints.join('\n') || 'Not detected'}
 ### Raw HTML Structure (first 3000 chars):
 ${data.rawHtml}
 
+### Design Tokens — parsed from the site's real stylesheets (AUTHORITATIVE, use these exact values):
+${(data.extracted.designTokens || []).join('\n') || 'None found'}
+
+### Fonts declared in CSS:
+${(data.extracted.cssFonts || []).join(', ') || 'Not detected'}
+
+### Breakpoints in CSS:
+${(data.extracted.cssBreakpoints || []).join(', ') || 'Not detected'}
+
 ### CSS Styles (first 5000 chars):
 ${data.cssStyles}
 
@@ -451,7 +604,7 @@ module.exports = async (req, res) => {
         try {
             pageRes = await fetch(cleanUrl, {
                 headers: {
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+                    'User-Agent': BROWSER_UA,
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                     'Accept-Language': 'en-US,en;q=0.9'
                 },
@@ -484,7 +637,7 @@ module.exports = async (req, res) => {
         const $ = cheerio.load(html);
 
         // 2. Build analysis data
-        const analysis = buildAnalysisPrompt(html, $, cleanUrl, domain);
+        const analysis = await buildAnalysisPrompt(html, $, cleanUrl, domain);
 
         // 3. Call AI
         const prompt = USER_PROMPT(analysis);

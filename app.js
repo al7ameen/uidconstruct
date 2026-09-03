@@ -171,18 +171,11 @@
             btnText.textContent = 'Analyzing…';
             btnSpinner.style.display = 'inline-block';
             deconstructBtn.disabled = true;
-            // Progress counter: analysis takes 30-50s; show it's working, not stuck
-            let elapsed = 0;
-            const statusHints = ['fetching page…', 'extracting styles…', 'AI analyzing design…', 'almost done…'];
-            window.__uidcTimer = setInterval(() => {
-                elapsed++;
-                const hint = statusHints[Math.min(Math.floor(elapsed / 12), statusHints.length - 1)];
-                btnText.textContent = 'Analyzing… ' + elapsed + 's — ' + hint;
-            }, 1000);
+            // Neutral status text only — no elapsed-seconds counter
+            btnText.textContent = 'Analyzing…';
             resultStatus.textContent = 'Analyzing…';
             resultLabel.textContent = 'Generating spec';
         } else {
-            clearInterval(window.__uidcTimer);
             btnText.textContent = 'Generate prompt';
             btnSpinner.style.display = 'none';
             deconstructBtn.disabled = false;
@@ -200,10 +193,7 @@
             Copy prompt`;
         copyBtn.classList.remove('copied');
         resultStatus.textContent = 'Generated';
-        const secs = timings && timings.totalMs ? (timings.totalMs / 1000).toFixed(1) : null;
-        resultLabel.textContent = secs
-            ? 'Generated spec in ' + secs + 's (fetch ' + Math.round((timings.fetchMs || 0) / 100) / 10 + 's · AI ' + Math.round((timings.aiMs || 0) / 100) / 10 + 's)'
-            : 'Generated spec';
+        resultLabel.textContent = 'Generated spec';
         if (window.innerWidth < 768) {
             resultPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
