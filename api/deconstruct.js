@@ -14,7 +14,7 @@
  *   Returns: { url, domain, prompt }
  */
 
-const fetch = require('node-fetch');
+// native fetch (Node 18+)
 const cheerio = require('cheerio');
 
 // ============================================================
@@ -352,7 +352,7 @@ async function callAI(messages) {
             'Authorization': `Bearer ${CONFIG.API_KEY}`
         },
         body: JSON.stringify(body),
-        timeout: CONFIG.TIMEOUT_MS
+        signal: AbortSignal.timeout(CONFIG.TIMEOUT_MS)
     });
 
     if (!res.ok) {
