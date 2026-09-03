@@ -377,7 +377,7 @@ ${data.rawHtml}
 ### CSS Styles (first 5000 chars):
 ${data.cssStyles}
 
-Please produce the full specification following the format above. Be thorough and include every design detail you can extract.`;
+Produce the specification now. Hard cap: 500 words, maximally dense, tables over prose, state each value once.`;
 
 // ============================================================
 // MAIN HANDLER
@@ -442,8 +442,8 @@ module.exports = async (req, res) => {
 
         const domain = extractDomain(cleanUrl);
 
+    const timings = { start: Date.now(), fetchMs: 0, aiMs: 0, aiChars: 0 };
     try {
-        const timings = { start: Date.now(), fetchMs: 0, aiMs: 0, aiChars: 0 };
 
         // 1. Fetch the target page
         // Browser-like UA: many sites (and CDNs) block non-browser agents outright
