@@ -383,6 +383,44 @@ function priorityRank(name) {
     return 9;
 }
 
+// A single global slice is the wrong shape for this problem: on a Tailwind
+// site the colour tokens are numerous AND rank highest (they're referenced by
+// real classes), so they consumed all 40 slots and the spec came back with no
+// radius, shadow or spacing values at all. Fix: bucket by category, then give
+// every non-empty category a guaranteed floor and share the rest proportionally.
+const TOKEN_TOTAL = 44;
+const TOKEN_FLOOR = 3;
+const TOKEN_CEIL = { color: 24, type: 12, geometry: 12 };
+const COLOR_VALUE = /(#[0-9a-f]{3,8}\b|rgba?\(|hsla?\(|oklch\(|oklab\(|lch\(|lab\(|color-mix\(|\btransparent\b)/i;
+
+function tokenCategory(name, val) {
+    // Value beats name: --text-primary is a colour, --text-xl is a type size.
+    if (COLOR_VALUE.test(val)) return 'color';
+    if (/^--(font|leading|tracking|letter|text|heading|body|caption)/i.test(name)) return 'type';
+    return 'geometry';
+}
+
+function allocateTokenQuota(buckets) {
+    const active = Object.keys(buckets).filter(k => buckets[k].length);
+    const quota = {};
+    active.forEach(k => { quota[k] = Math.min(TOKEN_FLOOR, buckets[k].length); });
+
+    let spare = TOKEN_TOTAL - active.reduce((n, k) => n + quota[k], 0);
+    // Largest-first so a category that is genuinely rich (36 real colours)
+    // still gets most of the page, but never all of it.
+    const bySize = active.slice().sort((a, b) => buckets[b].length - buckets[a].length);
+    while (spare > 0) {
+        let grew = false;
+        for (const k of bySize) {
+            if (spare === 0) break;
+            if (quota[k] >= TOKEN_CEIL[k] || quota[k] >= buckets[k].length) continue;
+            quota[k]++; spare--; grew = true;
+        }
+        if (!grew) break;   // every bucket is saturated or capped
+    }
+    return quota;
+}
+
 function mineDesignTokens(css, usedClasses) {
     const found = new Map();   // name -> first value
     const re = /(--[a-zA-Z][\w-]*)\s*:\s*([^;{}]{1,60})/g;
@@ -394,10 +432,23 @@ function mineDesignTokens(css, usedClasses) {
         if (!val || !VALUE_RE.test(val)) continue;
         found.set(name, val);
     }
-    return Array.from(found.entries())
+
+    const buckets = {};
+    Array.from(found.entries())
         .sort((a, b) => tokenRank(a[0], usedClasses) - tokenRank(b[0], usedClasses))
-        .slice(0, 40)
-        .map(([k, v]) => k + ': ' + v);
+        .forEach(([name, val]) => {
+            const cat = tokenCategory(name, val);
+            (buckets[cat] = buckets[cat] || []).push([name, val]);
+        });
+
+    const quota = allocateTokenQuota(buckets);
+    const out = [];
+    Object.keys(quota).sort().forEach(cat => {
+        if (!buckets[cat]) return;
+        out.push('[' + cat + ']');
+        buckets[cat].slice(0, quota[cat]).forEach(([k, v]) => out.push('  ' + k + ': ' + v));
+    });
+    return out;
 }
 
 function mineFonts(css) {
