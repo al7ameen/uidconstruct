@@ -73,6 +73,27 @@ function sanitizeUrl(url) {
     }
 }
 
+// ============================================================
+// RATE LIMIT — per-IP, in-memory (resets on cold start; burst guard)
+// ============================================================
+const RATE_LIMIT = 10;          // requests
+const RATE_WINDOW_MS = 3600e3;  // per hour
+const hits = new Map();         // ip -> [timestamps]
+
+function rateLimit(ip) {
+    const now = Date.now();
+    const arr = (hits.get(ip) || []).filter(t => now - t < RATE_WINDOW_MS);
+    if (arr.length >= RATE_LIMIT) { hits.set(ip, arr); return false; }
+    arr.push(now);
+    hits.set(ip, arr);
+    return true;
+}
+
+function getClientIp(req) {
+    return (req.headers['x-forwarded-for'] || '').split(',')[0].trim() ||
+           req.headers['x-real-ip'] || 'unknown';
+}
+
 function stripStyles(html) {
     return html
         .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ' ')
@@ -415,7 +436,11 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'Invalid URL. Must start with http:// or https://' });
     }
 
-    const domain = extractDomain(cleanUrl);
+    if (!rateLimit(getClientIp(req))) {
+            return res.status(429).json({ error: "Hourly limit reached (10 analyses). Try again later." });
+        }
+
+        const domain = extractDomain(cleanUrl);
 
     try {
         // 1. Fetch the target page
