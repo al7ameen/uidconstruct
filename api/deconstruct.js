@@ -24,7 +24,7 @@ const CONFIG = {
     API_KEY: process.env.OPENAI_API_KEY || '',
     BASE_URL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
     MODEL: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-    TIMEOUT_MS: 45000
+    TIMEOUT_MS: 52000
 };
 
 // ============================================================
@@ -237,7 +237,7 @@ function buildAnalysisPrompt(html, $, url, domain) {
     const layouts = extractLayout($);
     const components = extractComponents($);
     const responsive = extractResponsive($);
-    const cleanHtml = stripStyles(html).substring(0, 3000);
+    const cleanHtml = stripStyles(html).substring(0, 2500);
 
     return {
         domain,
@@ -251,11 +251,11 @@ function buildAnalysisPrompt(html, $, url, domain) {
             responsiveBreakpoints: responsive
         },
         rawHtml: cleanHtml,
-        cssStyles: styles.substring(0, 5000)
+        cssStyles: styles.substring(0, 3500)
     };
 }
 
-const SYSTEM_PROMPT = `You are a senior UI/UX engineer and design system expert. Given raw HTML, CSS, and extracted design data from a website, produce an exhaustive, pixel-perfect UI specification that any AI coding assistant (Cursor, v0, Bolt, Claude Code) can use to rebuild the UI 1:1.
+const SYSTEM_PROMPT = `You are a senior UI/UX engineer and design system expert. Given raw HTML, CSS, and extracted design data from a website, produce a dense, pixel-accurate UI specification that any AI coding assistant (Cursor, v0, Bolt, Claude Code) can use to rebuild the UI 1:1.
 
 FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
 
@@ -348,7 +348,7 @@ Give a numbered, actionable checklist:
 2. [Second thing]
 3. etc.
 
-Be exhaustive. Include every pixel value, hex code, and CSS property found. The goal is that someone copying this spec into Cursor or v0 should be able to reproduce the UI accurately.`;
+HARD LIMIT: 500 words. Be maximally dense — compact lines, tables over prose, no filler, no explanations. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions. If something is not detectable, write 'not detectable' in 2 words — never guess at length. A developer copying this into Cursor or v0 must be able to rebuild the UI accurately.`;
 const USER_PROMPT = (data) => `Analyze this website and produce a detailed UI specification.
 
 Website URL: ${data.url}
