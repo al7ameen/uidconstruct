@@ -4,12 +4,30 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>uidconstruct — Turn URLs into buildable specs</title>
-    <meta name="description" content="Turn any website URL into a buildable UI specification with layout, typography, colors, spacing, and responsive rules." />
+    <meta name="description" content="Paste any website URL and get a build-ready design spec + AI prompt for v0, Cursor, Bolt and Lovable. Real colors, type scale, spacing and layout, extracted from the live page." />
+
+    <!-- Social preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="uidconstruct" />
+    <meta property="og:title" content="uidconstruct — any website, turned into a build prompt" />
+    <meta property="og:description" content="Paste a URL, get the design spec behind it. Real tokens from the live page, formatted as a prompt for v0, Cursor, Bolt or Lovable." />
+    <meta property="og:url" content="https://uidconstruct.vercel.app/" />
+    <meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="uidconstruct — any website, turned into a build prompt" />
+    <meta name="twitter:description" content="Paste a URL, get the design spec behind it, ready for your AI editor." />
+
+    <!-- Analytics: cookieless, no consent banner needed.
+         Create the free Plausible site for this domain and this starts reporting.
+         Until then the request 404s silently and nothing else changes. -->
+    <script defer data-domain="uidconstruct.vercel.app" src="https://plausible.io/js/script.outbound-links.js"></script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
 
     <!-- Stylesheet -->
     <link rel="stylesheet" href="style.css" />
@@ -49,17 +67,18 @@
                 <div class="hero-content">
                     <div class="hero-badge fade-in">
                         <span class="badge-dot"></span>
-                        UIDCONSTRUCT · v2
+                        UIDCONSTRUCT · FREE BETA
                     </div>
 
                     <h1 class="fade-in fade-in-d1" id="hero-headline">
-                        Turn any URL<br />
-                        <span class="highlight">into a buildable spec.</span>
+                        Any website,<br />
+                        <span class="highlight">turned into a build prompt.</span>
                     </h1>
 
                     <p class="subhead fade-in fade-in-d2">
-                        Paste a website. Get its visual system — colors, typography,
-                        spacing, layout, and responsive rules — ready for your AI editor.
+                        Paste a URL. Get the design spec behind it — real colors, type
+                        scale, spacing and layout, read from the live page — as a prompt
+                        you can drop straight into v0, Cursor, Bolt or Lovable.
                     </p>
 
                     <!-- INPUT AREA -->
@@ -81,6 +100,48 @@
                             </button>
                         </div>
                         <div id="url-error" class="error-message" role="alert" aria-live="assertive"></div>
+
+                        <!-- Email capture: only useful list we can build pre-launch -->
+                        <div class="waitlist" id="waitlist">
+                            <span class="wl-prompt" id="wlPrompt">Get notified when Pro launches — no spam, one email.</span>
+                            <form class="wl-form" id="wlForm" novalidate>
+                                <label for="wlEmail" class="sr-only">Email address</label>
+                                <input type="email" id="wlEmail" placeholder="you@company.com" autocomplete="email" />
+                                <button type="submit" class="btn-secondary" id="wlBtn">Notify me</button>
+                            </form>
+                        </div>
+
+                        <!-- BYOK: removes our cost + our rate limit -->
+                        <button type="button" class="byok-toggle" id="byokToggle" aria-expanded="false" aria-controls="byokPanel">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            Hit the limit? Use your own AI key
+                        </button>
+
+                        <div class="byok-panel" id="byokPanel" hidden>
+                            <div class="byok-grid">
+                                <div class="byok-field">
+                                    <label for="byokProvider">Provider</label>
+                                    <select id="byokProvider">
+                                        <option value="openai">OpenAI</option>
+                                        <option value="anthropic">Anthropic</option>
+                                    </select>
+                                </div>
+                                <div class="byok-field">
+                                    <label for="byokModel">Model (required)</label>
+                                    <input type="text" id="byokModel" placeholder="gpt-4o-mini" autocomplete="off" spellcheck="false" />
+                                </div>
+                                <div class="byok-field byok-field-wide">
+                                    <label for="byokKey">API key</label>
+                                    <input type="password" id="byokKey" placeholder="sk-..." autocomplete="off" spellcheck="false" />
+                                </div>
+                            </div>
+                            <label class="byok-remember"><input type="checkbox" id="byokRemember" /> Remember in this browser only</label>
+                            <p class="byok-note">
+                                Enter a model your key can actually access — we don't guess, because a wrong default just fails.
+                                Your key is sent with each request straight to the provider and is never written to our logs or database.
+                                We can't recover it if you lose it.
+                            </p>
+                        </div>
 
                         <!-- Usage stats -->
                         <div class="usage-stats">
@@ -159,7 +220,7 @@
                         <span class="number">03</span>
                         <div class="content">
                             <h3>Paste into your editor</h3>
-                            <p>Use the generated specification with v0, Bolt, Cursor, or your preferred AI coding tool.</p>
+                            <p>Drop the spec into v0, Bolt, Cursor or Lovable and watch it rebuild the layout — no hand-written brief required.</p>
                         </div>
                     </div>
                 </div>
@@ -178,7 +239,7 @@
                     SVG paths or canvas animations yet.
                     <br /><br />
                     This works best for websites where the design is represented through standard HTML/CSS.
-                    <a href="#">SVG & canvas are in private beta</a>.
+                    <a href="#">SVG &amp; canvas are in private beta</a>.
                 </div>
                 <span class="note-tag">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -228,6 +289,20 @@
                         </ul>
                         <button class="btn-secondary" onclick="document.getElementById('main').scrollIntoView({behavior:'smooth'})">Try it now</button>
                     </div>
+
+                    <div class="pricing-card pro">
+                        <div class="plan-label">Bring your key</div>
+                        <div class="price">
+                            $0<small> + your AI bill</small>
+                        </div>
+                        <div class="plan-desc">Unlimited analyses on your own OpenAI or Anthropic quota. We never see or store your key.</div>
+                        <ul class="pricing-features">
+                            <li>Everything in Beta, no hourly cap</li>
+                            <li>Choose your model per run</li>
+                            <li>Key stays in your browser, sent per request</li>
+                        </ul>
+                        <button class="btn-secondary" id="pricingByokBtn" onclick="document.getElementById('byokToggle')&&document.getElementById('byokToggle').click();document.getElementById('main').scrollIntoView({behavior:'smooth'})">Use my own key</button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -238,7 +313,7 @@
                 <div class="cta-box">
                     <div class="cta-content">
                         <h2 class="cta-title" id="cta-heading">Ready to deconstruct?</h2>
-                        <p class="cta-text">Join thousands of designers and developers who ship faster with uidconstruct.</p>
+                        <p class="cta-text">Free while in beta — no account, no card. Bring your own AI key when you want unlimited runs.</p>
                     </div>
                     <div class="cta-actions">
                         <button class="btn-primary cta-btn" id="ctaBtn">

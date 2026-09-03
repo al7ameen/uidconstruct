@@ -28,11 +28,27 @@
     const resultStatus = document.getElementById('resultStatus');
     const resultLabel = document.getElementById('resultLabel');
     const ctaBtn = document.getElementById('ctaBtn');
+    const byokToggle = document.getElementById('byokToggle');
+    const byokPanel = document.getElementById('byokPanel');
+    const byokProvider = document.getElementById('byokProvider');
+    const byokModel = document.getElementById('byokModel');
+    const byokKey = document.getElementById('byokKey');
+    const byokRemember = document.getElementById('byokRemember');
 
     // ============================================================
     // CONFIG — Backend endpoint
     // ============================================================
     const API_ENDPOINT = '/api/deconstruct';
+
+    // ============================================================
+    // ANALYTICS — fire-and-forget custom events (Plausible)
+    // No-op if Plausible isn't loaded yet, so it can never break the UI.
+    // ============================================================
+    function track(event, props) {
+        try {
+            if (window.plausible) window.plausible(event, { props: props || {} });
+        } catch (_) { /* analytics must never break the product */ }
+    }
 
     // ============================================================
     // THEME MANAGEMENT
@@ -146,13 +162,128 @@
 
 
     // ============================================================
+    // BRING-YOUR-OWN-KEY
+    // The key is held in memory by default. It is only persisted if the
+    // user ticks "Remember", and then only in this browser's localStorage.
+    // It is never logged and never stored server-side.
+    // ============================================================
+    const BYOK_STORE = 'uid-byok';
+    let byok = { provider: 'openai', model: '', key: '' };
+
+    function loadByok() {
+        try {
+            const raw = localStorage.getItem(BYOK_STORE);
+            if (!raw) return;
+            const saved = JSON.parse(raw);
+            if (saved && typeof saved.key === 'string' && saved.key) {
+                byok = { provider: saved.provider || 'openai', model: saved.model || '', key: saved.key };
+                if (byokKey) byokKey.value = byok.key;
+                if (byokModel) byokModel.value = byok.model;
+                if (byokProvider) byokProvider.value = byok.provider;
+                if (byokRemember) byokRemember.checked = true;
+            }
+        } catch (_) {}
+    }
+
+    function saveByok() {
+        try {
+            if (byokRemember && byokRemember.checked && byok.key) {
+                localStorage.setItem(BYOK_STORE, JSON.stringify(byok));
+            } else {
+                localStorage.removeItem(BYOK_STORE);
+            }
+        } catch (_) {}
+    }
+
+    function readByokFromForm() {
+        byok.key = (byokKey && byokKey.value || '').trim();
+        byok.model = (byokModel && byokModel.value || '').trim();
+        byok.provider = (byokProvider && byokProvider.value) || 'openai';
+        saveByok();
+        updateByokBadge();
+    }
+
+    // A key without a model is a half-filled form. Treat it as "not using BYOK"
+    // rather than sending a request the provider will reject.
+    function byokReady() {
+        return Boolean(byok.key && byok.model);
+    }
+
+    function updateByokBadge() {
+        const free = document.querySelector('.usage-stats .stat .num');
+        if (!free) return;
+        if (byokReady()) {
+            free.textContent = '∞';
+            free.parentElement.innerHTML = '<span class="num">∞</span> with your own key';
+        } else {
+            free.textContent = '10';
+            free.parentElement.innerHTML = '<span class="num">10</span> free analyses / hour';
+        }
+    }
+
+    if (byokToggle && byokPanel) {
+        byokToggle.addEventListener('click', () => {
+            const open = byokPanel.hasAttribute('hidden');
+            if (open) byokPanel.removeAttribute('hidden');
+            else byokPanel.setAttribute('hidden', '');
+            byokToggle.setAttribute('aria-expanded', String(open));
+            if (open && byokKey) byokKey.focus();
+            track('BYOK opened');
+        });
+        [byokProvider, byokModel, byokKey, byokRemember].forEach(el => {
+            if (el) el.addEventListener('change', readByokFromForm);
+        });
+        if (byokKey) byokKey.addEventListener('blur', readByokFromForm);
+    }
+    loadByok();
+
+    // ============================================================
+    // WAITLIST — posts to Formspree-free fallback: mailto is the honest
+    // zero-backend option until we pick a list provider.
+    // ============================================================
+    const wlForm = document.getElementById('wlForm');
+    if (wlForm) {
+        wlForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const emailEl = document.getElementById('wlEmail');
+            const email = (emailEl.value || '').trim();
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(email)) {
+                emailEl.classList.add('error');
+                return;
+            }
+            emailEl.classList.remove('error');
+            const btn = document.getElementById('wlBtn');
+            btn.disabled = true;
+            try {
+                const r = await fetch('/api/waitlist', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                if (!r.ok) throw new Error('rejected');
+                document.getElementById('wlPrompt').textContent =
+                    'Saved — ' + email + '. We will email once before launch.';
+                wlForm.style.display = 'none';
+                track('Waitlist join');
+            } catch (_) {
+                btn.disabled = false;
+                document.getElementById('wlPrompt').textContent =
+                    'Could not save that. Email alameensathar1751@gmail.com and we will add you by hand.';
+            }
+        });
+    }
+
+    // ============================================================
     // REAL API CALL — uses your custom backend
     // ============================================================
     async function deconstructWebsite(url) {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ url: url.trim() })
+            body: JSON.stringify({
+                url: url.trim(),
+                byok: byokReady() ? { provider: byok.provider, model: byok.model, key: byok.key } : undefined
+            })
         });
 
         if (!response.ok) {
@@ -268,9 +399,14 @@
         setLoading(true);
 
         try {
+            track('Analysis started', { domain: extractDomain(url) });
+            const t0 = Date.now();
             const result = await deconstructWebsite(url);
             showResult(result.prompt, result.timings);
+            track('Analysis success', { domain: extractDomain(url), ms: String(Date.now() - t0) });
+            if (byokReady()) track('BYOK used');
         } catch (err) {
+            track('Analysis failed', { domain: extractDomain(url), status: String(err.status || '') });
             showError(err.message || 'Something went wrong. Please try again.');
             resultStatus.textContent = 'Error';
             resultLabel.textContent = 'Error';
@@ -283,6 +419,7 @@
     // EVENT BINDING
     // ============================================================
     deconstructBtn.addEventListener('click', handleDeconstruct);
+    track('Tool viewed');
 
     urlInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
