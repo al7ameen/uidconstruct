@@ -108,6 +108,10 @@ function sanitizeUrl(url) {
 // own loop is the only way to do that with fetch().
 class BlockedUrlError extends Error {}
 
+// Signals a caller-correctable problem (bad key / quota), so the handler can
+// answer 4xx instead of 500 and the user doesn't think we are down.
+class ByokAuthError extends Error {}
+
 async function safeFetch(url, options = {}, maxHops = 3) {
     let current = sanitizeUrl(url);
     if (!current) throw new BlockedUrlError('Blocked URL');
@@ -645,7 +649,7 @@ async function callAI(messages, byok) {
         // can contain fragments of the request, and we must not surface a key.
         const text = (await res.text()).slice(0, 300);
         if (res.status === 401 || res.status === 403) {
-            throw new Error('Your API key was rejected by the provider. Check it and try again.');
+            throw new ByokAuthError('Your API key was rejected by the provider. Check the key and the model name, then try again.');
         }
         if (res.status === 429) {
             throw new Error('Your provider quota is rate-limited right now. Try again shortly.');
@@ -777,6 +781,9 @@ module.exports = async (req, res) => {
         });
 
     } catch (err) {
+        if (err instanceof ByokAuthError) {
+            return res.status(401).json({ error: err.message });
+        }
         console.error('Deconstruct error:', err.message, JSON.stringify(timings || {}));
         return res.status(500).json({ error: (err && err.name === 'TimeoutError') ? 'The website or AI took too long to respond (60s). Please try again or use a faster site.' : (err.message || 'Internal server error.') });
     }
