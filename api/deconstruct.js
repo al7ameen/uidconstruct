@@ -38,12 +38,35 @@ function extractDomain(url) {
     }
 }
 
+function isPrivateHost(hostname) {
+    const h = hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    // Hostnames
+    if (h === 'localhost' || h.endsWith('.localhost') || h === '0.0.0.0' || h.endsWith('.local') || h === 'metadata.google.internal') return true;
+    // IPv6 literals (::1, fc00::/7 unique-local, fe80::/10 link-local)
+    if (h.includes(':')) {
+        return h === '::' || h === '::1' || /^f[cd][0-9a-f]{2}:/.test(h) || /^fe[89ab]/.test(h);
+    }
+    // IPv4 literals
+    const m = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+    if (m) {
+        const o = m.slice(1).map(Number);
+        if (o.some(x => x > 255)) return true; // malformed
+        const [a, b] = o;
+        if (a === 0 || a === 10 || a === 127 || a >= 224) return true;       // this-network, private, loopback, multicast/reserved
+        if (a === 169 && b === 254) return true;                             // link-local (cloud metadata)
+        if (a === 172 && b >= 16 && b <= 31) return true;                    // private
+        if (a === 192 && b === 168) return true;                             // private
+        if (a === 100 && b >= 64 && b <= 127) return true;                   // CGNAT
+    }
+    return false;
+}
+
 function sanitizeUrl(url) {
     try {
         const parsed = new URL(url);
-        if (!['http:', 'https:'].includes(parsed.protocol)) {
-            throw new Error('Invalid protocol');
-        }
+        if (!['http:', 'https:'].includes(parsed.protocol)) return null;
+        if (parsed.username || parsed.password) return null;                 // no embedded credentials
+        if (isPrivateHost(parsed.hostname)) return null;                     // SSRF guard
         return parsed.href;
     } catch {
         return null;
