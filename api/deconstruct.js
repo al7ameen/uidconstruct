@@ -24,7 +24,7 @@ const CONFIG = {
     API_KEY: process.env.OPENAI_API_KEY || '',
     BASE_URL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
     MODEL: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-    TIMEOUT_MS: 50000
+    TIMEOUT_MS: 45000
 };
 
 // ============================================================
@@ -136,14 +136,16 @@ function extractLayout($) {
         const tag = $(el).get(0).tagName.toLowerCase();
         const className = $el.attr('class') || '';
         const id = $el.attr('id') || '';
-        const display = $el.css('display');
-        const flexDir = $el.css('flex-direction');
-        const gridCols = $el.css('grid-template-columns');
-        const maxW = $el.css('max-width');
-        const padding = $el.css('padding');
-        const margin = $el.css('margin');
+        const display = $el.css('display') || '';
+        const flexDir = $el.css('flex-direction') || '';
+        const gridCols = $el.css('grid-template-columns') || '';
+        const maxW = $el.css('max-width') || '';
+        const padding = $el.css('padding') || '';
+        const margin = $el.css('margin') || '';
 
-        if (display === 'flex' || display === 'grid' || display.includes('flex') || gridCols !== 'none') {
+        const isFlex = display.includes('flex');
+            const isGrid = display.includes('grid') || (gridCols && gridCols !== 'none');
+            if (isFlex || isGrid) {
             layouts.push(`${tag}.${className.split(' ')[0]} { display:${display}; flex:${flexDir || 'row'}; grid:${gridCols !== 'none' ? gridCols : 'none'}; max:${maxW}; pad:${padding}; }`);
         }
     });
@@ -158,12 +160,12 @@ function extractComponents($) {
         const $el = $(el);
         const tag = $(el).get(0).tagName.toLowerCase();
         const className = $el.attr('class') || '';
-        const borderRadius = $el.css('border-radius');
-        const padding = $el.css('padding');
-        const bg = $el.css('background-color');
-        const color = $el.css('color');
-        const border = $el.css('border');
-        const boxShadow = $el.css('box-shadow');
+        const borderRadius = $el.css('border-radius') || '';
+        const padding = $el.css('padding') || '';
+        const bg = $el.css('background-color') || '';
+        const color = $el.css('color') || '';
+        const border = $el.css('border') || '';
+        const boxShadow = $el.css('box-shadow') || '';
 
         components.push(`${tag}${className ? '.' + className.split(' ')[0] : ''} { radius:${borderRadius}; pad:${padding}; bg:${bg}; color:${color}; border:${border}; shadow:${boxShadow} }`);
     });
@@ -342,6 +344,7 @@ async function callAI(messages) {
         model: CONFIG.MODEL,
         messages,
         temperature: 0.3,
+        reasoning_effort: 'low',
         max_tokens: 8000
     };
 
@@ -399,7 +402,7 @@ module.exports = async (req, res) => {
                 'Accept': 'text/html,application/xhtml+xml',
                 'Accept-Language': 'en-US,en;q=0.9'
             },
-            timeout: 10000
+            signal: AbortSignal.timeout(10000)
         });
 
         if (!pageRes.ok) {
@@ -430,7 +433,7 @@ module.exports = async (req, res) => {
 
     } catch (err) {
         console.error('Deconstruct error:', err.message);
-        return res.status(500).json({ error: err.message || 'Internal server error.' });
+        return res.status(500).json({ error: (err && err.name === 'TimeoutError') ? 'The website or AI took too long to respond (60s). Please try again or use a faster site.' : (err.message || 'Internal server error.') });
     }
 };
 

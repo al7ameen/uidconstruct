@@ -88,6 +88,7 @@
 
 html {
     scroll-behavior: smooth;
+    scroll-padding-top: 90px;
     -webkit-text-size-adjust: 100%;
 }
 
@@ -355,7 +356,7 @@ button:hover { opacity: 0.85; }
     font-family: var(--font-serif);
     font-size: clamp(2.25rem, 9vw, 4.75rem);
     font-weight: 400;
-    line-height: 1.05;
+    line-height: 1.1;
     letter-spacing: -0.02em;
     color: var(--text);
     margin-bottom: var(--space-4);
