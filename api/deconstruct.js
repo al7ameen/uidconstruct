@@ -73,6 +73,31 @@ function sanitizeUrl(url) {
     }
 }
 
+
+// sanitizeUrl only checks the URL WE were given. A public URL can 302 to an
+// internal one, so every hop must be re-validated. redirect:'manual' + our
+// own loop is the only way to do that with fetch().
+class BlockedUrlError extends Error {}
+
+async function safeFetch(url, options = {}, maxHops = 3) {
+    let current = sanitizeUrl(url);
+    if (!current) throw new BlockedUrlError('Blocked URL');
+    for (let i = 0; i <= maxHops; i++) {
+        const r = await fetch(current, { ...options, redirect: 'manual' });
+        if ([301, 302, 303, 307, 308].includes(r.status)) {
+            const loc = r.headers.get('location');
+            if (!loc) return r;
+            let next;
+            try { next = new URL(loc, current).href; } catch { return r; }
+            current = sanitizeUrl(next);
+            if (!current) throw new BlockedUrlError('Redirect to private address blocked');
+            continue;
+        }
+        return r;
+    }
+    throw new Error('Too many redirects');
+}
+
 // ============================================================
 // RATE LIMIT — per-IP, in-memory (resets on cold start; burst guard)
 // ============================================================
@@ -261,10 +286,10 @@ async function fetchCssFiles($, baseUrl) {
     const hrefs = extractCssHrefs($, baseUrl);
     if (!hrefs.length) return '';
     const results = await Promise.allSettled(hrefs.map(h =>
-        fetch(h, {
+        safeFetch(h, {
             headers: { 'User-Agent': BROWSER_UA, 'Accept': 'text/css,*/*;q=0.1' },
             signal: AbortSignal.timeout(CSS_FETCH_MS)
-        }).then(r => (r && r.ok ? r.text() : ''))
+        }, 2).then(r => (r && r.ok ? r.text() : ''))
     ));
     let out = '';
     for (const r of results) {
@@ -602,16 +627,18 @@ module.exports = async (req, res) => {
         // Browser-like UA: many sites (and CDNs) block non-browser agents outright
         let pageRes;
         try {
-            pageRes = await fetch(cleanUrl, {
+            pageRes = await safeFetch(cleanUrl, {
                 headers: {
                     'User-Agent': BROWSER_UA,
                     'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
                     'Accept-Language': 'en-US,en;q=0.9'
                 },
-                signal: AbortSignal.timeout(10000),
-                redirect: 'follow'
+                signal: AbortSignal.timeout(10000)
             });
         } catch (fetchErr) {
+            if (fetchErr instanceof BlockedUrlError) {
+                return res.status(400).json({ error: 'That URL resolves to a private or internal address, which is not allowed.' });
+            }
             const isTimeout = fetchErr.name === 'TimeoutError' || /abort|timeout/i.test(String(fetchErr.message));
             return res.status(504).json({
                 error: isTimeout
