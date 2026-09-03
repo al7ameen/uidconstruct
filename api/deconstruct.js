@@ -6,7 +6,7 @@
  * Environment variables (set in Vercel dashboard):
  *   OPENAI_API_KEY   — your API key
  *   OPENAI_BASE_URL  — custom endpoint (e.g. https://api.b.ai/v1)
- *   OPENAI_MODEL     — model name (e.g. glm-5.3-flash)
+ *   OPENAI_MODEL     — model name (e.g. qwen3.8-flash)
  *
  * API:
  *   POST /api/deconstruct
@@ -23,7 +23,7 @@ const cheerio = require('cheerio');
 const CONFIG = {
     API_KEY: process.env.OPENAI_API_KEY || '',
     BASE_URL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
-    MODEL: process.env.OPENAI_MODEL || 'gpt-4o-mini',
+    MODEL: process.env.OPENAI_MODEL || 'qwen3.8-flash',
     TIMEOUT_MS: 52000
 };
 
