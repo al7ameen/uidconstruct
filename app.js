@@ -235,9 +235,18 @@
             btnText.textContent = 'Analyzing…';
             btnSpinner.style.display = 'inline-block';
             deconstructBtn.disabled = true;
+            // Progress counter: analysis takes 30-50s; show it's working, not stuck
+            let elapsed = 0;
+            const statusHints = ['fetching page…', 'extracting styles…', 'AI analyzing design…', 'almost done…'];
+            window.__uidcTimer = setInterval(() => {
+                elapsed++;
+                const hint = statusHints[Math.min(Math.floor(elapsed / 12), statusHints.length - 1)];
+                btnText.textContent = 'Analyzing… ' + elapsed + 's — ' + hint;
+            }, 1000);
             resultStatus.textContent = 'Analyzing…';
             resultLabel.textContent = 'Generating spec';
         } else {
+            clearInterval(window.__uidcTimer);
             btnText.textContent = 'Generate prompt';
             btnSpinner.style.display = 'none';
             deconstructBtn.disabled = false;
