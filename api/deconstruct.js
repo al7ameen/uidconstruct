@@ -24,7 +24,7 @@ const CONFIG = {
     API_KEY: process.env.OPENAI_API_KEY || '',
     BASE_URL: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
     MODEL: process.env.OPENAI_MODEL || 'gpt-4o-mini',
-    TIMEOUT_MS: 20000
+    TIMEOUT_MS: 50000
 };
 
 // ============================================================
@@ -342,7 +342,7 @@ async function callAI(messages) {
         model: CONFIG.MODEL,
         messages,
         temperature: 0.3,
-        max_tokens: 4000
+        max_tokens: 8000
     };
 
     const res = await fetch(url, {
@@ -433,3 +433,6 @@ module.exports = async (req, res) => {
         return res.status(500).json({ error: err.message || 'Internal server error.' });
     }
 };
+
+// Allow up to 60s on Vercel (reasoning models are slow)
+module.exports.maxDuration = 60;
