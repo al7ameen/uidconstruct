@@ -27,16 +27,12 @@
     const reconstructBtn = document.getElementById('reconstructBtn');
     const resultStatus = document.getElementById('resultStatus');
     const resultLabel = document.getElementById('resultLabel');
-    const dailyCount = document.getElementById('dailyCount');
-    const pricingToggle = document.getElementById('pricingToggle');
-    const proPrice = document.getElementById('proPrice');
     const ctaBtn = document.getElementById('ctaBtn');
 
     // ============================================================
     // CONFIG — Backend endpoint
     // ============================================================
     const API_ENDPOINT = '/api/deconstruct';
-    const DAILY_LIMIT = 1; // Free tier
 
     // ============================================================
     // THEME MANAGEMENT
@@ -148,66 +144,6 @@
         urlInput.removeAttribute('aria-invalid');
     }
 
-    // ============================================================
-    // USAGE TRACKING (localStorage — daily limit)
-    // ============================================================
-    const USAGE_KEY = 'uid-usage';
-
-    function getTodayKey() {
-        const d = new Date();
-        return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
-    }
-
-    function getUsage() {
-        try {
-            const stored = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}');
-            return stored[getTodayKey()] || 0;
-        } catch { return 0; }
-    }
-
-    function incrementUsage() {
-        try {
-            const stored = JSON.parse(localStorage.getItem(USAGE_KEY) || '{}');
-            const key = getTodayKey();
-            stored[key] = (stored[key] || 0) + 1;
-            localStorage.setItem(USAGE_KEY, JSON.stringify(stored));
-            updateUsageDisplay();
-        } catch (_) {}
-    }
-
-    function updateUsageDisplay() {
-        if (dailyCount) {
-            const remaining = Math.max(0, DAILY_LIMIT - getUsage());
-            dailyCount.textContent = remaining;
-            if (remaining === 0) {
-                dailyCount.parentElement.innerHTML = '<span class="num">0</span> free sites used today';
-            }
-        }
-    }
-
-    updateUsageDisplay();
-
-    // ============================================================
-    // PRICING TOGGLE (monthly / yearly)
-    // ============================================================
-    let isYearly = false;
-    if (pricingToggle) {
-        pricingToggle.addEventListener('click', () => {
-            isYearly = !isYearly;
-            pricingToggle.setAttribute('aria-checked', isYearly);
-            if (proPrice) {
-                proPrice.style.opacity = '0';
-                setTimeout(() => {
-                    if (isYearly) {
-                        proPrice.innerHTML = '$7 <small>/ month</small><div style="font-size:13px;color:var(--text-muted);font-family:var(--font-sans);font-weight:400;margin-top:4px">Billed yearly ($84/yr)</div>';
-                    } else {
-                        proPrice.innerHTML = '$9 <small>/ month</small>';
-                    }
-                    proPrice.style.opacity = '1';
-                }, 150);
-            }
-        });
-    }
 
     // ============================================================
     // REAL API CALL — uses your custom backend
@@ -336,17 +272,11 @@
             return;
         }
 
-        if (getUsage() >= DAILY_LIMIT) {
-            showError('Daily free limit reached. Upgrade to Pro for unlimited.');
-            return;
-        }
-
         setLoading(true);
 
         try {
             const result = await deconstructWebsite(url);
             showResult(result.prompt);
-            incrementUsage();
         } catch (err) {
             showError(err.message || 'Something went wrong. Please try again.');
             resultStatus.textContent = 'Error';
