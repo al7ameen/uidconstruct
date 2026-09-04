@@ -90,9 +90,20 @@ function isPrivateHost(hostname) {
     return false;
 }
 
+// Same affordance as the frontend: a bare host is what people type. Adding the
+// scheme here means curl/scripts behave like the UI. It does NOT weaken the
+// SSRF guard — the result still goes through the full URL parse + isPrivateHost
+// check below, so "127.0.0.1" becomes https://127.0.0.1 and is then blocked.
+function ensureScheme(url) {
+    const u = String(url || '').trim();
+    if (/^https?:\/\//i.test(u)) return u;
+    if (/^[^\s/]+\.[^\s/.]+(:\d+)?([/?#]\S*)?$/.test(u)) return 'https://' + u;
+    return u;
+}
+
 function sanitizeUrl(url) {
     try {
-        const parsed = new URL(url);
+        const parsed = new URL(ensureScheme(url));
         if (!['http:', 'https:'].includes(parsed.protocol)) return null;
         if (parsed.username || parsed.password) return null;                 // no embedded credentials
         if (isPrivateHost(parsed.hostname)) return null;                     // SSRF guard
@@ -960,7 +971,7 @@ module.exports = async (req, res) => {
 
     const cleanUrl = sanitizeUrl(url);
     if (!cleanUrl) {
-        return res.status(400).json({ error: 'Invalid URL. Must start with http:// or https://' });
+        return res.status(400).json({ error: 'That does not look like a website address. Try something like example.com' });
     }
 
     // Free tier is capped because it spends OUR credits. BYOK spends THEIRS,

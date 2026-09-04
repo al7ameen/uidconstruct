@@ -221,6 +221,30 @@ t('escapes attribute-breaking quotes in text', () =>
     assert.ok(/&quot;|&#39;/.test(FE.escapeHtml('a"b\'c')), 'quotes not escaped'));
 t('empty input yields empty output', () => assert.strictEqual(FE.renderMarkdown(''), ''));
 
+section('bare-host input (the "linear.app" affordance)');
+const BE = slice(apiSrc, 'function isPrivateHost', '// sanitizeUrl only checks', 'sanitizeUrl,ensureScheme');
+const FEURL = slice(appSrc, 'const URL_PATTERN', 'function extractDomain', 'normalizeURL,validateURL');
+t('frontend adds https to a bare host', () => {
+    assert.strictEqual(FEURL.normalizeURL('linear.app'), 'https://linear.app');
+    assert.strictEqual(FEURL.normalizeURL('  vercel.com/docs  '), 'https://vercel.com/docs');
+    assert.strictEqual(FEURL.normalizeURL('www.foo.com'), 'https://www.foo.com');
+});
+t('frontend leaves a full URL alone', () =>
+    assert.strictEqual(FEURL.normalizeURL('https://ok.com/x'), 'https://ok.com/x'));
+t('frontend still rejects junk (does not prepend https to nonsense)', () => {
+    ['', 'not a url', 'hello world'].forEach(v =>
+        assert.ok(!FEURL.validateURL(FEURL.normalizeURL(v)), 'accepted: ' + JSON.stringify(v)));
+});
+t('backend accepts a bare host too, so curl matches the UI', () =>
+    assert.strictEqual(BE.sanitizeUrl('linear.app'), 'https://linear.app/'));
+// The affordance must not become a bypass: normalising happens BEFORE the
+// private-host check, so internal targets still resolve to null.
+t('normalisation cannot be used to reach internal hosts', () => {
+    ['127.0.0.1', 'localhost', '169.254.169.254', '10.0.0.5', 'metadata.google.internal',
+     'file:///etc/passwd', '0.0.0.0'].forEach(u =>
+        assert.strictEqual(BE.sanitizeUrl(u), null, 'reached: ' + u));
+});
+
 section('dark-mode accent: text uses must not pick up the brand --accent');
 // Live bug found on production: --accent is #f5f5f5 in dark mode, and was used
 // as a text color on links, badges, bullets, footer, and error messages, so

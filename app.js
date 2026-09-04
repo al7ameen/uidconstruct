@@ -135,8 +135,22 @@
     // ============================================================
     const URL_PATTERN = /^https?:\/\/.+/i;
 
+    // Everyone pastes "linear.app" and expects it to work. Rejecting that with
+    // "please include http://" is a needless wall in front of the one action
+    // the product exists to perform, so we add the scheme instead of nagging.
+    // Only bare hosts get the treatment — "not a url" must still fail, and we
+    // default to https because that is what a modern site serves.
+    function normalizeURL(raw) {
+        const url = String(raw || '').trim();
+        if (!url) return url;
+        if (URL_PATTERN.test(url)) return url;
+        // host[/path][?query] with no spaces and at least one dot
+        if (/^[^\s/]+\.[^\s/.]+(:\d+)?([/?#]\S*)?$/.test(url)) return 'https://' + url;
+        return url;
+    }
+
     function validateURL(url) {
-        return URL_PATTERN.test(url.trim());
+        return URL_PATTERN.test(String(url || '').trim());
     }
 
     function extractDomain(url) {
@@ -473,14 +487,17 @@
     // MAIN FLOW
     // ============================================================
     async function handleDeconstruct() {
-        const url = urlInput.value.trim();
+        const url = normalizeURL(urlInput.value);
         clearError();
 
         if (!validateURL(url)) {
-            showError('Please include http:// or https://');
+            showError('That does not look like a website address. Try something like example.com');
             urlInput.focus();
             return;
         }
+        // Reflect the normalisation so the field is never silently different
+        // from what we actually sent.
+        if (url !== urlInput.value.trim()) urlInput.value = url;
 
         setLoading(true);
 
