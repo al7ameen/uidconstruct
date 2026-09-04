@@ -301,18 +301,40 @@
     // REAL API CALL — uses your custom backend
     // ============================================================
     async function deconstructWebsite(url) {
-        const response = await fetch(API_ENDPOINT, {
+        const payload = JSON.stringify({
+            url: url.trim(),
+            byok: byokReady() ? { provider: byok.provider, model: byok.model, key: byok.key } : undefined
+        });
+        const attempt = () => fetch(API_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                url: url.trim(),
-                byok: byokReady() ? { provider: byok.provider, model: byok.model, key: byok.key } : undefined
-            })
+            body: payload
         });
+
+        let response = await attempt();
+
+        // A 429 from us means the shared free queue is saturated, not that the
+        // request was wrong. Honour Retry-After once, automatically, before
+        // bothering the user: one silent retry absorbs most of a launch-day
+        // spike. Capped at 20s because a longer wait reads as a hung page, and
+        // after that the honest move is to show the message and the BYOK hint.
+        if (response.status === 429) {
+            const err = await response.json().catch(() => ({}));
+            const waitSecs = Number(err.retryAfterSec) || 10;
+            if (waitSecs <= 20) {
+                resultStatus.textContent = 'Queue busy \u2014 retrying\u2026';
+                await new Promise(r => setTimeout(r, waitSecs * 1000));
+                response = await attempt();
+            } else {
+                throw new Error(err.error || 'Busy right now. Try again in a moment.');
+            }
+        }
 
         if (!response.ok) {
             const err = await response.json().catch(() => ({ error: 'Request failed' }));
-            throw new Error(err.error || 'Failed to analyze website');
+            const e = new Error(err.error || 'Failed to analyze website');
+            e.status = response.status;
+            throw e;
         }
 
         return await response.json();
