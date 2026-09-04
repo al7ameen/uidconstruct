@@ -22,6 +22,7 @@ let aiStatus = 200;      // flip to 429 to simulate the saturated free tier
 let aiDelay = 0;
 let aiModels = [];       // which model each attempt asked for
 let statusByModel = {};  // per-model status, to exercise the fallback chain
+let aiRetryAfter = '17'; // provider's Retry-After on a 429; null = header absent
 
 function installFetch() {
     global.fetch = async (url, opts) => {
@@ -37,7 +38,8 @@ function installFetch() {
                 return { ok: false, status: st, headers: { get: () => null }, text: async () => 'unauthorized' };
             }
             if (st === 429) {
-                return { ok: false, status: 429, headers: { get: () => '17' }, text: async () => 'slow down' };
+                // key-aware so the test proves we read the RIGHT header, not just any
+                return { ok: false, status: 429, headers: { get: (k) => (String(k).toLowerCase() === 'retry-after' ? aiRetryAfter : null) }, text: async () => 'slow down' };
             }
             return {
                 ok: true, status: 200,
@@ -103,13 +105,38 @@ function check(name, fn) {
     calls = { page: 0, ai: 0, css: 0 };
     if (clear) clear();
     aiStatus = 429;
+    aiRetryAfter = '17';
     const limited = await post('https://stripe.com');
     check('upstream 429 becomes HTTP 429, never 500', () =>
         assert.strictEqual(limited.statusCode, 429, 'got ' + limited.statusCode));
-    check('429 carries a Retry-After the client can honour', () =>
-        assert.ok(limited.headers['Retry-After'], 'no Retry-After header'));
+    // Regression in the TEST itself: this assertion used to be
+    //   assert.ok(limited.headers['Retry-After'])
+    // which a hardcoded `30` would satisfy. lib/ai.js deliberately honours the
+    // provider's own value and clamps absurd ones -- an assertion that cannot
+    // tell those three behaviours apart tests nothing. Pin the value.
+    check('429 forwards the provider OWN Retry-After, not a constant', () =>
+        assert.strictEqual(limited.headers['Retry-After'], '17',
+            'got ' + JSON.stringify(limited.headers['Retry-After'])));
+    check('the human-readable wait matches the header', () =>
+        assert.ok(/about 17 seconds/i.test(limited.body.error),
+            'header says 17s but the message says: ' + limited.body.error));
     check('429 message tells the user what to do, not that we are broken', () =>
         assert.ok(/try again|own API key/i.test(limited.body.error), limited.body.error));
+
+    // ---- 3b. a provider that lies about how long to wait must not be obeyed ----
+    aiRetryAfter = '99999';
+    const absurd = await post('https://stripe.com', '10.0.0.141');
+    check('an absurd provider Retry-After is clamped to our 30s default', () =>
+        assert.strictEqual(absurd.headers['Retry-After'], '30',
+            'got ' + absurd.headers['Retry-After'] + ' -- "come back in 27 hours" ends the session'));
+
+    // ---- 3c. header absent -> numeric default, never NaN/undefined ----
+    aiRetryAfter = null;
+    const noRa = await post('https://stripe.com', '10.0.0.142');
+    check('a 429 with no Retry-After header still gets a numeric default', () =>
+        assert.strictEqual(noRa.headers['Retry-After'], '30',
+            'got ' + JSON.stringify(noRa.headers['Retry-After'])));
+    aiRetryAfter = '17';
     aiStatus = 200;
 
     // ---- 4. failures must not be cached ----
@@ -185,9 +212,10 @@ function check(name, fn) {
     check('BYOK 429 does NOT fall back to a different model', () => {
         assert.deepStrictEqual(aiModels, ['gpt-5.2'], 'attempted ' + JSON.stringify(aiModels) + ' -- silently changing a user-chosen model is a lie about provenance');
     });
-    check('BYOK 429 returns 429 with Retry-After', () => {
+    check('BYOK 429 returns 429 with the provider Retry-After', () => {
         assert.strictEqual(byokRes2.statusCode, 429, 'got ' + byokRes2.statusCode);
-        assert.ok(byokRes2.headers['Retry-After'], 'no Retry-After');
+        assert.strictEqual(byokRes2.headers['Retry-After'], '17',
+            'got ' + JSON.stringify(byokRes2.headers['Retry-After']));
     });
     check('BYOK message is about THEIR key, not our queue', () => {
         assert.ok(/your ai provider|your key/i.test(byokRes2.body.error), byokRes2.body.error);
