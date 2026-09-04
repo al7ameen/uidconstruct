@@ -979,13 +979,27 @@ button:hover { opacity: 0.85; }
 .pricing-card.pro {
     --card-bg: var(--text);
     --card-text: var(--bg);
-    --card-muted: rgba(255, 255, 255, 0.6);
-    --card-border: rgba(255, 255, 255, 0.12);
+    /* The card inverts against the page, so "text on the card" is text over
+       --card-bg, NOT over --bg. These must be re-declared per theme: white
+       alphas read on the light theme's dark card but vanish on the dark
+       theme's near-white card. */
+    --card-muted: rgba(255, 255, 255, 0.66);
+    --card-border: rgba(255, 255, 255, 0.16);
 
     background: var(--card-bg);
     border-color: var(--card-bg);
     position: relative;
 }
+
+/* The card inverts against the page (--card-bg: var(--text)), so on the dark
+   theme its surface is near-white #f5f5f5. White alphas then vanish into it —
+   the invisible-text bug. Re-declare the card's muted/border against the
+   card's OWN background: --bg is #0a0a0a here, which is what sits on #f5f5f5. */
+[data-theme="dark"] .pricing-card.pro {
+    --card-muted: rgba(10, 10, 10, 0.66);
+    --card-border: rgba(10, 10, 10, 0.16);
+}
+
 .pricing-card.pro::after {
     content: '';
     position: absolute;

@@ -121,6 +121,20 @@ test('build-prompt card is populated (feature is not silently dead)', async () =
     assert.strictEqual(b.els.get('buildPromptCard').hidden, false, 'card hidden => extractor found nothing');
     assert.strictEqual(b.els.get('buildPromptText').textContent.trim(), 'Rebuild x.com as a dark landing page.');
 });
+test('build prompt stops at blank line, does not swallow the spec', async () => {
+    // Real-world shape: model writes BUILD PROMPT, then a bullet list, and never
+    // emits another heading. The old regex captured to end-of-string.
+    const leaky = [
+        'BUILD PROMPT', 'Rebuild acme.com as a bright SaaS landing page.', '',
+        '- hero with gradient', '- three feature cards', '- sticky nav',
+        '## Not A Heading That Follows Later', '', '- more stuff'
+    ].join('\n');
+    const b = withSpec(leaky);
+    await new Promise(r => setTimeout(r, 30));
+    const got = b.els.get('buildPromptText').textContent.trim();
+    assert.strictEqual(got, 'Rebuild acme.com as a bright SaaS landing page.', 'leaked: ' + got);
+    assert.ok(!got.includes('sticky nav'), 'spec bullets leaked into the prompt');
+});
 test('markdown renders to headings + table', async () => {
     const b = withSpec(SPEC);
     await new Promise(r => setTimeout(r, 30));
@@ -177,6 +191,103 @@ test('javascript: URL is rejected client-side', () => {
     b.els.get('urlInput').value = 'javascript:alert(1)';
     b.els.get('deconstructBtn')._fire('click');
     assert.ok(b.els.get('url-error').textContent.length > 0, 'no error shown for javascript:');
+});
+
+
+/* ---- theme contrast: the invisible-text bug class ------------------------ */
+/* Parses the real token blocks out of style.css and computes WCAG contrast
+   for the inverted pricing card in BOTH themes. A hardcoded alpha that only
+   reads on one card colour fails here, which is exactly how this shipped. */
+function block(re) { const m = CSS.match(re); return m ? m[0] : ''; }
+function tokens(css) {
+    const t = {};
+    for (const m of css.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) t[m[1]] = m[2].trim();
+    return t;
+}
+function resolve(v, scope) {
+    for (let i = 0; i < 8 && /^var\(/.test(v); i++) {
+        const m = v.match(/^var\((--[\w-]+)\)$/); if (!m) return v;
+        v = scope[m[1]]; if (v === undefined) return null;
+    }
+    return v;
+}
+function toRGB(c) {
+    c = c.trim();
+    let m = c.match(/^#([0-9a-f]{6})$/i);
+    if (m) { const n = parseInt(m[1], 16); return [n >> 16 & 255, n >> 8 & 255, n & 255, 1]; }
+    m = c.match(/^rgba?\(([^)]+)\)$/i);
+    if (m) { const p = m[1].split(',').map(x => parseFloat(x)); return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1]; }
+    return null;
+}
+function over(fg, bg) { // composite rgba over opaque rgb
+    const a = fg[3];
+    return [0, 1, 2].map(i => fg[i] * a + bg[i] * (1 - a));
+}
+function lum(c) {
+    const [r, g, b] = c.map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+function contrast(a, b) {
+    const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p);
+    return (x + 0.05) / (y + 0.05);
+}
+function proCardIn(theme) {
+    const base = theme === 'dark'
+        ? Object.assign(tokens(block(/:root\s*{[^}]*}/)), tokens(block(/\[data-theme="dark"\]\s*{[^}]*}/)))
+        : tokens(block(/:root\s*{[^}]*}/));
+    let card = tokens(block(/\.pricing-card\.pro\s*{[^}]*}/));
+    if (theme === 'dark') card = Object.assign({}, card, tokens(block(/\[data-theme="dark"\]\s*\.pricing-card\.pro\s*{[^}]*}/)));
+    const scope = Object.assign({}, base, card);
+    const bg = toRGB(resolve(card['--card-bg'], scope));
+    const muted = resolve(card['--card-muted'], scope);
+    const border = resolve(card['--card-border'], scope);
+    return { bg, muted: toRGB(muted), border: toRGB(border), text: toRGB(resolve(card['--card-text'], scope)) };
+}
+test('inverted pricing card: muted text passes WCAG AA in both themes', () => {
+    for (const theme of ['light', 'dark']) {
+        const c = proCardIn(theme);
+        assert.ok(c.bg && c.muted, theme + ': could not resolve card colours');
+        const ratio = contrast(over(c.muted, c.bg), c.bg);
+        assert.ok(ratio >= 4.5,
+            theme + ' theme: muted text on card is ' + ratio.toFixed(2) + ':1 (needs 4.5:1) — invisible text');
+    }
+});
+test('inverted pricing card: body text + dividers are visible in both themes', () => {
+    for (const theme of ['light', 'dark']) {
+        const c = proCardIn(theme);
+        const body = contrast(over(c.text, c.bg), c.bg);
+        const line = contrast(over(c.border, c.bg), c.bg);
+        assert.ok(body >= 4.5, theme + ': body text ' + body.toFixed(2) + ':1');
+        assert.ok(line >= 1.2, theme + ': divider ' + line.toFixed(2) + ':1 — border not perceptible');
+    }
+});
+test('every white-alpha declaration has a dark-theme override', () => {
+    // The real invariant: a white alpha is only safe if the dark theme either
+    // redefines that same custom property, or re-declares the same selector.
+    // This is the bug class that shipped twice (--accent text, then this card).
+    const WHITE = /rgba\(\s*255\s*,\s*255\s*,\s*255/;
+    const darkTokenProps = new Set();
+    const darkSelectors = new Set();
+    for (const m of CSS.matchAll(/\[data-theme="dark"\]([^{]*){([^}]*)}/g)) {
+        darkSelectors.add(m[1].trim());
+        for (const d of m[2].matchAll(/(--[\w-]+)\s*:/g)) darkTokenProps.add(d[1]);
+    }
+    const offenders = [];
+    for (const r of CSS.split(/(?<=})/)) {
+        if (!WHITE.test(r)) continue;
+        const sel = ((r.match(/^([^{}]*){/) || ['', ''])[1]).trim();
+        if (!sel || sel.includes('data-theme="dark"')) continue;
+        // only the declarations that are themselves white need covering
+        const whiteProps = [...r.matchAll(/(--[\w-]+)\s*:\s*([^;]*rgba\(\s*255\s*,\s*255\s*,\s*255[^;]*)/g)]
+            .map(x => x[1]);
+        if (whiteProps.length) {
+            const uncovered = whiteProps.filter(prop => !darkTokenProps.has(prop));
+            if (uncovered.length) offenders.push(sel + ' {' + uncovered.join(',') + '}');
+        } else if (!darkSelectors.has(sel)) {
+            offenders.push(sel + ' [literal white, no dark rule]');
+        }
+    }
+    assert.deepStrictEqual(offenders, [], 'white alphas without a dark override: ' + offenders.join(', '));
 });
 
 (async () => {
