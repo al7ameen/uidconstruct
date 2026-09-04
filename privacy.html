@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy — uidconstruct</title>
+    <meta name="description" content="What uidconstruct stores: almost nothing. No cookies, no accounts, no key logging." />
+    <meta name="robots" content="index, follow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="style.css" />
+    <script defer data-domain="uidconstruct.vercel.app" src="https://plausible.io/js/script.outbound-links.js"></script>
+</head>
+<body>
+    <header class="navbar" role="banner">
+        <div class="container">
+            <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="/#steps">How it works</a>
+                <a href="/#pricing">Pricing</a>
+                <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main" class="legal">
+        <div class="container narrow">
+            <h1>Privacy</h1>
+            <p class="legal-updated">Last updated: 3 September 2026</p>
+
+            <h2>The short version</h2>
+            <p>No accounts. No cookies for advertising. No third-party trackers. We do not sell or share personal data, because there is very little of it to begin with.</p>
+
+            <h2>What we do process</h2>
+            <ul>
+                <li><strong>The URL you analyse.</strong> We fetch it from our servers so we can read the page and its stylesheets. The domain name is written to our server-side runtime logs along with timing information, so we can see which sites break and how slow they are. We do not store the generated spec.</li>
+                <li><strong>Your IP address</strong>, transiently, for rate limiting. It is held in the memory of a serverless function and is lost when that instance is recycled — usually within minutes. We do not keep an IP log.</li>
+                <li><strong>Email addresses you submit to the waitlist.</strong> Stored in our runtime logs until we move them to a proper list provider. One email at launch, no newsletter, and ask us to remove it and we will.</li>
+                <li><strong>Cookieless analytics</strong> (Plausible) — aggregate page views and referrers. No cookies are set, so no consent banner is required under GDPR, and no cross-site or cross-device tracking is possible.</li>
+            </ul>
+
+            <h2>API keys, if you use "bring your own key"</h2>
+            <p>Your key is sent from your browser to our serverless function and forwarded directly to OpenAI or Anthropic. It is <strong>never written to our logs or database</strong> — our runtime logging records only the provider name. If you tick "Remember in this browser only", the key is stored in your browser's localStorage and never leaves your device except with a request you make. We cannot recover a lost key, and we cannot see yours.</p>
+
+            <h2>What we do not do</h2>
+            <ul>
+                <li>No advertising networks, no session replay, no fingerprinting.</li>
+                <li>No selling, renting or sharing of personal data.</li>
+                <li>No storing of the specifications we generate for you.</li>
+            </ul>
+
+            <h2>Deleting your data</h2>
+            <p>Email <a href="mailto:alameensathar1751@gmail.com">alameensathar1751@gmail.com</a> and we will remove your email from the waitlist and confirm it. Because we keep no other persistent records, that is the whole request.</p>
+
+            <p class="legal-back"><a href="/">← Back to uidconstruct</a></p>
+        </div>
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="container">
+            <div class="footer-bottom">
+                <span class="tagline">No tracking pixels. No cookies. Try it without an account.</span>
+                <span class="links"><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></span>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

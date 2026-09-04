@@ -314,7 +314,16 @@
     }
 
     function showResult(promptText, timings) {
-        promptBox.textContent = promptText;
+        lastSpecText = promptText;
+        // If it does not look like markdown at all, keep the plain-text path so
+        // a terse one-line answer is never mangled by the renderer.
+        if (/^\s*#\s|\n\s*#{1,6}\s/.test(promptText)) {
+            promptBox.innerHTML = renderMarkdown(promptText);
+            promptBox.classList.add('is-rendered');
+        } else {
+            promptBox.textContent = promptText;
+            promptBox.classList.remove('is-rendered');
+        }
         resultPanel.classList.add('visible');
         copyBtn.innerHTML = `
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -331,9 +340,86 @@
     }
 
     function hideResult() {
+        lastSpecText = '';
         resultPanel.classList.remove('visible');
         resultLabel.textContent = 'Sample output';
         resultStatus.textContent = 'Ready';
+    }
+
+    // ============================================================
+    // MARKDOWN RENDERING
+    // The model returns a markdown spec (headings, tables, bullet lists).
+    // Dumping that into a <pre> shows the reader literal "#" and "|" pipes,
+    // which makes a good spec look like a raw dump. Render it instead — but
+    // keep the original text for copying, because the copy target is another
+    // AI editor that wants markdown, not HTML.
+    // ============================================================
+    let lastSpecText = '';
+
+    function escapeHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function inlineMd(str) {
+        return escapeHtml(str)
+            .replace(/`([^`]+)`/g, '<code>$1</code>')
+            .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+            .replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>');
+    }
+
+    function renderMarkdown(src) {
+        const lines = String(src).replace(/\r/g, '').split('\n');
+        const out = [];
+        let i = 0;
+        while (i < lines.length) {
+            const line = lines[i];
+
+            if (!line.trim()) { i++; continue; }
+
+            // GFM table: header row, then |---|---|
+            if (/^\s*\|/.test(line) && i + 1 < lines.length && /^\s*\|[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+                const cells = (r) => r.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map(c => c.trim());
+                const head = cells(line);
+                i += 2;
+                const rows = [];
+                while (i < lines.length && /^\s*\|/.test(lines[i])) { rows.push(cells(lines[i])); i++; }
+                out.push('<table><thead><tr>' + head.map(h => '<th>' + inlineMd(h) + '</th>').join('') +
+                    '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => '<td>' + inlineMd(c) + '</td>').join('') + '</tr>').join('') +
+                    '</tbody></table>');
+                continue;
+            }
+
+            const h = line.match(/^(#{1,6})\s+(.*)$/);
+            if (h) {
+                const lvl = Math.min(h[1].length, 6);
+                out.push('<h' + lvl + '>' + inlineMd(h[2]) + '</h' + lvl + '>');
+                i++; continue;
+            }
+
+            if (/^\s*[-*]\s+/.test(line)) {
+                const items = [];
+                while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*[-*]\s+/, '')); i++; }
+                out.push('<ul>' + items.map(t => '<li>' + inlineMd(t) + '</li>').join('') + '</ul>');
+                continue;
+            }
+
+            if (/^\s*\d+[.)]\s+/.test(line)) {
+                const items = [];
+                while (i < lines.length && /^\s*\d+[.)]\s+/.test(lines[i])) { items.push(lines[i].replace(/^\s*\d+[.)]\s+/, '')); i++; }
+                out.push('<ol>' + items.map(t => '<li>' + inlineMd(t) + '</li>').join('') + '</ol>');
+                continue;
+            }
+
+            const para = [];
+            while (i < lines.length && lines[i].trim() && !/^\s*\|/.test(lines[i]) && !/^(#{1,6})\s/.test(lines[i]) &&
+                   !/^\s*[-*]\s+/.test(lines[i]) && !/^\s*\d+[.)]\s+/.test(lines[i])) {
+                para.push(lines[i].trim()); i++;
+            }
+            if (para.length) out.push('<p>' + inlineMd(para.join(' ')) + '</p>');
+        }
+        return out.join('\n');
     }
 
     // ============================================================
@@ -433,7 +519,9 @@
     });
 
     copyBtn.addEventListener('click', () => {
-        const text = promptBox.textContent;
+        // Copy the markdown the model produced, not the rendered DOM text —
+        // the destination is v0/Cursor, which reads markdown.
+        const text = lastSpecText || promptBox.textContent;
         if (text) copyPrompt(text);
     });
 

@@ -799,7 +799,8 @@ Give a numbered, actionable checklist:
 2. [Second thing]
 3. etc.
 
-HARD LIMIT: 500 words. Be maximally dense — compact lines, tables over prose, no filler, no explanations. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions. If something is not detectable, write 'not detectable' in 2 words — never guess at length. A developer copying this into Cursor or v0 must be able to rebuild the UI accurately.`;
+HARD LIMIT: 500 words. Be maximally dense — compact lines, tables over prose, no filler, no explanations. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions.
+DO NOT write "not detectable", "not found", "unknown", or any other placeholder for data that is missing. If a section has no data, either omit it or fill it with what the evidence DOES support — a reader copying this into Cursor gets nothing from a placeholder, and a page full of them makes a readable site look unreadable. Never invent values. A developer copying this into Cursor or v0 must be able to rebuild the UI accurately.`;
 // Two independent sources for the same fact: compiled stylesheets give us
 // min/max-width values, inline <style> blocks give us raw @media text. Pull
 // the numbers out of both and de-duplicate.

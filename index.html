@@ -49,7 +49,7 @@
             <nav class="nav-links" id="navLinks" role="navigation" aria-label="Main navigation">
                 <a href="#steps">How it works</a>
                 <a href="#pricing">Pricing</a>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
                 <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
                     <span id="themeIcon" aria-hidden="true"></span>
                     <span id="themeLabel">Dark</span>
@@ -234,12 +234,16 @@
                     We don't read every pixel <span>— yet.</span>
                 </blockquote>
                 <div class="note-body">
-                    <strong>Why we're upfront:</strong> We extract computed DOM styles — colors, spacing,
-                    typography, and layout rules — but we don't capture everything such as complex
-                    SVG paths or canvas animations yet.
+                    <strong>Why we're upfront:</strong> We fetch the page and its linked stylesheets
+                    server-side, then resolve the design tokens and component rules the site actually
+                    ships — including <code>var()</code> and <code>calc()</code> evaluated to concrete
+                    values. We don't run a headless browser, so anything that only exists after
+                    JavaScript paints is outside what we can see.
                     <br /><br />
                     This works best for websites where the design is represented through standard HTML/CSS.
-                    <a href="#">SVG &amp; canvas are in private beta</a>.
+                    Sites that render everything in JavaScript or hash their CSS at build time
+                    (Linear-style apps, canvas-heavy pages) give us far less to read, and we say so
+                    rather than hand you a thin spec that looks confident.
                 </div>
                 <span class="note-tag">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
@@ -334,9 +338,9 @@
             <div class="footer-top">
                 <span class="logo">uid<span>construct</span></span>
                 <div class="links">
-                    <a href="#">Terms</a>
-                    <a href="#">Privacy</a>
-                    <a href="https://github.com" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="/terms">Terms</a>
+                    <a href="/privacy">Privacy</a>
+                    <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </div>
             </div>
             <div class="footer-bottom">
