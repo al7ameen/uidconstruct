@@ -247,10 +247,12 @@ function extractLayout($) {
         const margin = $el.css('margin') || '';
 
         const isFlex = display.includes('flex');
-            const isGrid = display.includes('grid') || (gridCols && gridCols !== 'none');
-            if (isFlex || isGrid) {
-            layouts.push(`${tag}.${className.split(' ')[0]} { display:${display}; flex:${flexDir || 'row'}; grid:${gridCols !== 'none' ? gridCols : 'none'}; max:${maxW}; pad:${padding}; }`);
-        }
+        const isGrid = display.includes('grid') || (gridCols && gridCols !== 'none');
+        if (!isFlex && !isGrid) return;
+        const found = { display, flex: flexDir, grid: gridCols, max: maxW, pad: padding };
+        const real = Object.entries(found).filter(([, v]) => v && v !== 'none' && v !== 'inherit');
+        if (!real.length) return;
+        layouts.push(`${tag}.${(className.split(' ')[0] || '')} { ${real.map(([k, v]) => k + ':' + String(v).replace(/\s+/g, ' ').slice(0, 40)).join('; ')} }`);
     });
 
     return layouts.slice(0, 15);
@@ -270,7 +272,14 @@ function extractComponents($) {
         const border = $el.css('border') || '';
         const boxShadow = $el.css('box-shadow') || '';
 
-        components.push(`${tag}${className ? '.' + className.split(' ')[0] : ''} { radius:${borderRadius}; pad:${padding}; bg:${bg}; color:${color}; border:${border}; shadow:${boxShadow} }`);
+        // Only worth a line if at least one value actually resolved. On a
+        // class-based site every one of these is '' (cheerio cannot compute
+        // styles), and emitting "button.x { radius:; pad:; }" teaches the model
+        // that the site is undetectable when it simply uses stylesheets.
+        const found = { radius: borderRadius, pad: padding, bg, color, border, shadow: boxShadow };
+        const real = Object.entries(found).filter(([, v]) => v && v !== 'none' && v !== 'inherit');
+        if (!real.length) return;
+        components.push(`${tag}${className ? '.' + className.split(' ')[0] : ''} { ${real.map(([k, v]) => k + ':' + v).join('; ')} }`);
     });
 
     return components.slice(0, 20);
@@ -421,7 +430,9 @@ function allocateTokenQuota(buckets) {
     return quota;
 }
 
-function mineDesignTokens(css, usedClasses) {
+// Token map is the shared substrate: the design-token section AND the
+// component-rule resolver below both need it, so build it once.
+function collectTokens(css) {
     const found = new Map();   // name -> first value
     const re = /(--[a-zA-Z][\w-]*)\s*:\s*([^;{}]{1,60})/g;
     let m;
@@ -432,7 +443,11 @@ function mineDesignTokens(css, usedClasses) {
         if (!val || !VALUE_RE.test(val)) continue;
         found.set(name, val);
     }
+    return found;
+}
 
+function mineDesignTokens(css, usedClasses, tokens) {
+    const found = tokens || collectTokens(css);
     const buckets = {};
     Array.from(found.entries())
         .sort((a, b) => tokenRank(a[0], usedClasses) - tokenRank(b[0], usedClasses))
@@ -476,6 +491,182 @@ function mineBreakpoints(css) {
     return Array.from(bps).slice(0, 12);
 }
 
+// ============================================================
+// COMPONENT RULE RESOLVER
+// The old extractComponents/extractLayout/extractColors all called
+// $(el).css(), which on a class-based site returns '' for every property
+// (cheerio parses, it does not compute). Result: 17 lines of
+// "button.x { radius:; pad:; bg:; }" and a spec that says "not detectable".
+// We can do better without a browser: parse the stylesheet into rules, keep
+// the ones whose class is actually present in the HTML, and resolve
+// var(--token) through the token map. That is a mini-cascade, and it recovers
+// the real per-component values Tailwind hides behind utility classes.
+// ============================================================
+// Prefix match, so margin-top / padding-left / border-bottom-color count too.
+const RULE_PROPS = /^(background|color|border|padding|margin|gap|row-gap|column-gap|box-shadow|font|line-height|letter-spacing|width|height|min-|max-|display|flex|grid|justify-|align-|place-|position|top|right|bottom|left|inset|z-index|opacity|backdrop-filter|filter|transition|transform|cursor|text-|overflow|outline|ring|shadow)/i;
+// Scanning is cheap (regex over a string); only the OUTPUT needs a budget.
+// Capping the scan was a real bug: on tailwindcss.com the first 900 rules are
+// all .prose plugin noise, so every utility class sat beyond the cut.
+const CSS_RULE_CAP = 20000;
+const COMPONENT_OUT_CAP = 3000;
+const MAX_SELECTOR_LEN = 44;     // .prose :where(:not(.not-prose *)) is noise, .btn is signal
+
+function stripCssComments(css) {
+    return css.replace(/\/\*[\s\S]*?\*\//g, ' ');
+}
+
+function parseCssRules(css) {
+    const clean = stripCssComments(css);
+    // [selector, declarations] for every top-level rule. Nested blocks
+    // (@media bodies) are matched by this same regex one level in, which is
+    // what we want: a rule inside @media(min-width:768px) still tells us the
+    // value, and the selector text keeps the class we need to match on.
+    const blocks = [];
+    const re = /([^{}]+)\{([^{}]*)\}/g;
+    let m;
+    while ((m = re.exec(clean)) && blocks.length < CSS_RULE_CAP) {
+        const sel = m[1].trim();
+        const body = m[2].trim();
+        if (!sel || !body || sel.startsWith('@') && !sel.includes(':')) continue;
+        if (/^@/.test(sel)) continue;              // at-rule wrappers carry no decls
+        blocks.push([sel, body]);
+    }
+    return blocks;
+}
+
+function resolveVars(value, tokens, depth) {
+    depth = depth || 0;
+    if (depth > 3) return value;
+    let out = value;
+    if (/var\(/.test(out)) {
+        out = out.replace(/var\(\s*(--[\w-]+)\s*(?:,\s*([^()]*?))?\s*\)/g, (whole, name, fallback) => {
+            const hit = tokens.get(name);
+            const next = hit !== undefined ? hit : (fallback || '').trim();
+            // Unresolvable: return the ORIGINAL MATCH, never the whole string.
+            // Returning the full value here re-inserted the entire expression in
+            // place of one var(), so each recursion pass grew the string and the
+            // loop never converged (observed: request hang > 45s).
+            return next || whole;
+        });
+    }
+    // Tailwind spacing is calc(var(--spacing) * 3). Once the var is gone the
+    // calc is pure arithmetic, and a spec that says "calc(0.25rem*3)" makes the
+    // reader do our work — so evaluate the simple cases and pass the rest on.
+    if (/calc\(/.test(out)) out = evalCalc(out);
+    if (out !== value) return resolveVars(out, tokens, depth + 1);
+    return out;
+}
+
+// Only handles + - * / between absolute lengths (px/rem/em) and plain numbers.
+// Anything it can't prove safe (mixed units, env(), nested funcs) is returned
+// untouched rather than guessed at — a wrong number is worse than none.
+function evalCalc(expr) {
+    return expr.replace(/calc\(([^()]*)\)/g, (whole, inner) => {
+        // Normalise operators to spaced tokens: Tailwind emits calc(0.25rem*3)
+        // with no whitespace, which a naive split would read as one term.
+        const terms = inner
+            .replace(/\s+/g, ' ')
+            .replace(/([+\-*/])/g, ' $1 ')
+            .trim()
+            .split(/\s+/)
+            .filter(Boolean);
+        if (terms.length < 3 || terms.length % 2 === 0) return whole;
+        const NUM = /^(-?\d*\.?\d+)(px|rem|em|%)$/i;
+        const unitOf = (t) => { const m = t.match(NUM); return m ? m[2].toLowerCase() : null; };
+        const valOf = (t) => { const m = t.match(NUM); if (m) return parseFloat(m[1]); return /^-?\d*\.?\d+$/.test(t) ? parseFloat(t) : null; };
+
+        let acc = valOf(terms[0]);
+        const accUnit = unitOf(terms[0]);
+        if (acc === null || accUnit === '%') return whole;
+        for (let i = 1; i < terms.length; i += 2) {
+            const op = terms[i], rhs = terms[i + 1];
+            const rv = valOf(rhs), ru = unitOf(rhs);
+            if (rv === null) return whole;
+            if (op === '*' || op === '/') {
+                if (ru) return whole;                       // length * length is meaningless
+                acc = op === '*' ? acc * rv : (rv === 0 ? NaN : acc / rv);
+            } else if (op === '+' || op === '-') {
+                if (ru && ru !== accUnit) return whole;     // cannot mix px and rem
+                if (!ru && accUnit) return whole;           // bare number +/- length
+                acc = op === '+' ? acc + rv : acc - rv;
+            } else return whole;
+        }
+        if (!isFinite(acc)) return whole;
+        const rounded = Math.round(acc * 1000) / 1000;
+        return rounded + (accUnit || '');
+    });
+}
+
+// Which classes does a selector need for us to care about it?
+function selectorClasses(sel) {
+    const out = [];
+    const re = /\.(-?[_a-zA-Z][\w-]*)/g;
+    let m;
+    while ((m = re.exec(sel))) out.push(m[1]);
+    return out;
+}
+
+function mineComponentStyles(css, usedClasses, tokens) {
+    if (!css) return [];
+    const blocks = parseCssRules(css);
+    const candidates = [];
+    for (const [sel, body] of blocks) {
+        const classes = selectorClasses(sel);
+        // Skip pure-element or unknown-class rules: on a Tailwind build the
+        // classes in the selector are exactly the utilities the page uses.
+        if (!classes.length) continue;
+        if (sel.length > MAX_SELECTOR_LEN) continue;
+        const used = classes.some(c => usedClasses.has(c));
+        if (!used) continue;
+        const decls = [];
+        for (const part of body.split(';')) {
+            const idx = part.indexOf(':');
+            if (idx < 0) continue;
+            const prop = part.slice(0, idx).trim();
+            let val = part.slice(idx + 1).trim();
+            if (!prop || !val || !RULE_PROPS.test(prop)) continue;
+            if (/^var\(--[\w-]+\)$/.test(val) && !tokens.has(val.slice(4, -1))) continue;
+            val = resolveVars(val, tokens);
+            if (!val || val === 'initial' || val === 'inherit') continue;
+            // --tw-* / --el-* etc. are internal plumbing we deliberately do not
+            // mine, so an unresolved reference is pure noise to the model.
+            if (/var\(--(tw|el|ant|radix|sh|chakra|mui)-/.test(val)) continue;
+            decls.push(prop + ':' + val.replace(/\s+/g, ' ').slice(0, 60));
+        }
+        if (!decls.length) continue;
+        candidates.push({
+            sel, decls,
+            // Prefer rules that carry many real values, then simple selectors.
+            score: decls.length * 2 + (classes.length ? 1 : 0) - Math.floor(sel.length / 20)
+        });
+    }
+
+    candidates.sort((a, b) => b.score - a.score);
+    const seen = new Set();
+    const familyCount = new Map();
+    const picked = [];
+    let chars = 0;
+    for (const c of candidates) {
+        // Numeric utility families (.size-2/.size-3/.size-4, .mt-1/.mt-2) are
+        // one pattern, not eight facts. Two examples teach the model more than
+        // eight lines of near-duplicates that crowd out real components.
+        const fam = c.sel.replace(/\d+/g, '#');
+        const n = familyCount.get(fam) || 0;
+        if (n >= 2) continue;
+        familyCount.set(fam, n + 1);
+        // The same utility appears in several @media blocks; one line is enough
+        // unless it adds a declaration we have not already shown.
+        const key = c.decls.map(d => d.split(':')[0]).sort().join(',');
+        if (seen.has(key) && picked.length > 12) continue;
+        seen.add(key);
+        const line = c.sel.replace(/\s*,\s*/g, ', ') + ' { ' + c.decls.join('; ') + ' }';
+        if (chars + line.length > COMPONENT_OUT_CAP) break;
+        chars += line.length;
+        picked.push(line);
+    }
+    return picked;
+}
+
 async function buildAnalysisPrompt(html, $, url, domain) {
     const styles = extractStyles($);
     const inlineStyles = extractInlineStyles($);
@@ -485,10 +676,15 @@ async function buildAnalysisPrompt(html, $, url, domain) {
     const components = extractComponents($);
     const responsive = extractResponsive($);
     const css = await fetchCssFiles($, url);
-    const designTokens = mineDesignTokens(css, collectUsedClasses($));
+    const usedClasses = collectUsedClasses($);
+    const tokens = collectTokens(css);
+    const designTokens = mineDesignTokens(css, usedClasses, tokens);
     const cssFonts = mineFonts(css);
     const cssBreakpoints = mineBreakpoints(css);
     const cleanHtml = stripStyles(html).substring(0, 2500);
+    // Real per-component values, recovered from the stylesheet instead of the
+    // (always-empty) computed-style calls.
+    const componentRules = mineComponentStyles(css, usedClasses, tokens);
 
     return {
         domain,
@@ -502,7 +698,8 @@ async function buildAnalysisPrompt(html, $, url, domain) {
             responsiveBreakpoints: responsive,
             designTokens: designTokens,
             cssFonts: cssFonts,
-            cssBreakpoints: cssBreakpoints
+            cssBreakpoints: cssBreakpoints,
+            componentRules: componentRules
         },
         rawHtml: cleanHtml,
         cssStyles: styles.substring(0, 3500)
@@ -603,44 +800,65 @@ Give a numbered, actionable checklist:
 3. etc.
 
 HARD LIMIT: 500 words. Be maximally dense — compact lines, tables over prose, no filler, no explanations. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions. If something is not detectable, write 'not detectable' in 2 words — never guess at length. A developer copying this into Cursor or v0 must be able to rebuild the UI accurately.`;
-const USER_PROMPT = (data) => `Analyze this website and produce a detailed UI specification.
+// Two independent sources for the same fact: compiled stylesheets give us
+// min/max-width values, inline <style> blocks give us raw @media text. Pull
+// the numbers out of both and de-duplicate.
+function mergeBreakpoints(fromCss, fromInline) {
+    const out = new Set();
+    (fromCss || []).forEach(b => out.add(String(b)));
+    (fromInline || []).forEach(line => {
+        const re = /(\d+(?:\.\d+)?)(px|rem)/g;
+        let m;
+        while ((m = re.exec(String(line)))) out.add(m[1] + m[2]);
+    });
+    return Array.from(out).slice(0, 14).join(', ');
+}
+
+const USER_PROMPT = (data) => {
+    // Build the data block from ONLY the sections that have content. Five
+    // literal "Not detected" lines used to sit in front of the model like
+    // evidence that the site was unreadable, and it dutifully wrote
+    // "not detectable" into the spec. Absence of a section is neutral;
+    // an explicit "Not detected" is a conclusion.
+    const e = data.extracted;
+    const sections = [];
+    const add = (title, body, note) => {
+        const text = typeof body === 'string' ? body.trim() : (body || []).join('\n').trim();
+        if (!text) return;
+        sections.push(`### ${title}${note ? ' — ' + note : ''}:\n${text}`);
+    };
+
+    add('Fonts (from stylesheets)', e.cssFonts.join(', '));
+    add('Font sizes / weights / line-heights', e.fontSizes.slice(0, 12).join(', '));
+    add('Colors (inline styles)', e.colors.join(', '));
+    add('Layout patterns (inline styles)', e.layoutPatterns);
+    add('Component styles (inline styles)', e.componentPatterns);
+    // Inline <style> @media queries are a separate source: sites that ship no
+    // external stylesheet still expose them, so merge rather than choose.
+    add('Breakpoints', mergeBreakpoints(e.cssBreakpoints, e.responsiveBreakpoints));
+    add('Design Tokens — parsed from the site\'s real stylesheets (AUTHORITATIVE, use these exact values)', e.designTokens);
+    add('Component rules — resolved from the site\'s CSS with var()/calc() evaluated (AUTHORITATIVE, use these exact values)', e.componentRules);
+    add('CSS (inline <style>, excerpt)', data.cssStyles);
+
+    return `Analyze this website and produce a detailed UI specification.
 
 Website URL: ${data.url}
 Domain: ${data.domain}
 
 ## Extracted Design Data
+${sections.join('\n\n')}
 
-### Typography:
-Fonts: ${data.extracted.fonts.join(', ') || 'Not detected'}
-Font Sizes: ${data.extracted.fontSizes.slice(0, 10).join(', ') || 'Not detected'}
-
-### Colors Found: ${data.extracted.colors.join(', ') || 'Not detected'}
-
-### Layout Patterns:
-${data.extracted.layoutPatterns.join('\n') || 'Not detected'}
-
-### Component Patterns:
-${data.extracted.componentPatterns.join('\n') || 'Not detected'}
-
-### Responsive Breakpoints:
-${data.extracted.responsiveBreakpoints.join('\n') || 'Not detected'}
-
-### Raw HTML Structure (first 3000 chars):
+## Raw HTML Structure (excerpt)
 ${data.rawHtml}
 
-### Design Tokens — parsed from the site's real stylesheets (AUTHORITATIVE, use these exact values):
-${(data.extracted.designTokens || []).join('\n') || 'None found'}
-
-### Fonts declared in CSS:
-${(data.extracted.cssFonts || []).join(', ') || 'Not detected'}
-
-### Breakpoints in CSS:
-${(data.extracted.cssBreakpoints || []).join(', ') || 'Not detected'}
-
-### CSS Styles (first 5000 chars):
-${data.cssStyles}
-
-Produce the specification now. Hard cap: 500 words, maximally dense, tables over prose, state each value once.`;
+## How to read this data
+Sections marked AUTHORITATIVE were parsed from the site's own compiled
+stylesheets and are exact. Anything not listed was genuinely absent from the
+page source — do NOT write "not detectable"; describe what IS present and
+infer conventional values only where a component clearly needs one.
+Produce the specification now. Hard cap: 500 words, maximally dense, tables
+over prose, state each value once.`;
+};
 
 // ============================================================
 // MAIN HANDLER
