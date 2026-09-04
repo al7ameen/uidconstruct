@@ -153,6 +153,24 @@
                             </span>
                         </div>
 
+                        <!-- BUILD PROMPT CARD — surfaced separately so users can copy
+                             the imperative instruction to paste into v0/Cursor, not the
+                             full markdown spec (which is the design source). Hidden until
+                             we have a real build-prompt from the model. -->
+                        <div class="build-prompt-card" id="buildPromptCard" hidden>
+                            <div class="build-prompt-head">
+                                <span class="build-prompt-label">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                                    Build prompt
+                                </span>
+                                <button class="copy-prompt-btn" id="copyPromptBtn">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                                    Copy
+                                </button>
+                            </div>
+                            <p id="buildPromptText"></p>
+                        </div>
+
                         <!-- RESULT PANEL -->
                         <div class="result-panel" id="resultPanel" role="status" aria-live="polite">
                             <div class="panel-header">

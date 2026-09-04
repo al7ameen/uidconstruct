@@ -1433,3 +1433,62 @@ main.legal { padding: 140px 0 80px; }
     padding: 0.1em 0.4em;
 }
 .legal-back { margin-top: var(--space-8); }
+
+/* ============================================================
+   BUILD-PROMPT CARD
+   A short imperative instruction that users paste directly into
+   v0/Cursor/Bolt/Lovable — separate from the full spec which
+   is the design source document.
+   ============================================================ */
+.build-prompt-card {
+    background: linear-gradient(135deg, var(--surface) 0%, var(--bg-alt) 100%);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-lg);
+    padding: 14px 16px 16px;
+    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.build-prompt-card[hidden] { display: none; }
+.build-prompt-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+}
+.build-prompt-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-muted);
+}
+.build-prompt-card p {
+    font-size: clamp(13.5px, 1.1vw, 15px);
+    font-family: var(--font-sans);
+    line-height: 1.55;
+    color: var(--text);
+    margin: 0;
+}
+.copy-prompt-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--link-text);
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease), border-color var(--duration-fast) var(--ease);
+}
+.copy-prompt-btn:hover { background: var(--accent-subtle); border-color: var(--link-text); }
+.copy-prompt-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }

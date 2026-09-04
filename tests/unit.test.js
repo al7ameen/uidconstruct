@@ -221,6 +221,48 @@ t('escapes attribute-breaking quotes in text', () =>
     assert.ok(/&quot;|&#39;/.test(FE.escapeHtml('a"b\'c')), 'quotes not escaped'));
 t('empty input yields empty output', () => assert.strictEqual(FE.renderMarkdown(''), ''));
 
+section('CSS custom properties resolve');
+// I have now twice written var(--font-body), which does not exist in this
+// stylesheet (the token is --font-sans). Both times it failed silently: the
+// declaration is dropped and the element inherits the browser default font.
+// Nothing in a build step or a visual diff catches it on a phone. So: every
+// var(--x) reference must have a matching definition.
+const cssText = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+const defined = new Set((cssText.match(/--[a-zA-Z][\w-]*(?=\s*:)/g) || []));
+const referenced = new Set((cssText.match(/var\((--[a-zA-Z][\w-]*)/g) || []).map(x => x.slice(4)));
+t('every var(--x) used in style.css is defined somewhere', () => {
+    const missing = [...referenced].filter(v => !defined.has(v));
+    assert.strictEqual(missing.length, 0, 'undefined custom properties: ' + missing.join(', '));
+});
+t('the sanity check itself works (font-body is NOT a token, font-sans is)', () => {
+    assert.ok(defined.has('--font-sans'), '--font-sans should be defined');
+    assert.ok(!defined.has('--font-body'), '--font-body must not be reintroduced');
+});
+
+section('prompt <-> extractor agreement (cross-file invariant)');
+// The system prompt tells the model to emit a BUILD PROMPT block; the frontend
+// regex looks for it. These live in different files, so they drift: the format
+// template once said "start with # UI Specification" while the instruction
+// below it said "write BUILD PROMPT first", and the model would have obeyed the
+// template, leaving the extractor finding nothing and the card permanently
+// hidden. Assert the two ends of the contract still line up.
+const BP = slice(appSrc, 'function extractBuildPrompt', 'function renderMarkdown(src) {', 'extractBuildPrompt');
+const sysPrompt = apiSrc.slice(apiSrc.indexOf('const SYSTEM_PROMPT'), apiSrc.indexOf('const USER_PROMPT'));
+t('the FORMAT TEMPLATE (not just the prose) puts BUILD PROMPT first', () => {
+    const after = sysPrompt.slice(sysPrompt.indexOf('FORMAT YOUR RESPONSE EXACTLY LIKE THIS:'));
+    const firstLine = after.split('\n').map(l => l.trim()).filter(Boolean)[1]; // [0] is the marker itself
+    assert.strictEqual(firstLine, 'BUILD PROMPT',
+        'template must open with BUILD PROMPT, got: ' + JSON.stringify(firstLine));
+});
+t('a spec shaped exactly like the template is parsed by the frontend', () => {
+    const shaped = 'BUILD PROMPT\nBuild a dark-only Tailwind docs site: gray-950 bg, sky-400 accents, Inter + IBM Plex Mono, 4px spacing scale.\n\n# UI Specification: tailwindcss.com\n\n## 1. Design Tokens\n| a | b |';
+    const got = BP.extractBuildPrompt(shaped);
+    assert.ok(/gray-950/.test(got) && /sky-400/.test(got), 'build prompt not extracted: ' + JSON.stringify(got));
+    assert.ok(!got.includes('UI Specification'), 'extraction ran past the spec heading');
+});
+t('extractor returns empty (not garbage) when the model omits the block', () =>
+    assert.strictEqual(BP.extractBuildPrompt('# UI Specification: x\n## 1. Design Tokens'), ''));
+
 section('bare-host input (the "linear.app" affordance)');
 const BE = slice(apiSrc, 'function isPrivateHost', '// sanitizeUrl only checks', 'sanitizeUrl,ensureScheme');
 const FEURL = slice(appSrc, 'const URL_PATTERN', 'function extractDomain', 'normalizeURL,validateURL');

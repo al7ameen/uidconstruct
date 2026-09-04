@@ -721,6 +721,9 @@ const SYSTEM_PROMPT = `You are a senior UI/UX engineer and design system expert.
 
 FORMAT YOUR RESPONSE EXACTLY LIKE THIS:
 
+BUILD PROMPT
+<one imperative instruction, under 40 words, that the user pastes into v0 / Cursor / Bolt / Lovable to start the build>
+
 # UI Specification: [domain]
 
 ## 1. Design Tokens
@@ -810,7 +813,16 @@ Give a numbered, actionable checklist:
 2. [Second thing]
 3. etc.
 
-HARD LIMIT: 500 words. Be maximally dense — compact lines, tables over prose, no filler, no explanations. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions.
+HARD LIMIT: 500 words total, including the BUILD PROMPT line.
+
+The BUILD PROMPT is the product. A user copies it into an AI editor and gets a
+rebuild; the spec underneath is the evidence it works from. Write it as a single
+imperative instruction naming the domain, what the site IS, and the signals that
+define it (dark/light, the primary colours, the typeface, the layout pattern).
+Never write "Build a site like X" with no specifics — that is what the user
+already knows.
+
+Be maximally dense — compact lines, tables over prose, no filler. Include every distinct hex code, px value and font size found, but state each once. Priority order: design tokens > layout > components > interactions.
 DO NOT write "not detectable", "not found", "unknown", or any other placeholder for data that is missing. If a section has no data, either omit it or fill it with what the evidence DOES support — a reader copying this into Cursor gets nothing from a placeholder, and a page full of them makes a readable site look unreadable. Never invent values. A developer copying this into Cursor or v0 must be able to rebuild the UI accurately.`;
 // Two independent sources for the same fact: compiled stylesheets give us
 // min/max-width values, inline <style> blocks give us raw @media text. Pull

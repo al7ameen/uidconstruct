@@ -332,9 +332,18 @@
 
     function showResult(promptText, timings) {
         lastSpecText = promptText;
+        lastBuildPrompt = extractBuildPrompt(promptText);
+        if (buildPromptCard) {
+            if (lastBuildPrompt) {
+                buildPromptText.textContent = lastBuildPrompt;
+                buildPromptCard.hidden = false;
+            } else {
+                buildPromptCard.hidden = true;
+            }
+        }
         // If it does not look like markdown at all, keep the plain-text path so
         // a terse one-line answer is never mangled by the renderer.
-        if (/^\s*#\s|\n\s*#{1,6}\s/.test(promptText)) {
+        if (/^\s*#\s|\n\s*#{1,6}\s|BUILD PROMPT/i.test(promptText)) {
             promptBox.innerHTML = renderMarkdown(promptText);
             promptBox.classList.add('is-rendered');
         } else {
@@ -358,6 +367,8 @@
 
     function hideResult() {
         lastSpecText = '';
+        lastBuildPrompt = '';
+        if (buildPromptCard) buildPromptCard.hidden = true;
         resultPanel.classList.remove('visible');
         resultLabel.textContent = IDLE_LABEL;
         resultStatus.textContent = 'Ready';
@@ -372,6 +383,7 @@
     // AI editor that wants markdown, not HTML.
     // ============================================================
     let lastSpecText = '';
+    let lastBuildPrompt = '';
 
     function escapeHtml(str) {
         return String(str)
@@ -384,6 +396,22 @@
             .replace(/`([^`]+)`/g, '<code>$1</code>')
             .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
             .replace(/(^|[\s(])\*([^*\s][^*]*)\*/g, '$1<em>$2</em>');
+    }
+
+    // First line of the spec is a single-imperative instruction to an AI
+    // editor. Pull it out so it can sit above the spec with its own copy
+    // button — the user pastes the prompt to start the build, then references
+    // the spec below as their design source.
+    function extractBuildPrompt(spec) {
+        if (!spec) return '';
+        // The model is told to write "BUILD PROMPT" first. If it doesn't follow
+        // the convention we return nothing and the prompt box hides, so a
+        // missing header is not a 500 to the user.
+        const m = String(spec).match(/BUILD PROMPT\s*\n([\s\S]*?)(?=\n#{1,6}\s|$)/i);
+        if (!m) return '';
+        let line = m[1].trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
+        if (line.length > 600) line = line.slice(0, 600).replace(/\s+\S*$/, '') + '…';
+        return line;
     }
 
     function renderMarkdown(src) {
@@ -536,6 +564,10 @@
 
     urlInput.addEventListener('input', () => {
         if (errorEl.textContent) clearError();
+    });
+
+    if (copyPromptBtn) copyPromptBtn.addEventListener('click', () => {
+        if (lastBuildPrompt) copyPrompt(lastBuildPrompt);
     });
 
     copyBtn.addEventListener('click', () => {
