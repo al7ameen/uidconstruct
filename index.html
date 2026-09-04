@@ -124,11 +124,22 @@
                                     <select id="byokProvider">
                                         <option value="openai">OpenAI</option>
                                         <option value="anthropic">Anthropic</option>
+                                        <option value="custom">Custom URL</option>
                                     </select>
                                 </div>
                                 <div class="byok-field">
                                     <label for="byokModel">Model (required)</label>
                                     <input type="text" id="byokModel" placeholder="gpt-4o-mini" autocomplete="off" spellcheck="false" />
+                                </div>
+                                <p class="byok-hint" id="byokCustomHint" hidden>
+                                    Any OpenAI-compatible endpoint: OpenRouter, Groq, Together, DeepSeek, Azure, or a local gateway.
+                                    Paste the base URL (e.g. <code>https://openrouter.ai/api/v1</code>) — we append the rest.
+                                    Model IDs with a slash like <code>meta-llama/llama-3.3-70b-instruct</code> work.
+                                    HTTPS only, and we never follow redirects from it, so your key can't be forwarded to another host.
+                                </p>
+                                <div class="byok-field byok-field-wide" id="byokBaseUrlField" hidden>
+                                    <label for="byokBaseUrl">API base URL</label>
+                                    <input type="url" id="byokBaseUrl" placeholder="https://openrouter.ai/api/v1" autocomplete="off" spellcheck="false" inputmode="url" />
                                 </div>
                                 <div class="byok-field byok-field-wide">
                                     <label for="byokKey">API key</label>

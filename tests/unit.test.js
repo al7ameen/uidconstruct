@@ -27,6 +27,8 @@ const NET = require(path.join(ROOT, 'lib', 'net.js'));
 const MINE = require(path.join(ROOT, 'lib', 'mine.js'));
 const EXTRACT = require(path.join(ROOT, 'lib', 'extract.js'));
 const PROMPTS = require(path.join(ROOT, 'lib', 'prompts.js'));
+const AI = require(path.join(ROOT, 'lib', 'ai.js'));
+const CACHE = require(path.join(ROOT, 'lib', 'cache.js'));
 
 // Frontend is a browser IIFE with no module system, so it still has to be
 // sliced. Kept deliberately narrow: escapeHtml/renderMarkdown/inlineMd and the
@@ -461,5 +463,127 @@ t('outline is actually sent to the model', () => {
     assert.ok(/what this site IS/i.test(up), 'outline is sent but not labelled as the identity source');
 });
 
+(async () => {
+
+// ============================================================
+// Custom BYOK endpoint. lib/ai.js and lib/cache.js previously had ZERO
+// coverage, which is how a model-ID regex excluding '/' shipped: it silently
+// rejected every OpenRouter/Together model, and a null normalisation falls back
+// to the free tier, so the user saw a working result from the wrong engine.
+// ============================================================
+async function ta(name, fn) {
+    try { await fn(); pass++; console.log('  ok   ' + name); }
+    catch (e) { fail++; console.log('  FAIL ' + name + '\n         ' + String(e && e.message || e).split('\n')[0]); }
+}
+
+section('custom BYOK endpoint - URL resolution');
+t('base URL gets /chat/completions appended', () => {
+    const r = AI.resolveCustomTarget('https://openrouter.ai/api/v1');
+    assert.strictEqual(r.endpoint, 'https://openrouter.ai/api/v1/chat/completions');
+    assert.strictEqual(r.style, 'openai');
+});
+t('a full endpoint is NOT double-appended (most likely user error)', () => {
+    const r = AI.resolveCustomTarget('https://api.groq.com/openai/v1/chat/completions');
+    assert.strictEqual(r.endpoint, 'https://api.groq.com/openai/v1/chat/completions');
+});
+t('anthropic-shaped host uses /v1/messages', () => {
+    const r = AI.resolveCustomTarget('https://api.anthropic.com/v1');
+    assert.strictEqual(r.style, 'anthropic');
+    assert.ok(/\/v1\/messages$/.test(r.endpoint), r.endpoint);
+});
+t('http is refused: the request carries a secret key', () => {
+    assert.strictEqual(AI.resolveCustomTarget('http://openrouter.ai/api/v1'), null);
+});
+t('loopback / link-local metadata refused', () => {
+    assert.strictEqual(AI.resolveCustomTarget('https://127.0.0.1:8080/v1'), null);
+    assert.strictEqual(AI.resolveCustomTarget('https://169.254.169.254/latest/meta-data'), null);
+});
+t('embedded credentials refused', () => {
+    assert.strictEqual(AI.resolveCustomTarget('https://user:pass@evil.example/v1'), null);
+});
+
+section('custom BYOK endpoint - normalisation');
+const CKEY = 'sk-or-v1-' + 'a'.repeat(40);
+t('REGRESSION: model IDs containing / are accepted (OpenRouter/Together)', () => {
+    for (const m of ['openai/gpt-4o-mini', 'meta-llama/llama-3.3-70b-instruct', 'deepseek-ai/DeepSeek-V3']) {
+        const r = AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: m, key: CKEY });
+        assert.ok(r, 'rejected ' + m);
+        assert.strictEqual(r.model, m);
+    }
+});
+t('custom without a base URL is rejected, not silently downgraded', () => {
+    assert.strictEqual(AI.normalizeByok({ provider: 'custom', model: 'x/y', key: CKEY }), null);
+});
+t('model charset blocks URL/transport metacharacters', () => {
+    // The model goes only into the JSON body, never into a URL, so '.' and '/'
+    // are allowed by design (they are required for org/name model IDs).
+    // What must stay blocked are characters that could break out of the string
+    // context or smuggle a second request.
+    for (const m of ['a/b?x=1', 'a#frag', 'a b', 'a\rb', 'a\nb', 'a[', 'a%00', 'a@b', 'a&b', '']) {
+        assert.strictEqual(AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: m, key: CKEY }), null, 'allowed ' + JSON.stringify(m));
+    }
+});
+t('model longer than 80 chars is rejected (body-size guard)', () => {
+    assert.strictEqual(AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'a'.repeat(81), key: CKEY }), null);
+});
+t('unknown provider still rejected (allowlist intact)', () => {
+    assert.strictEqual(AI.normalizeByok({ provider: 'evil', baseUrl: 'https://openrouter.ai/api/v1', model: 'a', key: CKEY }), null);
+});
+
+section('custom BYOK endpoint - cache isolation');
+t('different custom hosts with the same model do NOT collide', () => {
+    const mk = (host) => AI.normalizeByok({ provider: 'custom', baseUrl: 'https://' + host + '/v1', model: 'llama-3', key: CKEY });
+    const a = CACHE.cacheKey('https://x.com', mk('openrouter.ai'));
+    const b = CACHE.cacheKey('https://x.com', mk('groq.com'));
+    assert.notStrictEqual(a, b, 'cache collision: ' + a);
+});
+t('the cache key never contains the API key', () => {
+    const k = CACHE.cacheKey('https://x.com', AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'a/b', key: CKEY }));
+    assert.ok(!k.includes(CKEY), 'key leaked into cache key');
+    assert.ok(!k.includes('sk-or'), 'key fragment in cache key');
+});
+
+section('custom BYOK endpoint - request policy (fetch capture)');
+async function capture(byok) {
+    const real = globalThis.fetch;
+    let cap = null;
+    globalThis.fetch = async (u, o) => {
+        cap = { u: String(u), o };
+        return { status: 200, ok: true, headers: { get: () => null }, json: async () => ({}), text: async () => '' };
+    };
+    try { await AI.callAI([{ role: 'user', content: 'hi' }], byok, { timeoutMs: 2000 }); }
+    catch (_) { /* response shape is irrelevant: we assert on the REQUEST */ }
+    finally { globalThis.fetch = real; }
+    assert.ok(cap, 'fetch was never called');
+    return cap;
+}
+await ta('custom endpoints are fetched with redirect:manual', async () => {
+    const cap = await capture(AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'a/b', key: CKEY }));
+    assert.strictEqual(cap.o.redirect, 'manual', 'redirect=' + cap.o.redirect);
+});
+await ta('built-in providers keep redirect:follow (no regression)', async () => {
+    const cap = await capture(AI.normalizeByok({ provider: 'openai', model: 'gpt-4o-mini', key: CKEY }));
+    assert.strictEqual(cap.o.redirect, 'follow');
+});
+await ta('the key travels in a header, never in the URL', async () => {
+    const cap = await capture(AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'a/b', key: CKEY }));
+    assert.ok(!cap.u.includes(CKEY), 'key in URL: ' + cap.u);
+    assert.strictEqual(cap.o.headers.Authorization, 'Bearer ' + CKEY);
+});
+await ta('a 307 from a custom endpoint is refused, not followed', async () => {
+    const real = globalThis.fetch;
+    let calls = 0;
+    globalThis.fetch = async () => { calls++; return { status: 307, ok: false, headers: { get: () => null }, text: async () => '' }; };
+    let err = null;
+    try { await AI.callAI([{ role: 'user', content: 'hi' }], AI.normalizeByok({ provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'a/b', key: CKEY }), { timeoutMs: 2000 }); }
+    catch (e) { err = e; }
+    finally { globalThis.fetch = real; }
+    assert.strictEqual(calls, 1, 'followed the redirect (' + calls + ' calls)');
+    assert.ok(err && /redirect/i.test(err.message), 'wrong error: ' + (err && err.message));
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
+console.log(`\n${pass} passed, ${fail} failed`);
+process.exit(fail ? 1 : 0);
+})();

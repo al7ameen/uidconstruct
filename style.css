@@ -1371,6 +1371,8 @@ button:hover { opacity: 0.85; }
     .byok-field-wide { grid-column: 1 / -1; }
 }
 .byok-field { display: flex; flex-direction: column; gap: 6px; }
+/* .byok-field sets display:flex, which outranks the UA [hidden] rule. */
+.byok-field[hidden] { display: none; }
 .byok-field label {
     font-size: 12px;
     font-weight: 600;
@@ -1405,6 +1407,22 @@ button:hover { opacity: 0.85; }
 .byok-field select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.byok-hint {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--text-muted);
+}
+.byok-hint[hidden] { display: none; }
+.byok-hint code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: var(--surface);
+    padding: 1px 5px;
+    border-radius: 4px;
 }
 
 .byok-remember {

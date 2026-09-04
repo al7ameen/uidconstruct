@@ -290,6 +290,96 @@ test('every white-alpha declaration has a dark-theme override', () => {
     assert.deepStrictEqual(offenders, [], 'white alphas without a dark override: ' + offenders.join(', '));
 });
 
+
+// ============================================================
+// Custom BYOK endpoint wiring. This panel previously had NO frontend coverage,
+// which is how a model-ID regex excluding '/' could ship: the server silently
+// fell back to the free tier, so the UI looked like it worked.
+// ============================================================
+function bootByok() {
+    const b = boot();
+    const els = b.els;
+    assert.ok(els.has('byokBaseUrl'), 'index.html is missing id="byokBaseUrl"');
+    assert.ok(els.has('byokBaseUrlField'), 'index.html is missing id="byokBaseUrlField"');
+    assert.ok(els.has('byokCustomHint'), 'index.html is missing id="byokCustomHint"');
+    return b;
+}
+function setByok(els, vals) {
+    Object.assign(els.get('byokProvider'), { value: vals.provider });
+    els.get('byokProvider')._fire('change');
+    if ('baseUrl' in vals) Object.assign(els.get('byokBaseUrl'), { value: vals.baseUrl });
+    if ('model' in vals) Object.assign(els.get('byokModel'), { value: vals.model });
+    if ('key' in vals) Object.assign(els.get('byokKey'), { value: vals.key });
+    els.get('byokBaseUrl')._fire('change');
+    els.get('byokModel')._fire('change');
+    els.get('byokKey')._fire('change');
+}
+
+test('custom fields are hidden on boot', () => {
+    const { els } = bootByok();
+    assert.strictEqual(els.get('byokBaseUrlField').hidden, true, 'base URL field visible for openai');
+    assert.strictEqual(els.get('byokCustomHint').hidden, true, 'hint visible for openai');
+});
+test('choosing Custom URL reveals the base-URL field and hint', () => {
+    const { els } = bootByok();
+    setByok(els, { provider: 'custom' });
+    assert.strictEqual(els.get('byokBaseUrlField').hidden, false, 'field stayed hidden');
+    assert.strictEqual(els.get('byokCustomHint').hidden, false, 'hint stayed hidden');
+});
+test('switching back to OpenAI re-hides them', () => {
+    const { els } = bootByok();
+    setByok(els, { provider: 'custom' });
+    setByok(els, { provider: 'openai' });
+    assert.strictEqual(els.get('byokBaseUrlField').hidden, true, 'field left visible after switching away');
+});
+test('.byok-field[hidden] CSS override exists (display:flex outranks UA [hidden])', () => {
+    assert.ok(/\.byok-field\[hidden\]\s*\{\s*display:\s*none/.test(CSS),
+        'missing .byok-field[hidden] rule: .byok-field sets display:flex, so hidden would be ignored');
+    assert.ok(/\.byok-hint\[hidden\]\s*\{\s*display:\s*none/.test(CSS), 'missing .byok-hint[hidden] rule');
+});
+
+test('custom provider without a URL does NOT silently fall back to free tier', async () => {
+    const bodies = [];
+    const b = boot({ fetch: (u, o) => { bodies.push(o && o.body); return Promise.resolve({ ok: true, json: () => Promise.resolve({ prompt: 'x', domain: 'd', signals: {} }) }); } });
+    setByok(b.els, { provider: 'custom', baseUrl: '', model: 'openai/gpt-4o-mini', key: 'sk-or-v1-' + 'a'.repeat(40) });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 50));
+    assert.strictEqual(bodies.length, 1, 'no request sent');
+    const payload = JSON.parse(bodies[0]);
+    // Half-filled custom form must be treated as "not using BYOK" explicitly,
+    // and must not send a baseUrl-less custom object the server rejects.
+    assert.ok(!payload.byok || payload.byok.provider !== 'custom',
+        'sent custom with empty baseUrl -> server normalises to null -> silent free tier');
+});
+test('a complete custom form sends baseUrl and a slashed model', async () => {
+    const bodies = [];
+    const b = boot({ fetch: (u, o) => { bodies.push(o && o.body); return Promise.resolve({ ok: true, json: () => Promise.resolve({ prompt: 'x', domain: 'd', signals: {} }) }); } });
+    setByok(b.els, { provider: 'custom', baseUrl: 'https://openrouter.ai/api/v1', model: 'meta-llama/llama-3.3-70b-instruct', key: 'sk-or-v1-' + 'a'.repeat(40) });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 50));
+    const payload = JSON.parse(bodies[0]);
+    assert.ok(payload.byok, 'byok missing entirely');
+    assert.strictEqual(payload.byok.provider, 'custom');
+    assert.strictEqual(payload.byok.baseUrl, 'https://openrouter.ai/api/v1');
+    assert.strictEqual(payload.byok.model, 'meta-llama/llama-3.3-70b-instruct');
+});
+test('remember round-trips baseUrl through localStorage', () => {
+    const b = bootByok();
+    b.els.get('byokRemember').checked = true;
+    setByok(b.els, { provider: 'custom', baseUrl: 'https://api.groq.com/openai/v1', model: 'llama-3.3-70b-versatile', key: 'gsk_' + 'b'.repeat(40) });
+    const saved = JSON.parse(b.sandbox.localStorage.getItem('uid-byok'));
+    assert.strictEqual(saved.baseUrl, 'https://api.groq.com/openai/v1', 'baseUrl not persisted');
+    assert.strictEqual(saved.provider, 'custom');
+});
+test('usage badge does not claim unlimited (BYOK is capped at 60/hr)', () => {
+    assert.ok(!/∞/.test(APP), 'the ∞ badge is still in app.js; api/deconstruct.js caps BYOK at 60/hr');
+});
+test('custom option is actually offered in the provider select', () => {
+    assert.ok(/<option value="custom"/.test(HTML), 'no custom option in #byokProvider');
+});
+
 (async () => {
     const unhandled = [];
     process.on('unhandledRejection', r => unhandled.push(String((r && r.message) || r)));

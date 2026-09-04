@@ -34,6 +34,9 @@
     const byokModel = document.getElementById('byokModel');
     const byokKey = document.getElementById('byokKey');
     const byokRemember = document.getElementById('byokRemember');
+    const byokBaseUrl = document.getElementById('byokBaseUrl');
+    const byokBaseUrlField = document.getElementById('byokBaseUrlField');
+    const byokCustomHint = document.getElementById('byokCustomHint');
     // The build-prompt card. These currently ALSO resolve via the browser's
     // named-access-on-window rule (id="buildPromptCard" -> window.buildPromptCard),
     // so the page works today either way. Declaring them explicitly means renaming
@@ -192,7 +195,7 @@
     // It is never logged and never stored server-side.
     // ============================================================
     const BYOK_STORE = 'uid-byok';
-    let byok = { provider: 'openai', model: '', key: '' };
+    let byok = { provider: 'openai', model: '', key: '', baseUrl: '' };
 
     function loadByok() {
         try {
@@ -200,7 +203,8 @@
             if (!raw) return;
             const saved = JSON.parse(raw);
             if (saved && typeof saved.key === 'string' && saved.key) {
-                byok = { provider: saved.provider || 'openai', model: saved.model || '', key: saved.key };
+                byok = { provider: saved.provider || 'openai', model: saved.model || '', key: saved.key, baseUrl: saved.baseUrl || '' };
+                if (byokBaseUrl) byokBaseUrl.value = byok.baseUrl;
                 if (byokKey) byokKey.value = byok.key;
                 if (byokModel) byokModel.value = byok.model;
                 if (byokProvider) byokProvider.value = byok.provider;
@@ -212,7 +216,7 @@
     function saveByok() {
         try {
             if (byokRemember && byokRemember.checked && byok.key) {
-                localStorage.setItem(BYOK_STORE, JSON.stringify(byok));
+                localStorage.setItem(BYOK_STORE, JSON.stringify({ provider: byok.provider, model: byok.model, key: byok.key, baseUrl: byok.baseUrl }));
             } else {
                 localStorage.removeItem(BYOK_STORE);
             }
@@ -223,6 +227,8 @@
         byok.key = (byokKey && byokKey.value || '').trim();
         byok.model = (byokModel && byokModel.value || '').trim();
         byok.provider = (byokProvider && byokProvider.value) || 'openai';
+        byok.baseUrl = (byokBaseUrl && byokBaseUrl.value || '').trim();
+        syncCustomFields();
         saveByok();
         updateByokBadge();
     }
@@ -230,15 +236,32 @@
     // A key without a model is a half-filled form. Treat it as "not using BYOK"
     // rather than sending a request the provider will reject.
     function byokReady() {
+        // A custom provider without a URL is an unusable half-form: it would
+        // normalise to null server-side and silently drop the user to the free
+        // tier, which reads as "my key was ignored".
+        if (byok.provider === 'custom' && !byok.baseUrl) return false;
         return Boolean(byok.key && byok.model);
+    }
+
+    // Show the base-URL field + hint only for 'custom'. Keeping this a function
+    // (rather than two inline style writes at the change site) means the initial
+    // render from localStorage and every later change follow one code path.
+    function syncCustomFields() {
+        const isCustom = byokProvider && byokProvider.value === 'custom';
+        if (byokBaseUrlField) byokBaseUrlField.hidden = !isCustom;
+        if (byokCustomHint) byokCustomHint.hidden = !isCustom;
+        if (byokModel) byokModel.placeholder = isCustom ? 'openai/gpt-4o-mini' : 'gpt-4o-mini';
     }
 
     function updateByokBadge() {
         const free = document.querySelector('.usage-stats .stat .num');
         if (!free) return;
         if (byokReady()) {
-            free.textContent = '∞';
-            free.parentElement.innerHTML = '<span class="num">∞</span> with your own key';
+            // Not "unlimited": api/deconstruct.js caps BYOK at 60/hr per IP.
+            // c5d6faa fixed this claim in the pricing copy; this badge was the
+            // same overclaim in a second place.
+            free.textContent = '60';
+            free.parentElement.innerHTML = '<span class="num">60</span> analyses / hour on your key';
         } else {
             free.textContent = '10';
             free.parentElement.innerHTML = '<span class="num">10</span> free analyses / hour';
@@ -254,12 +277,17 @@
             if (open && byokKey) byokKey.focus();
             track('BYOK opened');
         });
-        [byokProvider, byokModel, byokKey, byokRemember].forEach(el => {
+        [byokProvider, byokModel, byokKey, byokBaseUrl, byokRemember].forEach(el => {
             if (el) el.addEventListener('change', readByokFromForm);
         });
+        if (byokBaseUrl) byokBaseUrl.addEventListener('blur', readByokFromForm);
+        // Provider switch must re-render the conditional fields immediately,
+        // before the user has filled anything in.
+        if (byokProvider) byokProvider.addEventListener('change', syncCustomFields);
         if (byokKey) byokKey.addEventListener('blur', readByokFromForm);
     }
     loadByok();
+    syncCustomFields();
 
     // ============================================================
     // WAITLIST — posts to Formspree-free fallback: mailto is the honest
@@ -303,7 +331,7 @@
     async function deconstructWebsite(url) {
         const payload = JSON.stringify({
             url: url.trim(),
-            byok: byokReady() ? { provider: byok.provider, model: byok.model, key: byok.key } : undefined
+            byok: byokReady() ? { provider: byok.provider, model: byok.model, key: byok.key, baseUrl: byok.baseUrl } : undefined
         });
         const attempt = () => fetch(API_ENDPOINT, {
             method: 'POST',
