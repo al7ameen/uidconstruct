@@ -16,28 +16,31 @@ const assert = require('assert');
 const cheerio = require('cheerio');
 
 const ROOT = path.join(__dirname, '..');
-const apiSrc = fs.readFileSync(path.join(ROOT, 'api', 'deconstruct.js'), 'utf8');
 const appSrc = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
 
-// Serverless modules can't be require()d and unit-tested (they run the handler
-// shape on load), so we slice the pure functions out of the real source and
-// eval them. That tests the shipped code, not a copy of it.
+// Backend: the analysis engine now lives in lib/ as real CommonJS modules, so
+// we require() it directly. (Before the split, api/deconstruct.js was one
+// 1086-line file with no exports, which forced this suite to locate functions
+// by string marker and eval() them — 17 brittle slices, and the reason three
+// bugs shipped through that file unnoticed.)
+const NET = require(path.join(ROOT, 'lib', 'net.js'));
+const MINE = require(path.join(ROOT, 'lib', 'mine.js'));
+const EXTRACT = require(path.join(ROOT, 'lib', 'extract.js'));
+const PROMPTS = require(path.join(ROOT, 'lib', 'prompts.js'));
+
+// Frontend is a browser IIFE with no module system, so it still has to be
+// sliced. Kept deliberately narrow: escapeHtml/renderMarkdown/inlineMd and the
+// URL helpers are pure and take/return strings.
 function slice(src, startMark, endMark, exports) {
     const a = src.indexOf(startMark), b = src.indexOf(endMark);
     assert.ok(a >= 0, 'missing start marker: ' + startMark);
     assert.ok(b > a, 'missing end marker: ' + endMark);
-    return new Function('cheerio', src.slice(a, b) + '\nreturn {' + exports + '};')(cheerio);
+    return new Function(src.slice(a, b) + '\nreturn {' + exports + '};')();
 }
-
-const API = slice(apiSrc, 'const INTERNAL_TOKEN', 'async function buildAnalysisPrompt',
-    'collectTokens,mineDesignTokens,mineComponentStyles,evalCalc,resolveVars,parseCssRules,collectUsedClasses,tokenCategory');
-
 const FE = slice(appSrc, 'function escapeHtml', '// ============================================================\n    // COPY TO CLIPBOARD',
     'renderMarkdown,escapeHtml,inlineMd');
-
-// ---- SSRF / safety: these must never regress ------------------------------
-const SEC = slice(apiSrc, 'function isPrivateHost', '// sanitizeUrl only checks',
-    'isPrivateHost,sanitizeUrl');
+const SEC = NET;
+const API = MINE;
 
 let pass = 0, fail = 0;
 function t(name, fn) {
@@ -45,6 +48,34 @@ function t(name, fn) {
     catch (e) { fail++; console.log('  FAIL ' + name + '\n         ' + e.message.split('\n')[0]); }
 }
 function section(s) { console.log('\n' + s); }
+
+section('module structure (post-refactor contract)');
+// api/deconstruct.js was 1086 lines with a single export (maxDuration), which
+// made the analysis engine untestable. It is now lib/*.js. These assertions
+// keep the split honest: if someone inlines a module back into the handler, or
+// drops an export, this fails loudly instead of silently reducing coverage.
+const LIB = ['net', 'rate', 'extract', 'css', 'mine', 'prompts', 'ai', 'pipeline'];
+t('every lib module loads and exports something', () => {
+    LIB.forEach(m => {
+        const mod = require(path.join(ROOT, 'lib', m + '.js'));
+        assert.ok(Object.keys(mod).length > 0, m + '.js exports nothing');
+    });
+});
+t('the endpoint still exports maxDuration (Vercel kills the fn without it)', () => {
+    const handler = require(path.join(ROOT, 'api', 'deconstruct.js'));
+    assert.strictEqual(handler.maxDuration, 60);
+    assert.strictEqual(typeof handler, 'function');
+});
+t('the handler is thin again (regression guard against re-inlining)', () => {
+    const h = fs.readFileSync(path.join(ROOT, 'api', 'deconstruct.js'), 'utf8');
+    assert.ok(h.split('\n').length < 400,
+        'api/deconstruct.js is ' + h.split('\n').length + ' lines; analysis code belongs in lib/');
+});
+t('SSRF surface is reachable from exactly one module', () => {
+    assert.strictEqual(typeof NET.sanitizeUrl, 'function');
+    assert.strictEqual(typeof NET.safeFetch, 'function');
+    assert.strictEqual(typeof NET.BlockedUrlError, 'function');
+});
 
 section('SSRF guard');
 t('blocks loopback + private + metadata', () => {
@@ -247,7 +278,8 @@ section('prompt <-> extractor agreement (cross-file invariant)');
 // template, leaving the extractor finding nothing and the card permanently
 // hidden. Assert the two ends of the contract still line up.
 const BP = slice(appSrc, 'function extractBuildPrompt', 'function renderMarkdown(src) {', 'extractBuildPrompt');
-const sysPrompt = apiSrc.slice(apiSrc.indexOf('const SYSTEM_PROMPT'), apiSrc.indexOf('const USER_PROMPT'));
+const promptsSrc = fs.readFileSync(path.join(ROOT, 'lib', 'prompts.js'), 'utf8');
+const sysPrompt = promptsSrc.slice(promptsSrc.indexOf('const SYSTEM_PROMPT'), promptsSrc.indexOf('const USER_PROMPT'));
 t('the FORMAT TEMPLATE (not just the prose) puts BUILD PROMPT first', () => {
     const after = sysPrompt.slice(sysPrompt.indexOf('FORMAT YOUR RESPONSE EXACTLY LIKE THIS:'));
     const firstLine = after.split('\n').map(l => l.trim()).filter(Boolean)[1]; // [0] is the marker itself
@@ -264,7 +296,7 @@ t('extractor returns empty (not garbage) when the model omits the block', () =>
     assert.strictEqual(BP.extractBuildPrompt('# UI Specification: x\n## 1. Design Tokens'), ''));
 
 section('bare-host input (the "linear.app" affordance)');
-const BE = slice(apiSrc, 'function isPrivateHost', '// sanitizeUrl only checks', 'sanitizeUrl,ensureScheme');
+const BE = NET;
 const FEURL = slice(appSrc, 'const URL_PATTERN', 'function extractDomain', 'normalizeURL,validateURL');
 t('frontend adds https to a bare host', () => {
     assert.strictEqual(FEURL.normalizeURL('linear.app'), 'https://linear.app');
@@ -321,12 +353,12 @@ t('--accent still drives backgrounds, borders and fills', () =>
 
 section('prompt consistency');
 t('SYSTEM_PROMPT no longer asks for "not detectable"', () => {
-    const sys = apiSrc.slice(apiSrc.indexOf('const SYSTEM_PROMPT'), apiSrc.indexOf('const USER_PROMPT'));
+    const sys = promptsSrc.slice(promptsSrc.indexOf('const SYSTEM_PROMPT'), promptsSrc.indexOf('const USER_PROMPT'));
     assert.ok(!/write 'not detectable'/.test(sys), 'system prompt still requests the placeholder');
     assert.ok(/DO NOT write "not detectable"/.test(sys), 'system prompt lacks the prohibition');
 });
 t('USER_PROMPT omits empty sections instead of printing Not detected', () => {
-    const up = apiSrc.slice(apiSrc.indexOf('const USER_PROMPT'), apiSrc.indexOf('// ============================================================\n// MAIN HANDLER'));
+    const up = promptsSrc.slice(promptsSrc.indexOf('const USER_PROMPT'));
     assert.ok(!/\|\| 'Not detected'/.test(up), 'still emits literal "Not detected"');
 });
 
