@@ -23,6 +23,8 @@ let aiDelay = 0;
 let aiModels = [];       // which model each attempt asked for
 let statusByModel = {};  // per-model status, to exercise the fallback chain
 let aiRetryAfter = '17'; // provider's Retry-After on a 429; null = header absent
+let aiTimeout = false;   // AI call aborts -> exercises the 504 copy
+let pageBodyTimeout = false; // page headers arrive, body stalls -> separate branch
 
 function installFetch() {
     global.fetch = async (url, opts) => {
@@ -33,6 +35,7 @@ function installFetch() {
             try { askedModel = JSON.parse(opts.body).model; } catch (_) {}
             aiModels.push(askedModel);
             if (aiDelay) await new Promise(r => setTimeout(r, aiDelay));
+            if (aiTimeout) { const e = new Error('This operation was aborted'); e.name = 'TimeoutError'; throw e; }
             const st = (askedModel in statusByModel) ? statusByModel[askedModel] : aiStatus;
             if (st === 401 || st === 403) {
                 return { ok: false, status: st, headers: { get: () => null }, text: async () => 'unauthorized' };
@@ -48,6 +51,12 @@ function installFetch() {
         }
         if (/\.css(\?|$)/.test(u)) { calls.css++; return { ok: true, status: 200, headers: { get: (k) => k === 'content-type' ? 'text/css' : null }, text: async () => ':root{--color-primary:#123456}' }; }
         calls.page++;
+        if (pageBodyTimeout) {
+            return {
+                ok: true, status: 200, headers: { get: () => 'text/html' },
+                text: async () => { const e = new Error('This operation was aborted'); e.name = 'TimeoutError'; throw e; }
+            };
+        }
         return { ok: true, status: 200, headers: { get: () => 'text/html' }, text: async () => PAGE };
     };
 }
@@ -283,6 +292,58 @@ function check(name, fn) {
     });
     aiStatus = 200;
     process.env.OPENAI_API_KEY = KEY;
+
+    // ---- 10. timeout ATTRIBUTION. Measured 2026-09-04: example.com analyzes in
+    // 17.3s on the free tier but exceeds 55s through BYOK, because the BYOK path
+    // omits reasoning_effort:'low' and runs a reasoning model at full effort. The
+    // old 504 told those users to "use a faster site" -- wrong diagnosis, sent
+    // them to fix the thing that was not broken. These tests lock the copy.
+    const postByok = (url, ip, byok) => {
+        const res = mockRes();
+        return handler({ method: 'POST', headers: { 'x-forwarded-for': ip }, body: { url, byok } }, res).then(() => res);
+    };
+
+    if (clear) clear();
+    aiTimeout = true;
+    const freeTO = await post('https://ai-timeout-free.example', '198.51.100.11');
+    const byokTO = await postByok('https://ai-timeout-byok.example', '198.51.100.12',
+        { provider: 'openai', model: 'o3-pro', key: 'sk-to-' + 'z'.repeat(36) });
+    aiTimeout = false;
+
+    check('AI timeout is a 504, not a 500', () => {
+        assert.strictEqual(freeTO.statusCode, 504, 'got ' + freeTO.statusCode + ': ' + JSON.stringify(freeTO.body));
+        assert.strictEqual(byokTO.statusCode, 504, 'got ' + byokTO.statusCode + ': ' + JSON.stringify(byokTO.body));
+    });
+    check('timeout copy no longer tells users to use a faster site', () => {
+        assert.ok(!/faster site/i.test(freeTO.body.error), freeTO.body.error);
+        assert.ok(!/faster site/i.test(byokTO.body.error), byokTO.body.error);
+    });
+    check('BYOK timeout names the model the user chose', () => {
+        assert.ok(/o3-pro/.test(byokTO.body.error), byokTO.body.error);
+    });
+    check('BYOK timeout suggests the real fix (a faster model), free tier does not', () => {
+        assert.ok(/faster model/i.test(byokTO.body.error), byokTO.body.error);
+        assert.ok(!/faster model/i.test(freeTO.body.error), 'free tier has no model to change: ' + freeTO.body.error);
+    });
+    check('free-tier timeout owns it as our AI, not the visitor\'s site', () => {
+        assert.ok(/our ai did not finish/i.test(freeTO.body.error), freeTO.body.error);
+    });
+    check('timeout message does not leak the API key', () => {
+        assert.ok(!/sk-to-/.test(byokTO.body.error), byokTO.body.error);
+    });
+
+    // 10b. the body-read stall: headers arrive, the body never does. This used to
+    // fall through to the AI branch and blame our model for the site's delay.
+    if (clear) clear();
+    pageBodyTimeout = true;
+    const bodyTO = await post('https://body-stall.example', '198.51.100.13');
+    pageBodyTimeout = false;
+
+    check('a stalled page body is a 504 about the SITE, not the model', () => {
+        assert.strictEqual(bodyTO.statusCode, 504, 'got ' + bodyTO.statusCode + ': ' + JSON.stringify(bodyTO.body));
+        assert.ok(/stalled partway/i.test(bodyTO.body.error), bodyTO.body.error);
+        assert.ok(!/our ai|your model/i.test(bodyTO.body.error), 'misattributed to AI: ' + bodyTO.body.error);
+    });
 
     let failed = 0;
     for (const [ok, name, msg] of results) {

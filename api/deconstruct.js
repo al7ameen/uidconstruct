@@ -140,7 +140,20 @@ module.exports = async (req, res) => {
             return res.status(401).json({ error: err.message });
         }
         if (err && err.name === 'TimeoutError') {
-            return res.status(504).json({ error: 'The website or AI took too long to respond (60s). Please try again or use a faster site.' });
+            // Reaching here means the MODEL ran out of time, not the site: the
+            // page fetch has its own deadline and maps to UpstreamError above.
+            // The old copy said "use a faster site", which sent users to fix the
+            // wrong thing -- measured 2026-09-04, example.com analyzes in 17.3s
+            // on the free tier but exceeds 55s through BYOK, because the BYOK
+            // path omits reasoning_effort:'low' (non-reasoning models hard-400
+            // on it) and so runs a reasoning model at full effort. The cause is
+            // the model the user chose, and only they can change it.
+            const secs = Math.round((Number(process.env.AI_DEADLINE_MS || 50000)) / 1000);
+            return res.status(504).json({
+                error: byok
+                    ? 'Your model (' + byok.model + ') did not answer within ' + secs + 's. Reasoning models often need longer than this -- try a faster model, or leave the key fields empty to use the free tier.'
+                    : 'Our AI did not finish within ' + secs + 's. The page may be very large, or the free queue is congested. Try again, or add your own API key for a dedicated run.'
+            });
         }
         console.error('Deconstruct error:', err && err.message, JSON.stringify(timings || {}));
         return res.status(500).json({ error: (err && err.message) || 'Internal server error.' });
@@ -188,7 +201,20 @@ async function analyse(cleanUrl, domain, byok, timings, deadlineAt) {
         throw new UpstreamError(502, friendly);
     }
 
-    const html = await pageRes.text();
+    // The body read is a SEPARATE await from the request that produced it:
+    // safeFetch's try/catch covers headers only. If the site stalls mid-body,
+    // the abort surfaces here -- and without its own handler it falls through
+    // to the AI-timeout branch below, blaming our model for the site's delay.
+    let html;
+    try {
+        html = await pageRes.text();
+    } catch (bodyErr) {
+        const bodyTimeout = bodyErr && (bodyErr.name === 'TimeoutError'
+            || /abort|timeout/i.test(String(bodyErr.message)));
+        throw new UpstreamError(504, bodyTimeout
+            ? 'The site started responding but stalled partway through. It may be throttling automated access. Try another URL.'
+            : 'Could not read that page. Check the URL and try again.');
+    }
     timings.fetchMs = Date.now() - timings.start;
     const $ = cheerio.load(html);
 
