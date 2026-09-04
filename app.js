@@ -34,6 +34,13 @@
     const byokModel = document.getElementById('byokModel');
     const byokKey = document.getElementById('byokKey');
     const byokRemember = document.getElementById('byokRemember');
+    // The build-prompt card. These currently ALSO resolve via the browser's
+    // named-access-on-window rule (id="buildPromptCard" -> window.buildPromptCard),
+    // so the page works today either way. Declaring them explicitly means renaming
+    // an id in the HTML fails loudly here instead of silently at call time.
+    const buildPromptCard = document.getElementById('buildPromptCard');
+    const buildPromptText = document.getElementById('buildPromptText');
+    const copyPromptBtn = document.getElementById('copyPromptBtn');
 
     // ============================================================
     // CONFIG — Backend endpoint
@@ -407,7 +414,10 @@
         // The model is told to write "BUILD PROMPT" first. If it doesn't follow
         // the convention we return nothing and the prompt box hides, so a
         // missing header is not a 500 to the user.
-        const m = String(spec).match(/BUILD PROMPT\s*\n([\s\S]*?)(?=\n#{1,6}\s|$)/i);
+        // Stop at the first BLANK LINE as well as at a heading. Without the blank-line
+        // stop, a model that writes the prompt then a bullet list (and no heading
+        // after it) makes the card swallow the entire rest of the spec.
+        const m = String(spec).match(/BUILD PROMPT\s*\n([\s\S]*?)(?=\n\s*\n|\n#{1,6}\s|$)/i);
         if (!m) return '';
         let line = m[1].trim().replace(/\n/g, ' ').replace(/\s+/g, ' ');
         if (line.length > 600) line = line.slice(0, 600).replace(/\s+\S*$/, '') + '…';
@@ -430,9 +440,9 @@
                 i += 2;
                 const rows = [];
                 while (i < lines.length && /^\s*\|/.test(lines[i])) { rows.push(cells(lines[i])); i++; }
-                out.push('<table><thead><tr>' + head.map(h => '<th>' + inlineMd(h) + '</th>').join('') +
+                out.push('<div class="md-table-wrap"><table><thead><tr>' + head.map(h => '<th>' + inlineMd(h) + '</th>').join('') +
                     '</tr></thead><tbody>' + rows.map(r => '<tr>' + r.map(c => '<td>' + inlineMd(c) + '</td>').join('') + '</tr>').join('') +
-                    '</tbody></table>');
+                    '</tbody></table></div>');
                 continue;
             }
 

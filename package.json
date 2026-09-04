@@ -5,7 +5,8 @@
   "main": "api/deconstruct.js",
   "scripts": {
     "start": "node api/deconstruct.js",
-    "dev": "node api/deconstruct.js"
+    "dev": "node api/deconstruct.js",
+    "test": "node tests/unit.test.js && node tests/frontend.test.js"
   },
   "keywords": [
     "ui",

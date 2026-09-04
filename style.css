@@ -591,6 +591,19 @@ button:hover { opacity: 0.85; }
     line-height: 1.6;
     max-height: 420px;
 }
+/* With overflow-y:auto, a visible overflow-x computes to auto, so a table wider
+   than the panel used to drag the ENTIRE spec sideways. Clip the box and let the
+   table scroll inside its own wrapper instead. */
+.result-panel .prompt-box.is-rendered {
+    overflow-x: hidden;
+}
+.result-panel .md-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: var(--space-3) 0;
+}
+.result-panel .md-table-wrap > table { margin: 0; }
+
 .result-panel .prompt-box.is-rendered > :first-child { margin-top: 0; }
 .result-panel .prompt-box.is-rendered > :last-child { margin-bottom: 0; }
 .result-panel .prompt-box.is-rendered h1,

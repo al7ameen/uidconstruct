@@ -172,12 +172,16 @@
                         </div>
 
                         <!-- RESULT PANEL -->
-                        <div class="result-panel" id="resultPanel" role="status" aria-live="polite">
-                            <div class="panel-header">
+                        <!-- The live region is the STATUS LINE only. Putting
+                             aria-live on the panel itself made screen readers
+                             announce the entire ~4000-char spec on every
+                             analysis; readers navigate the spec manually. -->
+                        <div class="result-panel" id="resultPanel">
+                            <div class="panel-header" role="status" aria-live="polite">
                                 <span class="panel-label" id="resultLabel">Real output · tailwindcss.com</span>
                                 <span class="panel-status" id="resultStatus">Ready</span>
                             </div>
-                            <div class="prompt-box is-rendered" id="promptContent"><h1>UI Specification: tailwindcss.com</h1>
+                            <div class="prompt-box is-rendered" id="promptContent" aria-live="off"><h1>UI Specification: tailwindcss.com</h1>
 <h2>1. Design Tokens</h2>
 <h3>Color Palette</h3>
 <table><thead><tr><th>Token</th><th>Hex</th><th>Use</th></tr></thead><tbody><tr><td>gray-950</td><td><code>#030712</code></td><td>Page bg, borders</td></tr><tr><td>sky-400</td><td><code>#00bcfe</code></td><td>Primary accent</td></tr><tr><td>indigo-600</td><td><code>#4f39f6</code></td><td>Gradient end</td></tr></tbody></table>
