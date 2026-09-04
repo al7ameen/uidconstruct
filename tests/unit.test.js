@@ -402,5 +402,64 @@ t("hideResult restores the honest idle label", () => {
     assert.ok(/const IDLE_LABEL/.test(appSrc), "IDLE_LABEL is not defined");
 });
 
+
+// ---- page outline: the fix for "the model never saw the page" ----------------
+const { extractPageOutline } = require(path.join(ROOT, 'lib/extract.js'));
+
+t('outline carries the visible content a head-slice never could', () => {
+    // Deliberately head-heavy: 3000 chars of meta/preload before <body>, so a
+    // naive substring(0,2500) would return nothing but head markup.
+    const filler = '<meta name="x" content="' + 'a'.repeat(60) + '">' +
+                   '<link rel="preload" href="/_next/static/media/f' + 'b'.repeat(60) + '.png" as="image">';
+    const html = '<html><head><title>Acme — Ship faster</title>' + filler.repeat(20) +
+        '</head><body><header><nav><a href="/pricing">Pricing</a><a href="/docs">Docs</a></nav></header>' +
+        '<h1>Ship faster with Acme</h1><h2>Trusted by teams</h2><h3>Realtime sync</h3>' +
+        '<button>Start free trial</button>' +
+        '<main><p>Acme turns your spreadsheet into an API in under five minutes, no code.</p></main>' +
+        '<footer><a href="/about">About</a><a href="/careers">Careers</a></footer></body></html>';
+    const out = extractPageOutline(cheerio.load(html));
+
+    assert.ok(/Ship faster with Acme/.test(out), 'missing H1 — the exact bug: model never saw page text');
+    assert.ok(/Pricing/.test(out) && /Docs/.test(out), 'missing nav labels');
+    assert.ok(/Start free trial/.test(out), 'missing button text');
+    assert.ok(/spreadsheet into an API/.test(out), 'missing body copy');
+    assert.ok(/About/.test(out) && /Careers/.test(out), 'missing footer links');
+    assert.ok(/Title \/ description/.test(out), 'missing title line');
+});
+
+t('outline stays inside its token budget', () => {
+    // A page with absurd repetition must not blow the prompt budget.
+    let body = '';
+    for (let i = 0; i < 400; i++) body += '<h2>Heading number ' + i + ' with a long tail of words to inflate it</h2>';
+    const html = '<html><head><title>T</title></head><body>' + body + '</body></html>';
+    const out = extractPageOutline(cheerio.load(html));
+    assert.ok(out.length <= 2800, 'outline grew to ' + out.length + ' chars, budget is ~2600');
+});
+
+t('outline degrades quietly on a contentless page', () => {
+    const out = extractPageOutline(cheerio.load('<html><head></head><body></body></html>'));
+    assert.strictEqual(typeof out, 'string');
+    assert.ok(out.length < 40, 'invented content for an empty page: ' + JSON.stringify(out.slice(0, 80)));
+});
+
+t('pipeline slices from <body>, not from char 0', () => {
+    // Regression guard for the root cause: substring(0,2500) on a real page is
+    // pure <head> markup, which is why specs described a theme instead of a page.
+    const src = fs.readFileSync(path.join(ROOT, 'lib/pipeline.js'), 'utf8');
+    assert.ok(/search\(\/<body/i.test(src), 'no body-first slice — reverted to head-prefix bug');
+    assert.ok(!/stripStyles\(html\)\.substring\(0,\s*2500\)/.test(src), 'still slicing the document from char 0');
+});
+
+t('outline is actually sent to the model', () => {
+    const { USER_PROMPT } = require(path.join(ROOT, 'lib/prompts.js'));
+    const data = { url: 'https://x.com', domain: 'x.com', rawHtml: '<body></body>', cssStyles: '',
+        extracted: { fonts: [], fontSizes: [], colors: [], layoutPatterns: [], componentPatterns: [],
+                     responsiveBreakpoints: [], designTokens: ['--a: #fff'], cssFonts: [], cssBreakpoints: [],
+                     componentRules: [], pageOutline: 'Headings in DOM order: H1 The real headline' } };
+    const up = USER_PROMPT(data);
+    assert.ok(/The real headline/.test(up), 'pageOutline not included in the user prompt');
+    assert.ok(/what this site IS/i.test(up), 'outline is sent but not labelled as the identity source');
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
