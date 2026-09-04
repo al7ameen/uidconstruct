@@ -12,20 +12,9 @@
       ]
     }
   ],
-  "rewrites": {
-    "beforeFiles": [
-      {
-        "source": "/lib/(.*)",
-        "destination": "/api/hidden"
-      },
-      {
-        "source": "/tests/(.*)",
-        "destination": "/api/hidden"
-      },
-      {
-        "source": "/node_modules/(.*)",
-        "destination": "/api/hidden"
-      }
-    ]
-  }
+  "redirects": [
+    { "source": "/lib/(.*)", "destination": "/api/hidden", "permanent": false },
+    { "source": "/tests/(.*)", "destination": "/api/hidden", "permanent": false },
+    { "source": "/node_modules/(.*)", "destination": "/api/hidden", "permanent": false }
+  ]
 }
