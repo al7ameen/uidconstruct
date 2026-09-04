@@ -288,5 +288,45 @@ t('USER_PROMPT omits empty sections instead of printing Not detected', () => {
     assert.ok(!/\|\| 'Not detected'/.test(up), 'still emits literal "Not detected"');
 });
 
+section("index.html integrity");
+// cheerio is a parser, not a validator: it silently repairs unbalanced markup,
+// so it once reported a broken page as "well-formed". This is a real stack-based
+// balance check that will actually fail on a stray </div>.
+const htmlSrc = fs.readFileSync(path.join(ROOT, "index.html"), "utf8");
+const VOID_TAGS = new Set(["br","hr","img","input","meta","link","source","path","rect","circle","line","polyline","polygon","use","area","base","col","embed","track","wbr"]);
+function unbalanced(src) {
+    const re = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)\b[^>]*?(\/?)>/g;
+    const stack = []; let m; const errs = [];
+    while ((m = re.exec(src))) {
+        const closing = m[1] === "/", name = m[2].toLowerCase(), selfClose = m[3] === "/";
+        if (VOID_TAGS.has(name) || selfClose) continue;
+        if (!closing) stack.push(name);
+        else { const top = stack.pop();
+            if (!top) errs.push("extra </" + name + ">");
+            else if (top !== name) errs.push("<" + top + "> closed by </" + name + ">"); }
+    }
+    stack.forEach(t => errs.push("never closed <" + t + ">"));
+    return errs;
+}
+t("index.html tags balance (no stray/missing close)", () => {
+    const errs = unbalanced(htmlSrc);
+    assert.deepStrictEqual(errs, [], errs.slice(0, 4).join(" | "));
+});
+t("resting panel shows a real spec, not a hand-written mock", () => {
+    assert.ok(!/Replicate the UI of linear\.app with/.test(htmlSrc), "fake hand-written sample is still on the page");
+    assert.ok(/id="resultLabel">Real output/.test(htmlSrc), "idle label does not say it is real output");
+    assert.ok(/class="prompt-box is-rendered" id="promptContent"/.test(htmlSrc), "sample is not marked is-rendered, so it renders as raw text");
+});
+t("no cherry-picked signal count claim", () => {
+    assert.ok(!/~120<\/span> design signals/.test(htmlSrc), "still claims ~120 design signals (that was the best case only)");
+    assert.ok(/design values per site/.test(htmlSrc), "missing the honest range label");
+});
+t("hideResult restores the honest idle label", () => {
+    const hide = appSrc.slice(appSrc.indexOf("function hideResult"), appSrc.indexOf("function hideResult") + 400);
+    assert.ok(!/= .Sample output./.test(hide), "hideResult overwrites the label with Sample output, undoing the honest caption");
+    assert.ok(/IDLE_LABEL/.test(hide), "hideResult does not restore IDLE_LABEL");
+    assert.ok(/const IDLE_LABEL/.test(appSrc), "IDLE_LABEL is not defined");
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -39,6 +39,9 @@
     // CONFIG — Backend endpoint
     // ============================================================
     const API_ENDPOINT = '/api/deconstruct';
+    // The panel's resting state is a genuine spec we generated, not a mock-up,
+    // so the caption has to survive the init call to hideResult().
+    const IDLE_LABEL = 'Real output · tailwindcss.com';
 
     // ============================================================
     // ANALYTICS — fire-and-forget custom events (Plausible)
@@ -356,7 +359,7 @@
     function hideResult() {
         lastSpecText = '';
         resultPanel.classList.remove('visible');
-        resultLabel.textContent = 'Sample output';
+        resultLabel.textContent = IDLE_LABEL;
         resultStatus.textContent = 'Ready';
     }
 
