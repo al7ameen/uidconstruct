@@ -5,8 +5,27 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        }
       ]
     }
-  ]
+  ],
+  "rewrites": {
+    "beforeFiles": [
+      {
+        "source": "/lib/(.*)",
+        "destination": "/api/hidden"
+      },
+      {
+        "source": "/tests/(.*)",
+        "destination": "/api/hidden"
+      },
+      {
+        "source": "/node_modules/(.*)",
+        "destination": "/api/hidden"
+      }
+    ]
+  }
 }
