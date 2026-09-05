@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Design token library — colours, fonts &amp; spacing from real sites | uidconstruct</title>
+<meta name="description" content="Extracted design tokens from 16 well-known websites: hex colours, type scales, radii and spacing, each as a copy-paste build prompt." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Design token library — colours, fonts &amp; spacing from real sites | uidconstruct" />
+<meta property="og:description" content="Extracted design tokens from 16 well-known websites: hex colours, type scales, radii and spacing, each as a copy-paste build prompt." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Design token library — colours, fonts &amp; spacing from real sites | uidconstruct" />
+<meta name="twitter:description" content="Extracted design tokens from 16 well-known websites: hex colours, type scales, radii and spacing, each as a copy-paste build prompt." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Design token library","url":"https://uidconstruct.vercel.app/specs/","description":"Design tokens extracted from public stylesheets.","hasPart":[{"@type":"TechArticle","name":"Apple design tokens","url":"https://uidconstruct.vercel.app/specs/apple"},{"@type":"TechArticle","name":"Clerk design tokens","url":"https://uidconstruct.vercel.app/specs/clerk"},{"@type":"TechArticle","name":"Cloudflare design tokens","url":"https://uidconstruct.vercel.app/specs/cloudflare"},{"@type":"TechArticle","name":"GitHub design tokens","url":"https://uidconstruct.vercel.app/specs/github"},{"@type":"TechArticle","name":"Neon design tokens","url":"https://uidconstruct.vercel.app/specs/neon"},{"@type":"TechArticle","name":"Notion design tokens","url":"https://uidconstruct.vercel.app/specs/notion"},{"@type":"TechArticle","name":"PlanetScale design tokens","url":"https://uidconstruct.vercel.app/specs/planetscale"},{"@type":"TechArticle","name":"Raycast design tokens","url":"https://uidconstruct.vercel.app/specs/raycast"},{"@type":"TechArticle","name":"Resend design tokens","url":"https://uidconstruct.vercel.app/specs/resend"},{"@type":"TechArticle","name":"Sanity design tokens","url":"https://uidconstruct.vercel.app/specs/sanity"},{"@type":"TechArticle","name":"shadcn/ui design tokens","url":"https://uidconstruct.vercel.app/specs/shadcn"},{"@type":"TechArticle","name":"Spotify design tokens","url":"https://uidconstruct.vercel.app/specs/spotify"},{"@type":"TechArticle","name":"Stripe design tokens","url":"https://uidconstruct.vercel.app/specs/stripe"},{"@type":"TechArticle","name":"Supabase design tokens","url":"https://uidconstruct.vercel.app/specs/supabase"},{"@type":"TechArticle","name":"Tailwind CSS design tokens","url":"https://uidconstruct.vercel.app/specs/tailwindcss"},{"@type":"TechArticle","name":"Vercel design tokens","url":"https://uidconstruct.vercel.app/specs/vercel"}]}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<section class="spec-hero container">
+  <h1>Design token library</h1>
+  <p class="spec-lede">Real colour, type and spacing values from 16 well-known sites, pulled straight out of their public stylesheets. Each page ends in a prompt you can paste into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>Extracted 2026-09-05</span> · <a href="/?url=https://example.com">analyse any URL instead</a></p>
+</section>
+<section class="spec-section container">
+  <ul class="spec-grid"><li class="spec-card">
+  <a href="/specs/apple">
+    <span class="spec-card-name">Apple</span>
+    <span class="spec-card-stat">9 colours · 0 type · 12 geometry</span>
+    <span class="spec-card-blurb">Neutral greyscale with product photography carrying the colour.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/clerk">
+    <span class="spec-card-name">Clerk</span>
+    <span class="spec-card-stat">20 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Purple-accented auth SaaS, heavy on card layouts.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/cloudflare">
+    <span class="spec-card-name">Cloudflare</span>
+    <span class="spec-card-stat">18 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Orange on dark, infrastructure marketing.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/github">
+    <span class="spec-card-name">GitHub</span>
+    <span class="spec-card-stat">24 colours · 0 type · 0 geometry</span>
+    <span class="spec-card-blurb">Primer design system, the most familiar dark UI in developer land.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/neon">
+    <span class="spec-card-name">Neon</span>
+    <span class="spec-card-stat">15 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Purple serverless Postgres identity.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/notion">
+    <span class="spec-card-name">Notion</span>
+    <span class="spec-card-stat">24 colours · 0 type · 12 geometry</span>
+    <span class="spec-card-blurb">Warm neutrals and a serif-leaning display voice.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/planetscale">
+    <span class="spec-card-name">PlanetScale</span>
+    <span class="spec-card-stat">22 colours · 0 type · 0 geometry</span>
+    <span class="spec-card-blurb">Dark database marketing with vivid accents.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/raycast">
+    <span class="spec-card-name">Raycast</span>
+    <span class="spec-card-stat">23 colours · 6 type · 12 geometry</span>
+    <span class="spec-card-blurb">Developer-tool dark UI with a red accent.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/resend">
+    <span class="spec-card-name">Resend</span>
+    <span class="spec-card-stat">19 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Minimal monochrome email-infrastructure branding.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/sanity">
+    <span class="spec-card-name">Sanity</span>
+    <span class="spec-card-stat">24 colours · 5 type · 12 geometry</span>
+    <span class="spec-card-blurb">Bold red accent, strong typographic hierarchy.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/shadcn">
+    <span class="spec-card-name">shadcn/ui</span>
+    <span class="spec-card-stat">20 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">The component library whose CSS variables most AI tools already emit.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/spotify">
+    <span class="spec-card-name">Spotify</span>
+    <span class="spec-card-stat">23 colours · 0 type · 12 geometry</span>
+    <span class="spec-card-blurb">Iconic green-on-black consumer dark theme.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/stripe">
+    <span class="spec-card-name">Stripe</span>
+    <span class="spec-card-stat">9 colours · 2 type · 12 geometry</span>
+    <span class="spec-card-blurb">The reference point for gradient-forward fintech marketing pages.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/supabase">
+    <span class="spec-card-name">Supabase</span>
+    <span class="spec-card-stat">4 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Open-source dark green identity, dense documentation UI.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/tailwindcss">
+    <span class="spec-card-name">Tailwind CSS</span>
+    <span class="spec-card-stat">20 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">The utility-first framework, so its token names are the ones every AI coding tool already understands.</span>
+  </a>
+</li>
+<li class="spec-card">
+  <a href="/specs/vercel">
+    <span class="spec-card-name">Vercel</span>
+    <span class="spec-card-stat">20 colours · 12 type · 12 geometry</span>
+    <span class="spec-card-blurb">Geist: near-black canvas, tight greyscale ramp, restrained accent usage.</span>
+  </a>
+</li></ul>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Site not here?</h2>
+  <p>Paste any URL and uidconstruct reads its live stylesheets the same way it read these.</p>
+  <p><a class="btn-primary" href="/">Analyse a site now</a></p>
+</section>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Cloudflare design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Cloudflare colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/cloudflare" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Cloudflare design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Cloudflare colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/cloudflare" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Cloudflare design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Cloudflare colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Cloudflare design tokens","description":"Cloudflare colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/cloudflare","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://www.cloudflare.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Cloudflare</p>
+  <h1>Cloudflare design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.cloudflare.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.cloudflare.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff5e1f"></span>
+  <code class="spec-swatch-name">--color-accent-100</code>
+  <code class="spec-swatch-val">#ff5e1f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff7038"></span>
+  <code class="spec-swatch-name">--color-accent-200</code>
+  <code class="spec-swatch-val">#ff7038</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#bf4c14"></span>
+  <code class="spec-swatch-name">--color-accent-muted</code>
+  <code class="spec-swatch-val">#bf4c14</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1f1f1f"></span>
+  <code class="spec-swatch-name">--color-on-accent</code>
+  <code class="spec-swatch-val">#1f1f1f</code>
+</li></ul>
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-background-100</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fdfdfc"></span>
+  <code class="spec-swatch-name">--color-background-200</code>
+  <code class="spec-swatch-val">#fdfdfc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f9f7f6"></span>
+  <code class="spec-swatch-name">--color-background-300</code>
+  <code class="spec-swatch-val">#f9f7f6</code><span class="spec-chip">only under before,hover</span>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-white</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#262626"></span>
+  <code class="spec-swatch-name">--color-foreground-100</code>
+  <code class="spec-swatch-val">#262626</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#262626"></span>
+  <code class="spec-swatch-name">--color-foreground-200</code>
+  <code class="spec-swatch-val">#262626</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#707070"></span>
+  <code class="spec-swatch-name">--color-text-secondary</code>
+  <code class="spec-swatch-val">#707070</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#727272"></span>
+  <code class="spec-swatch-name">--color-text-tertiary</code>
+  <code class="spec-swatch-val">#727272</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f0f0f0"></span>
+  <code class="spec-swatch-name">--color-border-100</code>
+  <code class="spec-swatch-val">#f0f0f0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ccc"></span>
+  <code class="spec-swatch-name">--color-border-200</code>
+  <code class="spec-swatch-val">#ccc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-light-foreground</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#b52831"></span>
+  <code class="spec-swatch-name">--color-security-100</code>
+  <code class="spec-swatch-val">#b52831</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#171717"></span>
+  <code class="spec-swatch-name">--color-foreground</code>
+  <code class="spec-swatch-val">#171717</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f5f5f5"></span>
+  <code class="spec-swatch-name">--color-muted</code>
+  <code class="spec-swatch-val">#f5f5f5</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Apple Color Emoji, SFMono-Regular, Consolas, FT Kunst Grotesk, Apercu Mono Pro, STK Bureau Sans.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-xs</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>13px</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>14px</code></td><td></td></tr>
+<tr><td><code>--text-lg</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--font-sans</code></td><td><code>&quot;FT Kunst Grotesk&quot;, sans-serif</code></td><td></td></tr>
+<tr><td><code>--font-mono</code></td><td><code>&quot;Apercu Mono Pro&quot;, monospace</code></td><td></td></tr>
+<tr><td><code>--tracking-widest</code></td><td><code>.1em</code></td><td></td></tr>
+<tr><td><code>--leading-tight</code></td><td><code>1.25</code></td><td></td></tr>
+<tr><td><code>--text-lg--line-height</code></td><td><code>1.25</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.25rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>1.875rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--blur-3xl</code></td><td><code>64px</code></td><td></td></tr>
+<tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-xs</code></td><td><code>.125rem</code></td><td></td></tr>
+<tr><td><code>--radius-sm</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-md</code></td><td><code>.375rem</code></td><td></td></tr>
+<tr><td><code>--radius-lg</code></td><td><code>.5rem</code></td><td></td></tr>
+<tr><td><code>--radius-xl</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--radius-2xl</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--radius-3xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--blur-lg</code></td><td><code>16px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>767px</code></li><li><code>40rem</code></li><li><code>48rem</code></li><li><code>64rem</code></li><li><code>80rem</code></li><li><code>96rem</code></li><li><code>1120px</code></li><li><code>640px</code></li><li><code>768px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Cloudflare: Build for the agent era | Welcome to Cloudflare - Powering the next generation of applications
+Headings in DOM order: H1 Everything we learned from powering 20% of the Internet—yours by default | H2 Region: Earth | H3 Run everywhere | H3 Run anywhere | H3 Run at massive scale | H2 Cloudflare powers 45% of the Fortune 500 | H2 Why choose Cloudflare | H3 Fighting infra with “cloud” | H3 Shipping withCloudflare | H2 Pay onlywhen your code runs | H3 Pay for clean traffic | H3 Tailored to your team | H3 Fits into your existing workflows | H3 One network for users, apps, and data | H3 Secure by default | H3 Fast path to AI adoption | H1 Build without boundaries
+Navigation labels: Products | Solutions | Resources | Pricing | Under attack? | Login | Dashboard | Contact sales | Start building
+Buttons / calls to action: Search Cloudflare | Open menu | Shopify | Character.AI | Intercom | DoorDash | Discord | Zendesk | Lovable | npm | SiteGPT | Liveblocks | Leagued | Seated | People | Pause
+Body copy: One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure. | One smart network for workloads + security — close to users, close to data. | Compute close to users reduces network latency. | Smart Placement moves your Worker closer to your data for optimized end-to-end latency. | Faster for 95% of round trips by running Workers near your backend, not you. | 95% of the world’s Internet-connected population is reached by Cloudflare within 50ms. | Security, connectivity, and code run in 335+ cities around the world, within 50ms of 95% of the world's population. | Our network is close to your users, applications, and sites. It optimizes all your traffic from source to destination for low latency. | Duncan Davidson, VP of Developer Productivity, Shopify | Everything needed tobuild secure, performant applications
+Footer links: Plans | Contact sales | Partners | Find a partner | Startups | Under attack? | Domain name search | About | Careers | Investors | Press | Press kit | Global network | Project Galileo | Athenian Project | Cloudflare for Campaigns
+Element counts: 18 sections | 72 links | 66 images | 36 buttons | 1 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Cloudflare
+Source: https://www.cloudflare.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-red-500: oklch(63.7% .237 25.331)  /* only under aria-invalid */
+  --color-white: #fff
+  --color-accent-100: #ff5e1f
+  --color-accent-200: #ff7038
+  --color-accent-muted: #bf4c14
+  --color-background-100: #fff
+  --color-background-200: #fdfdfc
+  --color-background-300: #f9f7f6  /* only under before,hover */
+  --color-foreground-100: #262626
+  --color-foreground-200: #262626
+  --color-text-secondary: #707070
+  --color-text-tertiary: #727272
+  --color-border-100: #f0f0f0
+  --color-border-200: #ccc
+  --color-light-foreground: #fff
+  --color-on-accent: #1f1f1f
+  --color-security-100: #b52831
+  --shadow-stack: 1px 6px 6px 0 #fff3 inset, 0 0 0px 0 #ffffff59 inset, 0 4px
+  --color-foreground: #171717
+  --color-muted: #f5f5f5
+
+TYPE TOKENS
+  --text-xs: 12px
+  --text-sm: 13px
+  --text-base: 14px
+  --text-lg: 16px
+  --font-sans: &quot;FT Kunst Grotesk&quot;, sans-serif
+  --font-mono: &quot;Apercu Mono Pro&quot;, monospace
+  --tracking-widest: .1em
+  --leading-tight: 1.25
+  --text-lg--line-height: 1.25
+  --text-xl: 1.25rem
+  --text-2xl: 1.5rem
+  --text-3xl: 1.875rem
+
+GEOMETRY (radius / spacing / size)
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-3xl: 64px
+  --spacing: .25rem
+  --radius-xs: .125rem
+  --radius-sm: .25rem
+  --radius-md: .375rem
+  --radius-lg: .5rem
+  --radius-xl: .75rem
+  --radius-2xl: 1rem
+  --radius-3xl: 1.5rem
+  --blur-lg: 16px
+
+THEME CAVEAT
+  2 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  767px, 40rem, 48rem, 64rem, 80rem, 96rem, 1120px, 640px, 768px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Cloudflare: Build for the agent era | Welcome to Cloudflare - Powering the next generation of applications
+  Headings in DOM order: H1 Everything we learned from powering 20% of the Internet—yours by default | H2 Region: Earth | H3 Run everywhere | H3 Run anywhere | H3 Run at massive scale | H2 Cloudflare powers 45% of the Fortune 500 | H2 Why choose Cloudflare | H3 Fighting infra with “cloud” | H3 Shipping withCloudflare | H2 Pay onlywhen your code runs | H3 Pay for clean traffic | H3 Tailored to your team | H3 Fits into your existing workflows | H3 One network for users, apps, and data | H3 Secure by default | H3 Fast path to AI adoption | H1 Build without boundaries
+  Navigation labels: Products | Solutions | Resources | Pricing | Under attack? | Login | Dashboard | Contact sales | Start building
+  Buttons / calls to action: Search Cloudflare | Open menu | Shopify | Character.AI | Intercom | DoorDash | Discord | Zendesk | Lovable | npm | SiteGPT | Liveblocks | Leagued | Seated | People | Pause
+  Body copy: One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure. | One smart network for workloads + security — close to users, close to data. | Compute close to users reduces network latency. | Smart Placement moves your Worker closer to your data for optimized end-to-end latency. | Faster for 95% of round trips by running Workers near your backend, not you. | 95% of the world’s Internet-connected population is reached by Cloudflare within 50ms. | Security, connectivity, and code run in 335+ cities around the world, within 50ms of 95% of the world's population. | Our network is close to your users, applications, and sites. It optimizes all your traffic from source to destination for low latency. | Duncan Davidson, VP of Developer Productivity, Shopify | Everything needed tobuild secure, performant applications
+  Footer links: Plans | Contact sales | Partners | Find a partner | Startups | Under attack? | Domain name search | About | Careers | Investors | Press | Press kit | Global network | Project Galileo | Athenian Project | Cloudflare for Campaigns
+  Element counts: 18 sections | 72 links | 66 images | 36 buttons | 1 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

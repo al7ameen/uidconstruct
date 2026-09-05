@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Supabase design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Supabase colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/supabase" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Supabase design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Supabase colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/supabase" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Supabase design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Supabase colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Supabase design tokens","description":"Supabase colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/supabase","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://supabase.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Supabase</p>
+  <h1>Supabase design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://supabase.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fsupabase.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--color-black</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-white</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#be93e4"></span>
+  <code class="spec-swatch-name">--color-purple-800</code>
+  <code class="spec-swatch-val">#be93e4</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#8e4ec6"></span>
+  <code class="spec-swatch-name">--color-purple-900</code>
+  <code class="spec-swatch-val">#8e4ec6</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Ubuntu, Droid Sans, Segoe WPC, Courier, Inter, Source Code Pro, Apple Color Emoji, Not.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-xs</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>.9375rem</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.125rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.375rem</code></td><td></td></tr>
+<tr><td><code>--text-4xl</code></td><td><code>2.125rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl</code></td><td><code>2.875rem</code></td><td><span class="spec-chip">only under sm</span></td></tr>
+<tr><td><code>--leading-snug</code></td><td><code>1.375</code></td><td></td></tr>
+<tr><td><code>--leading-relaxed</code></td><td><code>1.625</code></td><td></td></tr>
+<tr><td><code>--text-lg</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>1.75rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl--line-height</code></td><td><code>1</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-xs</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--borderradius-sm</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--borderradius-lg</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--borderradius-xl</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--borderradius-xs</code></td><td><code>2px</code></td><td></td></tr>
+<tr><td><code>--borderradius-tableheader</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--borderwidth-none</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--borderwidth-xs</code></td><td><code>1px</code></td><td></td></tr>
+<tr><td><code>--borderwidth-sm</code></td><td><code>2px</code></td><td></td></tr>
+<tr><td><code>--borderwidth-md</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--borderwidth-lg</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--surface-hue</code></td><td><code>34</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>480px</code></li><li><code>40rem</code></li><li><code>48rem</code></li><li><code>64rem</code></li><li><code>80rem</code></li><li><code>96rem</code></li><li><code>1080px</code></li><li><code>960px</code></li><li><code>720px</code></li><li><code>520px</code></li><li><code>769px</code></li><li><code>600px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Supabase | The Postgres Development Platform | Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings. Start for free.
+Headings in DOM order: H1 Build in a weekendScale to millions | H2 Postgres Database | H2 Authentication | H2 Edge Functions | H2 Storage | H2 Realtime | H2 Vector | H2 Data APIs | H3 Stay productive and manage your app without leaving the dashboard | H3 Use Supabase with React | H3 Kickstart your next project with production ready templates | H3 How industry leaders are building with Supabase | H3 Join the community | H2 Open source from day one | H2 Build in a weekend, scale to millions | H2 Footer
+Navigation labels: Pricing | Docs | Blog | 108.8K | Sign in | Start your project | Request a demo
+Buttons / calls to action: Product | Developers | Solutions | Open main menu | Table Editor | SQL Editor | RLS Policies | React | Next.js | Flutter | Svelte | Vue | Nuxt | eXp Realty | Phoenix Energy | Chatbase
+Body copy: Start your project with a Postgres database. Add Authentication, Data APIs, Edge Functions, Realtime Data, Storage, and Vector embeddings. | Every project is a full Postgres database, the world's most trusted relational database. | Add user sign ups and logins, securing your data with Row Level Security. | Easily write custom code without deploying or scaling servers. | Store, organize, and serve large files, from videos to images. | Build multiplayer experiences with real-time data synchronization. | Integrate your favorite ML-models to store, index and search vector embeddings. | Use one or all. Best of breed products. Integrated as a platform. | Trusted by fast-growing companies worldwide | The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel.
+Form fields: Your email
+Footer links: More on Security | Twitter | GitHub | Discord | Youtube | TikTok | Instagram | Pricing | Database | Auth | Functions | Realtime | Storage | Vector | Cron | Feature Catalog
+Element counts: 9 sections | 36 cards | 116 links | 57 images | 15 buttons | 1 forms | 11 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Supabase
+Source: https://supabase.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-black: #000
+  --color-white: #fff
+  --drop-shadow-xs: 0 1px 1px #0000000d
+  --background: oklch(var(--surface) calc(var(--chroma) * .5) var(--surface-
+  --foreground: oklch(calc(var(--surface) + var(--tone-span) * var(--contras
+  --card: oklch(from var(--background) calc(l + var(--elevation-step)  /* dark-only */
+  --popover: oklch(from var(--background) calc(l + var(--elevation-step)  /* only under data-[state=open],hover */
+  --muted: oklch(from var(--foreground) l c h/var(--muted-alpha))
+  --accent: oklch(from var(--foreground) l c h/var(--accent-alpha))  /* only under data-[state=open],hover */
+  --field: oklch(0 0 0/var(--field-alpha))
+  --destructive: oklch(var(--destructive-lightness) var(--expressive-chroma)  /* only under aria-[invalid=true],focus,focus-visible,hover */
+  --border-destructive: oklch(from var(--destructive) l c h/30%)  /* only under aria-[invalid=true],focus,focus-visible,hover */
+  --border-brand: oklch(from var(--primary) l c h/30%)
+  --border: oklch(from var(--foreground) l calc(c * .54) h/calc(2% + 20%
+  --border-control-hover: oklch(from var(--foreground) l calc(c * .5) h/calc(12% + 58%  /* only under data-[state=open],focus,hover */
+  --ring: oklch(from var(--primary) l c h/55%)
+  --border-stronger: oklch(from var(--foreground) l calc(c * .5) h/calc(5% + 45%
+  --color-purple-800: #be93e4
+  --color-purple-900: #8e4ec6
+  --color-brand-300: hsl(var(--brand-300))
+
+TYPE TOKENS
+  --text-xs: .75rem
+  --text-sm: .875rem
+  --text-base: .9375rem
+  --text-xl: 1.125rem
+  --text-2xl: 1.375rem
+  --text-4xl: 2.125rem
+  --text-5xl: 2.875rem
+  --leading-snug: 1.375
+  --leading-relaxed: 1.625
+  --text-lg: 1rem
+  --text-3xl: 1.75rem
+  --text-5xl--line-height: 1
+
+GEOMETRY (radius / spacing / size)
+  --blur-xs: 4px
+  --borderradius-sm: 4px
+  --borderradius-lg: 8px
+  --borderradius-xl: 16px
+  --borderradius-xs: 2px
+  --borderradius-tableheader: 4px
+  --borderwidth-none: 0
+  --borderwidth-xs: 1px
+  --borderwidth-sm: 2px
+  --borderwidth-md: 4px
+  --borderwidth-lg: 8px
+  --surface-hue: 34
+
+THEME CAVEAT
+  7 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  480px, 40rem, 48rem, 64rem, 80rem, 96rem, 1080px, 960px, 720px, 520px, 769px, 600px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Supabase | The Postgres Development Platform | Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings. Start for free.
+  Headings in DOM order: H1 Build in a weekendScale to millions | H2 Postgres Database | H2 Authentication | H2 Edge Functions | H2 Storage | H2 Realtime | H2 Vector | H2 Data APIs | H3 Stay productive and manage your app without leaving the dashboard | H3 Use Supabase with React | H3 Kickstart your next project with production ready templates | H3 How industry leaders are building with Supabase | H3 Join the community | H2 Open source from day one | H2 Build in a weekend, scale to millions | H2 Footer
+  Navigation labels: Pricing | Docs | Blog | 108.8K | Sign in | Start your project | Request a demo
+  Buttons / calls to action: Product | Developers | Solutions | Open main menu | Table Editor | SQL Editor | RLS Policies | React | Next.js | Flutter | Svelte | Vue | Nuxt | eXp Realty | Phoenix Energy | Chatbase
+  Body copy: Start your project with a Postgres database. Add Authentication, Data APIs, Edge Functions, Realtime Data, Storage, and Vector embeddings. | Every project is a full Postgres database, the world's most trusted relational database. | Add user sign ups and logins, securing your data with Row Level Security. | Easily write custom code without deploying or scaling servers. | Store, organize, and serve large files, from videos to images. | Build multiplayer experiences with real-time data synchronization. | Integrate your favorite ML-models to store, index and search vector embeddings. | Use one or all. Best of breed products. Integrated as a platform. | Trusted by fast-growing companies worldwide | The all-in-one subscription starter kit for high-performance SaaS applications, powered by Stripe, Supabase, and Vercel.
+  Form fields: Your email
+  Footer links: More on Security | Twitter | GitHub | Discord | Youtube | TikTok | Instagram | Pricing | Database | Auth | Functions | Realtime | Storage | Vector | Cron | Feature Catalog
+  Element counts: 9 sections | 36 cards | 116 links | 57 images | 15 buttons | 1 forms | 11 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

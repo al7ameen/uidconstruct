@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Resend design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Resend colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/resend" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Resend design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Resend colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/resend" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Resend design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Resend colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Resend design tokens","description":"Resend colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/resend","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://resend.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Resend</p>
+  <h1>Resend design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://resend.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fresend.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fdfdfd"></span>
+  <code class="spec-swatch-name">--background</code>
+  <code class="spec-swatch-val">#fdfdfd</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00c758"></span>
+  <code class="spec-swatch-name">--color-green-500</code>
+  <code class="spec-swatch-val">#00c758</code><span class="spec-chip">only under before,group-data-active</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#6a7282"></span>
+  <code class="spec-swatch-name">--color-gray-500</code>
+  <code class="spec-swatch-val">#6a7282</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--color-black</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-white</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00000014"></span>
+  <code class="spec-swatch-name">--gray-a2</code>
+  <code class="spec-swatch-val">#00000014</code><span class="spec-chip">only under focus-visible</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#4d4d4d"></span>
+  <code class="spec-swatch-name">--gray-11</code>
+  <code class="spec-swatch-val">#4d4d4d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#191919"></span>
+  <code class="spec-swatch-name">--gray-12</code>
+  <code class="spec-swatch-val">#191919</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff6568"></span>
+  <code class="spec-swatch-name">--color-red-400</code>
+  <code class="spec-swatch-val">#ff6568</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fb2c36"></span>
+  <code class="spec-swatch-name">--color-red-500</code>
+  <code class="spec-swatch-val">#fb2c36</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e40014"></span>
+  <code class="spec-swatch-name">--color-red-600</code>
+  <code class="spec-swatch-val">#e40014</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff8b1a"></span>
+  <code class="spec-swatch-name">--color-orange-400</code>
+  <code class="spec-swatch-val">#ff8b1a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fe6e00"></span>
+  <code class="spec-swatch-name">--color-orange-500</code>
+  <code class="spec-swatch-val">#fe6e00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f99c00"></span>
+  <code class="spec-swatch-name">--color-amber-500</code>
+  <code class="spec-swatch-val">#f99c00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffe02a"></span>
+  <code class="spec-swatch-name">--color-yellow-300</code>
+  <code class="spec-swatch-val">#ffe02a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#edb200"></span>
+  <code class="spec-swatch-name">--color-yellow-500</code>
+  <code class="spec-swatch-val">#edb200</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#80cd00"></span>
+  <code class="spec-swatch-name">--color-lime-500</code>
+  <code class="spec-swatch-val">#80cd00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#7bf1a8"></span>
+  <code class="spec-swatch-name">--color-green-300</code>
+  <code class="spec-swatch-val">#7bf1a8</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00d294"></span>
+  <code class="spec-swatch-name">--color-emerald-400</code>
+  <code class="spec-swatch-val">#00d294</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Apple Color Emoji, SFMono-Regular, Consolas.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-xs</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.25rem</code></td><td></td></tr>
+<tr><td><code>--tracking-tighter</code></td><td><code>-.05em</code></td><td></td></tr>
+<tr><td><code>--tracking-wide</code></td><td><code>.025em</code></td><td></td></tr>
+<tr><td><code>--text-lg</code></td><td><code>1.125rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>1.875rem</code></td><td></td></tr>
+<tr><td><code>--text-4xl</code></td><td><code>2.25rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl</code></td><td><code>3rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl--line-height</code></td><td><code>1</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-xs</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td><span class="spec-chip">only under after</span></td></tr>
+<tr><td><code>--blur-2xl</code></td><td><code>40px</code></td><td><span class="spec-chip">only under before</span></td></tr>
+<tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-xs</code></td><td><code>.125rem</code></td><td></td></tr>
+<tr><td><code>--radius-sm</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-md</code></td><td><code>.375rem</code></td><td></td></tr>
+<tr><td><code>--radius-lg</code></td><td><code>.5rem</code></td><td></td></tr>
+<tr><td><code>--radius-xl</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--radius-2xl</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--radius-3xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--radius-4xl</code></td><td><code>2rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>1920px</code></li><li><code>40rem</code></li><li><code>48rem</code></li><li><code>64rem</code></li><li><code>80rem</code></li><li><code>96rem</code></li><li><code>1340px</code></li><li><code>1160px</code></li><li><code>1000px</code></li><li><code>375px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: dark — 2 dark:-variant utilities present but no dark class on &lt;html&gt;, so they apply only when the visitor opts into dark mode.
+Title / description: Resend · Email for developers | The best way to reach humans instead of spam folders. Deliver transactional and marketing emails at scale.
+Headings in DOM order: H1 Email fordevelopers | H2 Integrate | H2 First-class developer experience | H2 Test mode | H2 Modular webhooks | H2 Write using a delightful editor | H2 Go beyond editing | H2 Contact management | H2 Broadcast analytics | H2 Develop emails using React | H2 Welcome to ACME, user! | H2 Reach humans, not spam folders | H3 Proactive blocklist tracking | H3 Faster time to inbox | H3 Build confidence with BIMI | H3 Managed dedicated IPs | H3 Dynamic suppression list | H3 IP and domain monitoring | H3 Verify DNS records | H3 Battle-tested infrastructure | H3 Prevent spoofing with DMARC | H2 Everything in your control | H3 Intuitive analytics | H3 Full visibility
+Navigation labels: Pricing | Log in | Get started
+Buttons / calls to action: Open main menu | Features | Company | Enterprise | Help | Docs | AI | Get started | Node.js | Serverless | Ruby | Python | PHP | CLI | Go | Rust
+Footer links: View on GitHub | Download ZIP | Status unknown | Automations | Audiences | Broadcasts | Inbound | Templates | Webhooks | Dedicated IPs | Changelog | Pricing | Enterprise | Security | SOC 2 | GDPR
+Element counts: 12 sections | 54 links | 12 images | 47 buttons | 9 lists | 4 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Resend
+Source: https://resend.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-green-500: #00c758  /* only under before,group-data-active */
+  --color-gray-500: #6a7282
+  --color-black: #000
+  --color-white: #fff
+  --shadow-button: 0px 0px 4px #ffffff0f, 0px 1px 14px #ffffff1f, 0px 3px 32px  /* only under hover,not-disabled */
+  --background: #fdfdfd
+  --gray-a2: #00000014  /* only under focus-visible */
+  --gray-11: #4d4d4d
+  --gray-12: #191919
+  --color-red-400: #ff6568
+  --color-red-500: #fb2c36
+  --color-red-600: #e40014
+  --color-orange-400: #ff8b1a
+  --color-orange-500: #fe6e00
+  --color-amber-500: #f99c00
+  --color-yellow-300: #ffe02a
+  --color-yellow-500: #edb200
+  --color-lime-500: #80cd00
+  --color-green-300: #7bf1a8
+  --color-emerald-400: #00d294
+
+TYPE TOKENS
+  --text-xs: .75rem
+  --text-sm: .875rem
+  --text-base: 1rem
+  --text-xl: 1.25rem
+  --tracking-tighter: -.05em
+  --tracking-wide: .025em
+  --text-lg: 1.125rem
+  --text-2xl: 1.5rem
+  --text-3xl: 1.875rem
+  --text-4xl: 2.25rem
+  --text-5xl: 3rem
+  --text-5xl--line-height: 1
+
+GEOMETRY (radius / spacing / size)
+  --blur-xs: 4px
+  --blur-md: 12px
+  --blur-2xl: 40px
+  --spacing: .25rem
+  --radius-xs: .125rem
+  --radius-sm: .25rem
+  --radius-md: .375rem
+  --radius-lg: .5rem
+  --radius-xl: .75rem
+  --radius-2xl: 1rem
+  --radius-3xl: 1.5rem
+  --radius-4xl: 2rem
+
+THEME CAVEAT
+  5 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  1920px, 40rem, 48rem, 64rem, 80rem, 96rem, 1340px, 1160px, 1000px, 375px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: dark — 2 dark:-variant utilities present but no dark class on &lt;html&gt;, so they apply only when the visitor opts into dark mode.
+  Title / description: Resend · Email for developers | The best way to reach humans instead of spam folders. Deliver transactional and marketing emails at scale.
+  Headings in DOM order: H1 Email fordevelopers | H2 Integrate | H2 First-class developer experience | H2 Test mode | H2 Modular webhooks | H2 Write using a delightful editor | H2 Go beyond editing | H2 Contact management | H2 Broadcast analytics | H2 Develop emails using React | H2 Welcome to ACME, user! | H2 Reach humans, not spam folders | H3 Proactive blocklist tracking | H3 Faster time to inbox | H3 Build confidence with BIMI | H3 Managed dedicated IPs | H3 Dynamic suppression list | H3 IP and domain monitoring | H3 Verify DNS records | H3 Battle-tested infrastructure | H3 Prevent spoofing with DMARC | H2 Everything in your control | H3 Intuitive analytics | H3 Full visibility
+  Navigation labels: Pricing | Log in | Get started
+  Buttons / calls to action: Open main menu | Features | Company | Enterprise | Help | Docs | AI | Get started | Node.js | Serverless | Ruby | Python | PHP | CLI | Go | Rust
+  Footer links: View on GitHub | Download ZIP | Status unknown | Automations | Audiences | Broadcasts | Inbound | Templates | Webhooks | Dedicated IPs | Changelog | Pricing | Enterprise | Security | SOC 2 | GDPR
+  Element counts: 12 sections | 54 links | 12 images | 47 buttons | 9 lists | 4 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

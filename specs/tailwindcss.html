@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Tailwind CSS design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Tailwind CSS colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/tailwindcss" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Tailwind CSS design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Tailwind CSS colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/tailwindcss" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Tailwind CSS design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Tailwind CSS colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Tailwind CSS design tokens","description":"Tailwind CSS colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/tailwindcss","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://tailwindcss.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Tailwind CSS</p>
+  <h1>Tailwind CSS design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://tailwindcss.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Ftailwindcss.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fee685"></span>
+  <code class="spec-swatch-name">--color-amber-200</code>
+  <code class="spec-swatch-val">#fee685</code><span class="spec-chip">dark-only</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffd236"></span>
+  <code class="spec-swatch-name">--color-amber-300</code>
+  <code class="spec-swatch-val">#ffd236</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00d294"></span>
+  <code class="spec-swatch-name">--color-emerald-400</code>
+  <code class="spec-swatch-val">#00d294</code><span class="spec-chip">dark-only</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00bb7f"></span>
+  <code class="spec-swatch-name">--color-emerald-500</code>
+  <code class="spec-swatch-val">#00bb7f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00d2ef"></span>
+  <code class="spec-swatch-name">--color-cyan-400</code>
+  <code class="spec-swatch-val">#00d2ef</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#77d4ff"></span>
+  <code class="spec-swatch-name">--color-sky-300</code>
+  <code class="spec-swatch-val">#77d4ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00bcfe"></span>
+  <code class="spec-swatch-name">--color-sky-400</code>
+  <code class="spec-swatch-val">#00bcfe</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00a5ef"></span>
+  <code class="spec-swatch-name">--color-sky-500</code>
+  <code class="spec-swatch-val">#00a5ef</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0084cc"></span>
+  <code class="spec-swatch-name">--color-sky-600</code>
+  <code class="spec-swatch-val">#0084cc</code><span class="spec-chip">only under data-selected</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#005986"></span>
+  <code class="spec-swatch-name">--color-sky-800</code>
+  <code class="spec-swatch-val">#005986</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#7d87ff"></span>
+  <code class="spec-swatch-name">--color-indigo-400</code>
+  <code class="spec-swatch-val">#7d87ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#625fff"></span>
+  <code class="spec-swatch-name">--color-indigo-500</code>
+  <code class="spec-swatch-val">#625fff</code><span class="spec-chip">dark-only via dark,data-selected</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#4f39f6"></span>
+  <code class="spec-swatch-name">--color-indigo-600</code>
+  <code class="spec-swatch-val">#4f39f6</code><span class="spec-chip">only under data-selected</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#c07eff"></span>
+  <code class="spec-swatch-name">--color-purple-400</code>
+  <code class="spec-swatch-val">#c07eff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ac4bff"></span>
+  <code class="spec-swatch-name">--color-purple-500</code>
+  <code class="spec-swatch-val">#ac4bff</code><span class="spec-chip">dark-only</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#9810fa"></span>
+  <code class="spec-swatch-name">--color-purple-600</code>
+  <code class="spec-swatch-val">#9810fa</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ec6cff"></span>
+  <code class="spec-swatch-name">--color-fuchsia-400</code>
+  <code class="spec-swatch-val">#ec6cff</code><span class="spec-chip">dark-only</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e12afb"></span>
+  <code class="spec-swatch-name">--color-fuchsia-500</code>
+  <code class="spec-swatch-val">#e12afb</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fda5d5"></span>
+  <code class="spec-swatch-name">--color-pink-300</code>
+  <code class="spec-swatch-val">#fda5d5</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fb64b6"></span>
+  <code class="spec-swatch-name">--color-pink-400</code>
+  <code class="spec-swatch-val">#fb64b6</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Noto Sans, s, SFMono-Regular, Consolas.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-xs</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--text-lg</code></td><td><code>1.125rem</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.25rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.5rem</code></td><td><span class="spec-chip">only under @md</span></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>1.875rem</code></td><td></td></tr>
+<tr><td><code>--text-4xl</code></td><td><code>2.25rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl</code></td><td><code>3rem</code></td><td><span class="spec-chip">only under sm</span></td></tr>
+<tr><td><code>--text-6xl</code></td><td><code>3.75rem</code></td><td><span class="spec-chip">only under lg</span></td></tr>
+<tr><td><code>--text-8xl</code></td><td><code>6rem</code></td><td><span class="spec-chip">only under xl</span></td></tr>
+<tr><td><code>--tracking-tighter</code></td><td><code>-.05em</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--blur-lg</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--perspective-distant</code></td><td><code>1200px</code></td><td></td></tr>
+<tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-xs</code></td><td><code>.125rem</code></td><td></td></tr>
+<tr><td><code>--radius-sm</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-md</code></td><td><code>.375rem</code></td><td></td></tr>
+<tr><td><code>--radius-lg</code></td><td><code>.5rem</code></td><td></td></tr>
+<tr><td><code>--radius-xl</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--radius-2xl</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--radius-3xl</code></td><td><code>1.5rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>64rem</code></li><li><code>40rem</code></li><li><code>48rem</code></li><li><code>80rem</code></li><li><code>96rem</code></li><li><code>600px</code></li><li><code>320px</code></li><li><code>500px</code></li><li><code>712px</code></li><li><code>877px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light — 1 dark:-variant utilities present but no dark class on &lt;html&gt;, so they apply only when the visitor opts into dark mode — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+Title / description: Tailwind CSS - Rapidly build modern websites without ever leaving your HTML. | Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.
+Headings in DOM order: H1 Rapidly build modern websites without ever leaving your HTML. | H2 Supported by the best. | H2 Built for the modern web. | H3 Browse properties | H3 Redefining real-time performance | H2 Ship faster and smaller. | H2 Build whatever you want, without touching your CSS file. | H2 Move even faster with Tailwind Plus. | H3 Tailwind CSS | H3 Resources | H3 Tailwind Plus | H3 Community
+Buttons / calls to action: v4.3 | ⌘KCtrl K | Search | Navigation | Quick search⌘KCtrl K | Check availability | index.html | app.css | package.json | Terminal | build.css | TemplatesVisually-stunning, easy to customize site templates built with React and Next.js. | UI BlocksOver 500+ professionally designed, fully responsive, expertly crafted components. | UI KitA starter kit for building your own component systems with React and Tailwind CSS.
+Footer links: Documentation | Playground | Blog | Showcase | Sponsor | Refactoring UI | Headless UI | Heroicons | Hero Patterns | Tailwind Plus | UI Blocks | Templates | UI Kit | GitHub | Discord | X
+Element counts: 1 sections | 92 links | 43 images | 16 buttons | 9 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Tailwind CSS
+Source: https://tailwindcss.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-amber-200: #fee685  /* dark-only */
+  --color-amber-300: #ffd236
+  --color-emerald-400: #00d294  /* dark-only */
+  --color-emerald-500: #00bb7f
+  --color-cyan-400: #00d2ef
+  --color-sky-300: #77d4ff
+  --color-sky-400: #00bcfe
+  --color-sky-500: #00a5ef
+  --color-sky-600: #0084cc  /* only under data-selected */
+  --color-sky-800: #005986
+  --color-indigo-400: #7d87ff
+  --color-indigo-500: #625fff  /* dark-only via dark,data-selected */
+  --color-indigo-600: #4f39f6  /* only under data-selected */
+  --color-purple-400: #c07eff
+  --color-purple-500: #ac4bff  /* dark-only */
+  --color-purple-600: #9810fa
+  --color-fuchsia-400: #ec6cff  /* dark-only */
+  --color-fuchsia-500: #e12afb
+  --color-pink-300: #fda5d5
+  --color-pink-400: #fb64b6
+
+TYPE TOKENS
+  --text-xs: .75rem
+  --text-sm: .875rem
+  --text-base: 1rem
+  --text-lg: 1.125rem
+  --text-xl: 1.25rem
+  --text-2xl: 1.5rem
+  --text-3xl: 1.875rem
+  --text-4xl: 2.25rem
+  --text-5xl: 3rem
+  --text-6xl: 3.75rem
+  --text-8xl: 6rem
+  --tracking-tighter: -.05em
+
+GEOMETRY (radius / spacing / size)
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-lg: 16px
+  --perspective-distant: 1200px
+  --spacing: .25rem
+  --radius-xs: .125rem
+  --radius-sm: .25rem
+  --radius-md: .375rem
+  --radius-lg: .5rem
+  --radius-xl: .75rem
+  --radius-2xl: 1rem
+  --radius-3xl: 1.5rem
+
+THEME CAVEAT
+  11 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  64rem, 40rem, 48rem, 80rem, 96rem, 600px, 320px, 500px, 712px, 877px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light — 1 dark:-variant utilities present but no dark class on &lt;html&gt;, so they apply only when the visitor opts into dark mode — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+  Title / description: Tailwind CSS - Rapidly build modern websites without ever leaving your HTML. | Tailwind CSS is a utility-first CSS framework for rapidly building modern websites without ever leaving your HTML.
+  Headings in DOM order: H1 Rapidly build modern websites without ever leaving your HTML. | H2 Supported by the best. | H2 Built for the modern web. | H3 Browse properties | H3 Redefining real-time performance | H2 Ship faster and smaller. | H2 Build whatever you want, without touching your CSS file. | H2 Move even faster with Tailwind Plus. | H3 Tailwind CSS | H3 Resources | H3 Tailwind Plus | H3 Community
+  Buttons / calls to action: v4.3 | ⌘KCtrl K | Search | Navigation | Quick search⌘KCtrl K | Check availability | index.html | app.css | package.json | Terminal | build.css | TemplatesVisually-stunning, easy to customize site templates built with React and Next.js. | UI BlocksOver 500+ professionally designed, fully responsive, expertly crafted components. | UI KitA starter kit for building your own component systems with React and Tailwind CSS.
+  Footer links: Documentation | Playground | Blog | Showcase | Sponsor | Refactoring UI | Headless UI | Heroicons | Hero Patterns | Tailwind Plus | UI Blocks | Templates | UI Kit | GitHub | Discord | X
+  Element counts: 1 sections | 92 links | 43 images | 16 buttons | 9 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

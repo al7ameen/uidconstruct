@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Sanity design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Sanity colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/sanity" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Sanity design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Sanity colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/sanity" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Sanity design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Sanity colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Sanity design tokens","description":"Sanity colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/sanity","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://www.sanity.io","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Sanity</p>
+  <h1>Sanity design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.sanity.io's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>5 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.sanity.io">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f50"></span>
+  <code class="spec-swatch-name">--color-brand</code>
+  <code class="spec-swatch-val">#f50</code>
+</li></ul>
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0b0b0b"></span>
+  <code class="spec-swatch-name">--color-black</code>
+  <code class="spec-swatch-val">#0b0b0b</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-white</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ededed"></span>
+  <code class="spec-swatch-name">--color-gray-100</code>
+  <code class="spec-swatch-val">#ededed</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#d6d6d6"></span>
+  <code class="spec-swatch-name">--color-gray-200</code>
+  <code class="spec-swatch-val">#d6d6d6</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#b9b9b9"></span>
+  <code class="spec-swatch-name">--color-gray-300</code>
+  <code class="spec-swatch-val">#b9b9b9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#797979"></span>
+  <code class="spec-swatch-name">--color-gray-500</code>
+  <code class="spec-swatch-val">#797979</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#4a4a4a"></span>
+  <code class="spec-swatch-name">--color-gray-700</code>
+  <code class="spec-swatch-val">#4a4a4a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#353535"></span>
+  <code class="spec-swatch-name">--color-gray-800</code>
+  <code class="spec-swatch-val">#353535</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#212121"></span>
+  <code class="spec-swatch-name">--color-gray-900</code>
+  <code class="spec-swatch-val">#212121</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#afe3ff"></span>
+  <code class="spec-swatch-name">--color-blue-100</code>
+  <code class="spec-swatch-val">#afe3ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0084f8"></span>
+  <code class="spec-swatch-name">--color-blue-500</code>
+  <code class="spec-swatch-val">#0084f8</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0052ef"></span>
+  <code class="spec-swatch-name">--color-blue-700</code>
+  <code class="spec-swatch-val">#0052ef</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#96ff6f"></span>
+  <code class="spec-swatch-name">--color-green-100</code>
+  <code class="spec-swatch-val">#96ff6f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#45ff00"></span>
+  <code class="spec-swatch-name">--color-green-300</code>
+  <code class="spec-swatch-val">#45ff00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#00fe00"></span>
+  <code class="spec-swatch-name">--color-green-500</code>
+  <code class="spec-swatch-val">#00fe00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#19d600"></span>
+  <code class="spec-swatch-name">--color-green-700</code>
+  <code class="spec-swatch-val">#19d600</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fcb9ff"></span>
+  <code class="spec-swatch-name">--color-magenta-100</code>
+  <code class="spec-swatch-val">#fcb9ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff23fc"></span>
+  <code class="spec-swatch-name">--color-magenta-500</code>
+  <code class="spec-swatch-val">#ff23fc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f500ff"></span>
+  <code class="spec-swatch-name">--color-magenta-700</code>
+  <code class="spec-swatch-val">#f500ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fcffd6"></span>
+  <code class="spec-swatch-name">--color-yellow-100</code>
+  <code class="spec-swatch-val">#fcffd6</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fdfe00"></span>
+  <code class="spec-swatch-name">--color-yellow-500</code>
+  <code class="spec-swatch-val">#fdfe00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff500"></span>
+  <code class="spec-swatch-name">--color-yellow-700</code>
+  <code class="spec-swatch-val">#fff500</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e7fefe"></span>
+  <code class="spec-swatch-name">--color-cyan-50</code>
+  <code class="spec-swatch-val">#e7fefe</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Apple Color Emoji, SFMono-Regular, Consolas.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--font-weight-normal</code></td><td><code>400</code></td><td></td></tr>
+<tr><td><code>--font-weight-medium</code></td><td><code>500</code></td><td></td></tr>
+<tr><td><code>--font-weight-semibold</code></td><td><code>600</code></td><td></td></tr>
+<tr><td><code>--font-weight-bold</code></td><td><code>700</code></td><td></td></tr>
+<tr><td><code>--font-weight-extrabold</code></td><td><code>800</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--blur-2xl</code></td><td><code>40px</code></td><td></td></tr>
+<tr><td><code>--blur-3xl</code></td><td><code>64px</code></td><td></td></tr>
+<tr><td><code>--spacing-icon-lg</code></td><td><code>calc((25 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-icon-md</code></td><td><code>calc((21 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-icon-sm</code></td><td><code>calc((19 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-widget-xs</code></td><td><code>calc((19 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-widget-sm</code></td><td><code>calc((25 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-widget-md</code></td><td><code>calc((35 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-widget-lg</code></td><td><code>calc((45 / 16) * 1rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-0</code></td><td><code>0rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>480px</code></li><li><code>1000px</code></li><li><code>768px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: The Content Operating System for the AI era | Sanity | Sanity is the back-end built for AI content operations. Power web, mobile, and agentic applications at scale.
+Headings in DOM order: H1 The Content Operations Platform | H2 Mirror how your content operations team works | H3 Page title | H2 Content Operations without the busywork | H2 Power anything. One API, every platform | H2 Everything your team needs in one place | H3 The database optimized for content operations | H3 Content workflows that mirror how you work | H3 An agent to run content operations at scale | H3 Programmable automation | H3 Power web, mobile, or your own agent | H2 Loved by 1M+ users and 6k+ teams | H2 Enterprise-grade everything | H2 Less talk, more code | H3 CLI Install | H3 MCP Server | H3 Agent toolkit | H2 Footer | H3 Products | H3 Resources | H3 Company | H3 Trust and compliance | H3 Keep in touch
+Navigation labels: Sanity | Studio | Content Agent | App SDK | Media Library | Content Releases | Agent API | Content Lake | Sanity Context | MCP Server | Functions | Live CDN | Start building for free | E-commerce &amp; Retail | Media &amp; Publishing | SaaS | Developers | Content Editors | Product Owners | Business Leaders
+Buttons / calls to action: Skip to content | Products | Start building for free | Solutions | Read the story | Resources | Docs | Enterprise | Pricing | Log in | Contact Sales | Get started | Open menu | Start building | Watch demo | npm create sanity@latest
+Body copy: Grab your gear: The official Sanity swag store | Power content applications and AI workflows at scale. Every application, one platform. | Editorial time saved per month. Read more → | Agent actions, functions, and content agents automate manual work before and after hitting publish. | @Jason published a new product: ST07 Winter Jacket | Turn your content into a governed knowledge layer that powers applications and AI agents. | Store any valid JSON document, with schemas living in your Sanity Studio configuration, not as database constraints. | Enable creative freedom with infinitely customizable workflows. | The first content agent that knows your content, so you can action with accuracy at scale. | Automate content operations, from AI enrichment to syncing with any system, triggered by any mutation in your dataset.
+Form fields: Title | Description | publishDate | Ask the AI agent a question... | theme-switch
+Element counts: 14 sections | 141 links | 118 images | 32 buttons | 3 forms | 21 lists | 5 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Sanity
+Source: https://www.sanity.io
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-black: #0b0b0b
+  --color-white: #fff
+  --color-brand: #f50
+  --color-gray-100: #ededed
+  --color-gray-200: #d6d6d6
+  --color-gray-300: #b9b9b9
+  --color-gray-500: #797979
+  --color-gray-700: #4a4a4a
+  --color-gray-800: #353535
+  --color-gray-900: #212121
+  --color-blue-100: #afe3ff
+  --color-blue-500: #0084f8
+  --color-blue-700: #0052ef
+  --color-green-100: #96ff6f
+  --color-green-300: #45ff00
+  --color-green-500: #00fe00
+  --color-green-700: #19d600
+  --color-magenta-100: #fcb9ff
+  --color-magenta-500: #ff23fc
+  --color-magenta-700: #f500ff
+  --color-yellow-100: #fcffd6
+  --color-yellow-500: #fdfe00
+  --color-yellow-700: #fff500
+  --color-cyan-50: #e7fefe
+
+TYPE TOKENS
+  --font-weight-normal: 400
+  --font-weight-medium: 500
+  --font-weight-semibold: 600
+  --font-weight-bold: 700
+  --font-weight-extrabold: 800
+
+GEOMETRY (radius / spacing / size)
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-2xl: 40px
+  --blur-3xl: 64px
+  --spacing-icon-lg: calc((25 / 16) * 1rem)
+  --spacing-icon-md: calc((21 / 16) * 1rem)
+  --spacing-icon-sm: calc((19 / 16) * 1rem)
+  --spacing-widget-xs: calc((19 / 16) * 1rem)
+  --spacing-widget-sm: calc((25 / 16) * 1rem)
+  --spacing-widget-md: calc((35 / 16) * 1rem)
+  --spacing-widget-lg: calc((45 / 16) * 1rem)
+  --spacing-0: 0rem
+
+BREAKPOINTS SEEN IN CSS
+  480px, 1000px, 768px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: The Content Operating System for the AI era | Sanity | Sanity is the back-end built for AI content operations. Power web, mobile, and agentic applications at scale.
+  Headings in DOM order: H1 The Content Operations Platform | H2 Mirror how your content operations team works | H3 Page title | H2 Content Operations without the busywork | H2 Power anything. One API, every platform | H2 Everything your team needs in one place | H3 The database optimized for content operations | H3 Content workflows that mirror how you work | H3 An agent to run content operations at scale | H3 Programmable automation | H3 Power web, mobile, or your own agent | H2 Loved by 1M+ users and 6k+ teams | H2 Enterprise-grade everything | H2 Less talk, more code | H3 CLI Install | H3 MCP Server | H3 Agent toolkit | H2 Footer | H3 Products | H3 Resources | H3 Company | H3 Trust and compliance | H3 Keep in touch
+  Navigation labels: Sanity | Studio | Content Agent | App SDK | Media Library | Content Releases | Agent API | Content Lake | Sanity Context | MCP Server | Functions | Live CDN | Start building for free | E-commerce &amp; Retail | Media &amp; Publishing | SaaS | Developers | Content Editors | Product Owners | Business Leaders
+  Buttons / calls to action: Skip to content | Products | Start building for free | Solutions | Read the story | Resources | Docs | Enterprise | Pricing | Log in | Contact Sales | Get started | Open menu | Start building | Watch demo | npm create sanity@latest
+  Body copy: Grab your gear: The official Sanity swag store | Power content applications and AI workflows at scale. Every application, one platform. | Editorial time saved per month. Read more → | Agent actions, functions, and content agents automate manual work before and after hitting publish. | @Jason published a new product: ST07 Winter Jacket | Turn your content into a governed knowledge layer that powers applications and AI agents. | Store any valid JSON document, with schemas living in your Sanity Studio configuration, not as database constraints. | Enable creative freedom with infinitely customizable workflows. | The first content agent that knows your content, so you can action with accuracy at scale. | Automate content operations, from AI enrichment to syncing with any system, triggered by any mutation in your dataset.
+  Form fields: Title | Description | publishDate | Ask the AI agent a question... | theme-switch
+  Element counts: 14 sections | 141 links | 118 images | 32 buttons | 3 forms | 21 lists | 5 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

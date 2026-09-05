@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Clerk design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Clerk colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/clerk" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Clerk design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Clerk colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/clerk" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Clerk design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Clerk colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Clerk design tokens","description":"Clerk colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/clerk","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://clerk.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Clerk</p>
+  <h1>Clerk design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://clerk.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fclerk.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ef4444"></span>
+  <code class="spec-swatch-name">--color-red-500</code>
+  <code class="spec-swatch-val">#ef4444</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ccf9ff"></span>
+  <code class="spec-swatch-name">--color-sky-100</code>
+  <code class="spec-swatch-val">#ccf9ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#5de3ff"></span>
+  <code class="spec-swatch-name">--color-sky-300</code>
+  <code class="spec-swatch-val">#5de3ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#3ad4fd"></span>
+  <code class="spec-swatch-name">--color-sky-400</code>
+  <code class="spec-swatch-val">#3ad4fd</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#9785ff"></span>
+  <code class="spec-swatch-name">--color-purple-400</code>
+  <code class="spec-swatch-val">#9785ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#6c47ff"></span>
+  <code class="spec-swatch-name">--color-purple-500</code>
+  <code class="spec-swatch-val">#6c47ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f7f7f8"></span>
+  <code class="spec-swatch-name">--color-gray-50</code>
+  <code class="spec-swatch-val">#f7f7f8</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#eeeef0"></span>
+  <code class="spec-swatch-name">--color-gray-100</code>
+  <code class="spec-swatch-val">#eeeef0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#d9d9de"></span>
+  <code class="spec-swatch-name">--color-gray-200</code>
+  <code class="spec-swatch-val">#d9d9de</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#b7b8c2"></span>
+  <code class="spec-swatch-name">--color-gray-300</code>
+  <code class="spec-swatch-val">#b7b8c2</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#9394a1"></span>
+  <code class="spec-swatch-name">--color-gray-400</code>
+  <code class="spec-swatch-val">#9394a1</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#747686"></span>
+  <code class="spec-swatch-name">--color-gray-500</code>
+  <code class="spec-swatch-val">#747686</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#5e5f6e"></span>
+  <code class="spec-swatch-name">--color-gray-600</code>
+  <code class="spec-swatch-val">#5e5f6e</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#42434d"></span>
+  <code class="spec-swatch-name">--color-gray-700</code>
+  <code class="spec-swatch-val">#42434d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2f3037"></span>
+  <code class="spec-swatch-name">--color-gray-800</code>
+  <code class="spec-swatch-val">#2f3037</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#212126"></span>
+  <code class="spec-swatch-name">--color-gray-900</code>
+  <code class="spec-swatch-val">#212126</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#131316"></span>
+  <code class="spec-swatch-name">--color-gray-950</code>
+  <code class="spec-swatch-val">#131316</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--color-black</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-white</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fafafb"></span>
+  <code class="spec-swatch-name">--color-gray-25</code>
+  <code class="spec-swatch-val">#fafafb</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: geistSans, geistMono, geistNumbers, suisse, suisse Fallback, soehneMono, Apple Color Emoji, SFMono-Regular.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-xs</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>.8125rem</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>.9375rem</code></td><td></td></tr>
+<tr><td><code>--text-lg</code></td><td><code>1.125rem</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.25rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>2rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl</code></td><td><code>3rem</code></td><td><span class="spec-chip">only under md</span></td></tr>
+<tr><td><code>--text-6xl</code></td><td><code>4rem</code></td><td><span class="spec-chip">only under lg</span></td></tr>
+<tr><td><code>--tracking-tight</code></td><td><code>-.025em</code></td><td></td></tr>
+<tr><td><code>--tracking-widest</code></td><td><code>.1em</code></td><td></td></tr>
+<tr><td><code>--font-mosaic</code></td><td><code>ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td><span class="spec-chip">only under before</span></td></tr>
+<tr><td><code>--blur-lg</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--blur-xl</code></td><td><code>24px</code></td><td></td></tr>
+<tr><td><code>--base</code></td><td><code>18.5</code></td><td></td></tr>
+<tr><td><code>--px</code></td><td><code>1.5</code></td><td></td></tr>
+<tr><td><code>--rounded</code></td><td><code>2.25</code></td><td></td></tr>
+<tr><td><code>--top</code></td><td><code>1.25</code></td><td></td></tr>
+<tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-xs</code></td><td><code>.125rem</code></td><td></td></tr>
+<tr><td><code>--radius-sm</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-md</code></td><td><code>.375rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>32rem</code></li><li><code>26.5625rem</code></li><li><code>28rem</code></li><li><code>32.125rem</code></li><li><code>22.5rem</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Clerk | Authentication and User Management | The easiest way to add authentication and user management to your application. Purpose-built for React, Next.js, Remix, and “The Modern Web”.
+Headings in DOM order: H1 More than authentication, Complete User Management | H2 Clerk Components | H3 User Authentication | H3 Multi-Tenancy | H3 Billing | H2 Account | H2 Profile details | H2 Create Organization | H1 Join the waitlist | H1 Thanks for joining the waitlist | H1 Create your account | H1 Sign in to your account | H2 Organization | H2 General details | H1 Choose an account | H2 User authentication | H3 Multifactor Authentication | H3 Fraud and Abuse Prevention | H3 Advanced security | H3 Session Management | H3 Social Sign-On | H3 Bot Detection | H3 Email and SMS one-time passcodes | H3 Magic Links
+Navigation labels: Pricing | Sign up | Dashboard
+Buttons / calls to action: Products | Docs | Changelog | Company | AI | Sign in | Sign out | Open navigation | ❯Add Clerk auth to my app: clerk.com/SKILL.md | User Authentication | &lt;SignUp /&gt; | &lt;SignIn /&gt; | &lt;UserButton /&gt; | &lt;UserProfile /&gt; | &lt;Waitlist /&gt; | Multi-Tenancy
+Body copy: Need more than sign-in? Clerk gives you full stack auth and user management — so you can launch faster, scale easier, and stay focused on building your business. | Trusted by fast-growing companies around the world. | Drop-in UI components for authentication, profile management, organization management, and billing. Match to your brand with any CSS library, then deploy to your own domain. | Add user &lt;SignUp/&gt; and &lt;SignIn/&gt;, provide account access through a dropdown menu, and manage profile and security settings. | Allow your users to create new organizations, switch between accounts, manage settings and billing, and view memberships and invitations. | Display pricing plans with feature comparisons and subscription options to help your users choose the right plan for their needs. | Enter your email address and we'll let you know when your spot is ready. | We'll be in touch when your spot is ready | Welcome! Please fill in the details to get started. | Allow users to join the organization automatically or request to join based on a verified email domain.
+Footer links: Authentication | Multi-tenancy | Billing | CLI | Agents | React | Next.js | Expo | View all | Documentation | Changelog | Glossary | Feature requests | Startups | Students | LLM Leaderboard
+Element counts: 64 links | 102 images | 28 buttons | 19 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Clerk
+Source: https://clerk.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-red-500: #ef4444
+  --color-sky-100: #ccf9ff
+  --color-sky-300: #5de3ff
+  --color-sky-400: #3ad4fd
+  --color-purple-400: #9785ff
+  --color-purple-500: #6c47ff
+  --color-gray-50: #f7f7f8
+  --color-gray-100: #eeeef0
+  --color-gray-200: #d9d9de
+  --color-gray-300: #b7b8c2
+  --color-gray-400: #9394a1
+  --color-gray-500: #747686
+  --color-gray-600: #5e5f6e
+  --color-gray-700: #42434d
+  --color-gray-800: #2f3037
+  --color-gray-900: #212126
+  --color-gray-950: #131316
+  --color-black: #000
+  --color-white: #fff
+  --color-gray-25: #fafafb
+
+TYPE TOKENS
+  --text-xs: .75rem
+  --text-sm: .8125rem
+  --text-base: .9375rem
+  --text-lg: 1.125rem
+  --text-xl: 1.25rem
+  --text-2xl: 1.5rem
+  --text-3xl: 2rem
+  --text-5xl: 3rem
+  --text-6xl: 4rem
+  --tracking-tight: -.025em
+  --tracking-widest: .1em
+  --font-mosaic: ui-sans-serif, system-ui, sans-serif, &quot;Apple Color Emoji&quot;, &quot;
+
+GEOMETRY (radius / spacing / size)
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-lg: 16px
+  --blur-xl: 24px
+  --base: 18.5
+  --px: 1.5
+  --rounded: 2.25
+  --top: 1.25
+  --spacing: .25rem
+  --radius-xs: .125rem
+  --radius-sm: .25rem
+  --radius-md: .375rem
+
+THEME CAVEAT
+  3 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  32rem, 26.5625rem, 28rem, 32.125rem, 22.5rem
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Clerk | Authentication and User Management | The easiest way to add authentication and user management to your application. Purpose-built for React, Next.js, Remix, and “The Modern Web”.
+  Headings in DOM order: H1 More than authentication, Complete User Management | H2 Clerk Components | H3 User Authentication | H3 Multi-Tenancy | H3 Billing | H2 Account | H2 Profile details | H2 Create Organization | H1 Join the waitlist | H1 Thanks for joining the waitlist | H1 Create your account | H1 Sign in to your account | H2 Organization | H2 General details | H1 Choose an account | H2 User authentication | H3 Multifactor Authentication | H3 Fraud and Abuse Prevention | H3 Advanced security | H3 Session Management | H3 Social Sign-On | H3 Bot Detection | H3 Email and SMS one-time passcodes | H3 Magic Links
+  Navigation labels: Pricing | Sign up | Dashboard
+  Buttons / calls to action: Products | Docs | Changelog | Company | AI | Sign in | Sign out | Open navigation | ❯Add Clerk auth to my app: clerk.com/SKILL.md | User Authentication | &lt;SignUp /&gt; | &lt;SignIn /&gt; | &lt;UserButton /&gt; | &lt;UserProfile /&gt; | &lt;Waitlist /&gt; | Multi-Tenancy
+  Body copy: Need more than sign-in? Clerk gives you full stack auth and user management — so you can launch faster, scale easier, and stay focused on building your business. | Trusted by fast-growing companies around the world. | Drop-in UI components for authentication, profile management, organization management, and billing. Match to your brand with any CSS library, then deploy to your own domain. | Add user &lt;SignUp/&gt; and &lt;SignIn/&gt;, provide account access through a dropdown menu, and manage profile and security settings. | Allow your users to create new organizations, switch between accounts, manage settings and billing, and view memberships and invitations. | Display pricing plans with feature comparisons and subscription options to help your users choose the right plan for their needs. | Enter your email address and we'll let you know when your spot is ready. | We'll be in touch when your spot is ready | Welcome! Please fill in the details to get started. | Allow users to join the organization automatically or request to join based on a verified email domain.
+  Footer links: Authentication | Multi-tenancy | Billing | CLI | Agents | React | Next.js | Expo | View all | Documentation | Changelog | Glossary | Feature requests | Startups | Students | LLM Leaderboard
+  Element counts: 64 links | 102 images | 28 buttons | 19 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

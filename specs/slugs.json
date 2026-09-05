@@ -1,0 +1,178 @@
+[
+  {
+    "slug": "apple",
+    "name": "Apple",
+    "blurb": "Neutral greyscale with product photography carrying the colour.",
+    "stats": {
+      "colors": 9,
+      "type": 0,
+      "geometry": 12,
+      "total": 36
+    }
+  },
+  {
+    "slug": "clerk",
+    "name": "Clerk",
+    "blurb": "Purple-accented auth SaaS, heavy on card layouts.",
+    "stats": {
+      "colors": 20,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "cloudflare",
+    "name": "Cloudflare",
+    "blurb": "Orange on dark, infrastructure marketing.",
+    "stats": {
+      "colors": 18,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "github",
+    "name": "GitHub",
+    "blurb": "Primer design system, the most familiar dark UI in developer land.",
+    "stats": {
+      "colors": 24,
+      "type": 0,
+      "geometry": 0,
+      "total": 24
+    }
+  },
+  {
+    "slug": "neon",
+    "name": "Neon",
+    "blurb": "Purple serverless Postgres identity.",
+    "stats": {
+      "colors": 15,
+      "type": 12,
+      "geometry": 12,
+      "total": 39
+    }
+  },
+  {
+    "slug": "notion",
+    "name": "Notion",
+    "blurb": "Warm neutrals and a serif-leaning display voice.",
+    "stats": {
+      "colors": 24,
+      "type": 0,
+      "geometry": 12,
+      "total": 36
+    }
+  },
+  {
+    "slug": "planetscale",
+    "name": "PlanetScale",
+    "blurb": "Dark database marketing with vivid accents.",
+    "stats": {
+      "colors": 22,
+      "type": 0,
+      "geometry": 0,
+      "total": 24
+    }
+  },
+  {
+    "slug": "raycast",
+    "name": "Raycast",
+    "blurb": "Developer-tool dark UI with a red accent.",
+    "stats": {
+      "colors": 23,
+      "type": 6,
+      "geometry": 12,
+      "total": 42
+    }
+  },
+  {
+    "slug": "resend",
+    "name": "Resend",
+    "blurb": "Minimal monochrome email-infrastructure branding.",
+    "stats": {
+      "colors": 19,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "sanity",
+    "name": "Sanity",
+    "blurb": "Bold red accent, strong typographic hierarchy.",
+    "stats": {
+      "colors": 24,
+      "type": 5,
+      "geometry": 12,
+      "total": 41
+    }
+  },
+  {
+    "slug": "shadcn",
+    "name": "shadcn/ui",
+    "blurb": "The component library whose CSS variables most AI tools already emit.",
+    "stats": {
+      "colors": 20,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "spotify",
+    "name": "Spotify",
+    "blurb": "Iconic green-on-black consumer dark theme.",
+    "stats": {
+      "colors": 23,
+      "type": 0,
+      "geometry": 12,
+      "total": 36
+    }
+  },
+  {
+    "slug": "stripe",
+    "name": "Stripe",
+    "blurb": "The reference point for gradient-forward fintech marketing pages.",
+    "stats": {
+      "colors": 9,
+      "type": 2,
+      "geometry": 12,
+      "total": 35
+    }
+  },
+  {
+    "slug": "supabase",
+    "name": "Supabase",
+    "blurb": "Open-source dark green identity, dense documentation UI.",
+    "stats": {
+      "colors": 4,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "tailwindcss",
+    "name": "Tailwind CSS",
+    "blurb": "The utility-first framework, so its token names are the ones every AI coding tool already understands.",
+    "stats": {
+      "colors": 20,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
+    "slug": "vercel",
+    "name": "Vercel",
+    "blurb": "Geist: near-black canvas, tight greyscale ramp, restrained accent usage.",
+    "stats": {
+      "colors": 20,
+      "type": 12,
+      "geometry": 12,
+      "total": 44
+    }
+  }
+]

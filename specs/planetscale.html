@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>PlanetScale design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every PlanetScale colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/planetscale" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="PlanetScale design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every PlanetScale colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/planetscale" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="PlanetScale design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every PlanetScale colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"PlanetScale design tokens","description":"PlanetScale colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/planetscale","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://planetscale.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> PlanetScale</p>
+  <h1>PlanetScale design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://planetscale.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>0 type</span> · <span>0 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fplanetscale.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fafafa"></span>
+  <code class="spec-swatch-name">--gray-50</code>
+  <code class="spec-swatch-val">#fafafa</code><span class="spec-chip">dark-only</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ebebeb"></span>
+  <code class="spec-swatch-name">--gray-100</code>
+  <code class="spec-swatch-val">#ebebeb</code><span class="spec-chip">only under hover</span>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#111111"></span>
+  <code class="spec-swatch-name">--gray-900</code>
+  <code class="spec-swatch-val">#111111</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f2b600"></span>
+  <code class="spec-swatch-name">--yellow-300</code>
+  <code class="spec-swatch-val">#f2b600</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#336791"></span>
+  <code class="spec-swatch-name">--text-postgres</code>
+  <code class="spec-swatch-val">#336791</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e1e1e1"></span>
+  <code class="spec-swatch-name">--gray-200</code>
+  <code class="spec-swatch-val">#e1e1e1</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#c1c1c1"></span>
+  <code class="spec-swatch-name">--gray-300</code>
+  <code class="spec-swatch-val">#c1c1c1</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#a1a1a1"></span>
+  <code class="spec-swatch-name">--gray-400</code>
+  <code class="spec-swatch-val">#a1a1a1</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#818181"></span>
+  <code class="spec-swatch-name">--gray-500</code>
+  <code class="spec-swatch-val">#818181</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#737373"></span>
+  <code class="spec-swatch-name">--gray-550</code>
+  <code class="spec-swatch-val">#737373</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#616161"></span>
+  <code class="spec-swatch-name">--gray-600</code>
+  <code class="spec-swatch-val">#616161</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#414141"></span>
+  <code class="spec-swatch-name">--gray-700</code>
+  <code class="spec-swatch-val">#414141</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2b2b2b"></span>
+  <code class="spec-swatch-name">--gray-800</code>
+  <code class="spec-swatch-val">#2b2b2b</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1a1a1a"></span>
+  <code class="spec-swatch-name">--gray-850</code>
+  <code class="spec-swatch-val">#1a1a1a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fffafa"></span>
+  <code class="spec-swatch-name">--red-50</code>
+  <code class="spec-swatch-val">#fffafa</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffe5e9"></span>
+  <code class="spec-swatch-name">--red-100</code>
+  <code class="spec-swatch-val">#ffe5e9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fbbfc7"></span>
+  <code class="spec-swatch-name">--red-200</code>
+  <code class="spec-swatch-val">#fbbfc7</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff909f"></span>
+  <code class="spec-swatch-name">--red-300</code>
+  <code class="spec-swatch-val">#ff909f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff7082"></span>
+  <code class="spec-swatch-name">--red-400</code>
+  <code class="spec-swatch-val">#ff7082</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff455d"></span>
+  <code class="spec-swatch-name">--red-500</code>
+  <code class="spec-swatch-val">#ff455d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#d92038"></span>
+  <code class="spec-swatch-name">--red-600</code>
+  <code class="spec-swatch-val">#d92038</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#c11027"></span>
+  <code class="spec-swatch-name">--red-700</code>
+  <code class="spec-swatch-val">#c11027</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>640px</code></li><li><code>768px</code></li><li><code>1024px</code></li><li><code>1280px</code></li><li><code>1536px</code></li><li><code>801px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+Title / description: PlanetScale - the world’s fastest and most scalable cloud hosting for Vitess and Postgres | PlanetScale offers the world’s fastest and most scalable cloud hosting for Vitess and Postgres.
+Headings in DOM order: H1 The world’s fastest and most scalable cloud databases | H2 Performance | H2 Uptime | H2 Cost | H2 Security | H2 Features | H3 Shared PlanetScale features | H3 PlanetScale Vitess features | H3 PlanetScale Postgres features | H2 Company | H2 Product | H2 Resources | H2 Courses | H2 Open source
+Navigation labels: Log in | Get started | Get in touch | Documentation | Pricing | Migrate | About | Brand | Blog | Changelog | Careers | Events | Case studies | Enterprise | Benchmarks | Support | Status | Trust Center | MySQL for Developers | Database Scaling
+Buttons / calls to action: Get in touch | Platform▾ | Resources▾ | Vitess | Postgres | Neki
+Body copy: PlanetScale brings you the fastest databases available in the cloud. Both our Postgres and Vitess databases deliver exceptional speed and reliability, with Vitess adding ultra scal | Our blazing fast NVMe drives unlock unlimited IOPS, bringing data center performance to the cloud. We offer a range of deployment options to cover all of your security and complian | – Sualeh Asif - Chief Product Officer @Anysphere (Cursor) | Vitess allows MySQL databases to scale horizontally through explicit sharding — enabling a shared nothing architecture distributing data across thousands of nodes, all routed throu | Vitess was developed at YouTube by the founders of PlanetScale to scale their main MySQL database to petabytes of data on 70,000 nodes across 20 data centers. Now maintained and ma | PlanetScale Postgres starts at $5 per month and gives you a fully managed PostgreSQL cluster built for performance and reliability, offering first-class tooling without sacrificing | PlanetScale Metal starts at $50 per month for NVMe-backed performance with unlimited IOPS. | Get started with the Postgres quickstart or read the Postgres documentation. | Neki is our next-generation Postgres sharding architecture inspired by everything we have learned building Vitess: a fresh design from first principles to bring massive scale and r | Want to request access? Fill out the form on neki.dev.
+Footer links: About | Brand | Blog | Changelog | Careers | Events | Case studies | Enterprise | Pricing | Benchmarks | Documentation | Migrate | Support | Status | Trust Center | MySQL for Developers</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — PlanetScale
+Source: https://planetscale.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --white: rgba(255, 255, 255, 1)
+  --black: rgba(0, 0, 0, 1)  /* dark-only via dark,hover */
+  --gray-50: #fafafa  /* dark-only */
+  --gray-100: #ebebeb  /* only under hover */
+  --gray-900: #111111
+  --yellow-300: #f2b600
+  --text-postgres: #336791
+  --gray-200: #e1e1e1
+  --gray-300: #c1c1c1
+  --gray-400: #a1a1a1
+  --gray-500: #818181
+  --gray-550: #737373
+  --gray-600: #616161
+  --gray-700: #414141
+  --gray-800: #2b2b2b
+  --gray-850: #1a1a1a
+  --red-50: #fffafa
+  --red-100: #ffe5e9
+  --red-200: #fbbfc7
+  --red-300: #ff909f
+  --red-400: #ff7082
+  --red-500: #ff455d
+  --red-600: #d92038
+  --red-700: #c11027
+
+THEME CAVEAT
+  3 token(s) below are used ONLY under a state/theme variant, never in the default theme. Do not infer the page background or default text colour from a token marked *-only.
+
+BREAKPOINTS SEEN IN CSS
+  640px, 768px, 1024px, 1280px, 1536px, 801px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+  Title / description: PlanetScale - the world’s fastest and most scalable cloud hosting for Vitess and Postgres | PlanetScale offers the world’s fastest and most scalable cloud hosting for Vitess and Postgres.
+  Headings in DOM order: H1 The world’s fastest and most scalable cloud databases | H2 Performance | H2 Uptime | H2 Cost | H2 Security | H2 Features | H3 Shared PlanetScale features | H3 PlanetScale Vitess features | H3 PlanetScale Postgres features | H2 Company | H2 Product | H2 Resources | H2 Courses | H2 Open source
+  Navigation labels: Log in | Get started | Get in touch | Documentation | Pricing | Migrate | About | Brand | Blog | Changelog | Careers | Events | Case studies | Enterprise | Benchmarks | Support | Status | Trust Center | MySQL for Developers | Database Scaling
+  Buttons / calls to action: Get in touch | Platform▾ | Resources▾ | Vitess | Postgres | Neki
+  Body copy: PlanetScale brings you the fastest databases available in the cloud. Both our Postgres and Vitess databases deliver exceptional speed and reliability, with Vitess adding ultra scal | Our blazing fast NVMe drives unlock unlimited IOPS, bringing data center performance to the cloud. We offer a range of deployment options to cover all of your security and complian | – Sualeh Asif - Chief Product Officer @Anysphere (Cursor) | Vitess allows MySQL databases to scale horizontally through explicit sharding — enabling a shared nothing architecture distributing data across thousands of nodes, all routed throu | Vitess was developed at YouTube by the founders of PlanetScale to scale their main MySQL database to petabytes of data on 70,000 nodes across 20 data centers. Now maintained and ma | PlanetScale Postgres starts at $5 per month and gives you a fully managed PostgreSQL cluster built for performance and reliability, offering first-class tooling without sacrificing | PlanetScale Metal starts at $50 per month for NVMe-backed performance with unlimited IOPS. | Get started with the Postgres quickstart or read the Postgres documentation. | Neki is our next-generation Postgres sharding architecture inspired by everything we have learned building Vitess: a fresh design from first principles to bring massive scale and r | Want to request access? Fill out the form on neki.dev.
+  Footer links: About | Brand | Blog | Changelog | Careers | Events | Case studies | Enterprise | Pricing | Benchmarks | Documentation | Migrate | Support | Status | Trust Center | MySQL for Developers
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Neon design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Neon colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/neon" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Neon design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Neon colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/neon" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Neon design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Neon colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Neon design tokens","description":"Neon colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/neon","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://neon.tech","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Neon</p>
+  <h1>Neon design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://neon.tech's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>15 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fneon.tech">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--error-tooltip-bg</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#078345"></span>
+  <code class="spec-swatch-name">--shiki-token-link</code>
+  <code class="spec-swatch-val">#078345</code>
+</li></ul>
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--error-tooltip-bg</code>
+  <code class="spec-swatch-val">#000</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#131415"></span>
+  <code class="spec-swatch-name">--shiki-color-text</code>
+  <code class="spec-swatch-val">#131415</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#131415"></span>
+  <code class="spec-swatch-name">--shiki-foreground</code>
+  <code class="spec-swatch-val">#131415</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ec6f09"></span>
+  <code class="spec-swatch-name">--shiki-token-constant</code>
+  <code class="spec-swatch-val">#ec6f09</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#8458d0"></span>
+  <code class="spec-swatch-name">--shiki-token-string</code>
+  <code class="spec-swatch-val">#8458d0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#797d86"></span>
+  <code class="spec-swatch-name">--shiki-token-comment</code>
+  <code class="spec-swatch-val">#797d86</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2d8665"></span>
+  <code class="spec-swatch-name">--shiki-token-keyword</code>
+  <code class="spec-swatch-val">#2d8665</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#a35200"></span>
+  <code class="spec-swatch-name">--shiki-token-parameter</code>
+  <code class="spec-swatch-val">#a35200</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ec6f09"></span>
+  <code class="spec-swatch-name">--shiki-token-function</code>
+  <code class="spec-swatch-val">#ec6f09</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#426ce0"></span>
+  <code class="spec-swatch-name">--shiki-token-string-expression</code>
+  <code class="spec-swatch-val">#426ce0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#18191b"></span>
+  <code class="spec-swatch-name">--shiki-token-punctuation</code>
+  <code class="spec-swatch-val">#18191b</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#a86624"></span>
+  <code class="spec-swatch-name">--shiki-token-operator</code>
+  <code class="spec-swatch-val">#a86624</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#18191b"></span>
+  <code class="spec-swatch-name">--shiki-token-embed</code>
+  <code class="spec-swatch-val">#18191b</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Apple Color Emoji, Noto C, SFMono-Regular, Consolas, IBM Plex Sans, IBM Plex Sans Fallback, Noto, inherit.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--tracking-tight</code></td><td><code>-.025em</code></td><td></td></tr>
+<tr><td><code>--leading-tight</code></td><td><code>1.25</code></td><td></td></tr>
+<tr><td><code>--leading-snug</code></td><td><code>1.375</code></td><td></td></tr>
+<tr><td><code>--leading-normal</code></td><td><code>1.5</code></td><td></td></tr>
+<tr><td><code>--text-5xl--line-height</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--text-6xl--line-height</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--text-7xl--line-height</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--text-8xl--line-height</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--font-weight-light</code></td><td><code>300</code></td><td></td></tr>
+<tr><td><code>--font-weight-normal</code></td><td><code>400</code></td><td></td></tr>
+<tr><td><code>--font-weight-medium</code></td><td><code>500</code></td><td></td></tr>
+<tr><td><code>--font-weight-semibold</code></td><td><code>600</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-sm</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-md</code></td><td><code>.375rem</code></td><td></td></tr>
+<tr><td><code>--radius-lg</code></td><td><code>.5rem</code></td><td></td></tr>
+<tr><td><code>--radius-xl</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--radius-2xl</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--blur-lg</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--blur-xl</code></td><td><code>24px</code></td><td></td></tr>
+<tr><td><code>--blur-2xl</code></td><td><code>40px</code></td><td></td></tr>
+<tr><td><code>--blur-3xl</code></td><td><code>64px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>39.9375rem</code></li><li><code>99.9375rem</code></li><li><code>79.9375rem</code></li><li><code>63.9375rem</code></li><li><code>47.9375rem</code></li><li><code>1280px</code></li><li><code>119.938rem</code></li><li><code>70.4375rem</code></li><li><code>25.8125rem</code></li><li><code>1921px</code></li><li><code>1919px</code></li><li><code>1599px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: dark — &lt;html&gt;/&lt;body&gt; carries the bare &quot;dark&quot; class.
+Title / description: Neon — Postgres backends for apps and agents | The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless.
+Headings in DOM order: H1 The backend for apps and agents,built to scale on Lakebase Postgres. | H2 Cloud primitives for the AI Engineering era. Integrate with a single command and the LLM does the hard work. | H2 Advanced autoscaling. Keep scaling without worrying about capacity. Never overpay for resources you don’t use. | H2 Instant branching. Develop and test with efficient copies of any database to eliminate surprises in production deploys. | H3 Copy-on-write | H3 Anonymization | H3 Ephemerality | H2 Managed Better Auth included. Simplify your application with user authentication and management built into the database. | H2 No platform fees. Enterprise-grade features available to everyone, without fixed fees or monthly minimums. | H2 Trusted Postgres, Backed by Giants. Neon was founded by Postgres committers, bringing decades of expertise. In 2025, Neon became part of the Databricks Platform. | H3 15,000,000 | H3 Databricks | H2 The world's most advanced backend platform.
+Navigation labels: Neon | Docs | Pricing | Lakebase PostgresServerless Postgres database | AuthAuthentication built into your database | FunctionsServerless compute next to your data | Object StorageS3-compatible storage that branches | AI GatewayOne API for frontier and open-source models | Lakebase ArchitectureStorage-compute separation | AutoscalingAutomatic instance sizing | BranchingFaster Postgres workflows | SearchVector, keyword, and hybrid search | Instant RestoreInstant recovery when mistakes happen | What is NeonBuilt around Lakebase Postgres, by Databricks | Full-stack appsDeploy backends via your agent | Branching workflowsSimplify DB ops to ship faster &amp; safer | Bursty workloadsAvoid overprovisioning &amp; optimize performance | Large databasesRestore &amp; replicate your DB in seconds | AgentsInfra for app-generation agents like Replit &amp; v0AI | PlatformsDeploy isolated backends for your end users
+Buttons / calls to action: Product | Solutions | Resources | Open menu | $ npx neon init | Avoid incidents | Save costs
+Footer links: Neon | Neon status loading... | Apache Software Foundation | Privacy Notice | Terms of Use | Neon Platform Terms | Modern Slavery Statement | California Privacy | About | Blog | Careers | Contact Sales | Security | Docs | Changelog | Support</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Neon
+Source: https://neon.tech
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color: #fff
+  --error-tooltip-bg: #000
+  --shiki-color-text: #131415
+  --shiki-foreground: #131415
+  --shiki-token-constant: #ec6f09
+  --shiki-token-string: #8458d0
+  --shiki-token-comment: #797d86
+  --shiki-token-keyword: #2d8665
+  --shiki-token-parameter: #a35200
+  --shiki-token-function: #ec6f09
+  --shiki-token-string-expression: #426ce0
+  --shiki-token-punctuation: #18191b
+  --shiki-token-link: #078345
+  --shiki-token-operator: #a86624
+  --shiki-token-embed: #18191b
+
+TYPE TOKENS
+  --tracking-tight: -.025em
+  --leading-tight: 1.25
+  --leading-snug: 1.375
+  --leading-normal: 1.5
+  --text-5xl--line-height: 1
+  --text-6xl--line-height: 1
+  --text-7xl--line-height: 1
+  --text-8xl--line-height: 1
+  --font-weight-light: 300
+  --font-weight-normal: 400
+  --font-weight-medium: 500
+  --font-weight-semibold: 600
+
+GEOMETRY (radius / spacing / size)
+  --spacing: .25rem
+  --radius-sm: .25rem
+  --radius-md: .375rem
+  --radius-lg: .5rem
+  --radius-xl: .75rem
+  --radius-2xl: 1rem
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-lg: 16px
+  --blur-xl: 24px
+  --blur-2xl: 40px
+  --blur-3xl: 64px
+
+BREAKPOINTS SEEN IN CSS
+  39.9375rem, 99.9375rem, 79.9375rem, 63.9375rem, 47.9375rem, 1280px, 119.938rem, 70.4375rem, 25.8125rem, 1921px, 1919px, 1599px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: dark — &lt;html&gt;/&lt;body&gt; carries the bare &quot;dark&quot; class.
+  Title / description: Neon — Postgres backends for apps and agents | The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless.
+  Headings in DOM order: H1 The backend for apps and agents,built to scale on Lakebase Postgres. | H2 Cloud primitives for the AI Engineering era. Integrate with a single command and the LLM does the hard work. | H2 Advanced autoscaling. Keep scaling without worrying about capacity. Never overpay for resources you don’t use. | H2 Instant branching. Develop and test with efficient copies of any database to eliminate surprises in production deploys. | H3 Copy-on-write | H3 Anonymization | H3 Ephemerality | H2 Managed Better Auth included. Simplify your application with user authentication and management built into the database. | H2 No platform fees. Enterprise-grade features available to everyone, without fixed fees or monthly minimums. | H2 Trusted Postgres, Backed by Giants. Neon was founded by Postgres committers, bringing decades of expertise. In 2025, Neon became part of the Databricks Platform. | H3 15,000,000 | H3 Databricks | H2 The world's most advanced backend platform.
+  Navigation labels: Neon | Docs | Pricing | Lakebase PostgresServerless Postgres database | AuthAuthentication built into your database | FunctionsServerless compute next to your data | Object StorageS3-compatible storage that branches | AI GatewayOne API for frontier and open-source models | Lakebase ArchitectureStorage-compute separation | AutoscalingAutomatic instance sizing | BranchingFaster Postgres workflows | SearchVector, keyword, and hybrid search | Instant RestoreInstant recovery when mistakes happen | What is NeonBuilt around Lakebase Postgres, by Databricks | Full-stack appsDeploy backends via your agent | Branching workflowsSimplify DB ops to ship faster &amp; safer | Bursty workloadsAvoid overprovisioning &amp; optimize performance | Large databasesRestore &amp; replicate your DB in seconds | AgentsInfra for app-generation agents like Replit &amp; v0AI | PlatformsDeploy isolated backends for your end users
+  Buttons / calls to action: Product | Solutions | Resources | Open menu | $ npx neon init | Avoid incidents | Save costs
+  Footer links: Neon | Neon status loading... | Apache Software Foundation | Privacy Notice | Terms of Use | Neon Platform Terms | Modern Slavery Statement | California Privacy | About | Blog | Careers | Contact Sales | Security | Docs | Changelog | Support
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Apple design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Apple colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/apple" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Apple design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Apple colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/apple" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Apple design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Apple colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Apple design tokens","description":"Apple colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/apple","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://www.apple.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Apple</p>
+  <h1>Apple design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.apple.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>0 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.apple.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fafafc"></span>
+  <code class="spec-swatch-name">--r-globalnav-background-opened</code>
+  <code class="spec-swatch-val">#fafafc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#161617"></span>
+  <code class="spec-swatch-name">--r-globalnav-background-opened-dark</code>
+  <code class="spec-swatch-val">#161617</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#333336"></span>
+  <code class="spec-swatch-name">--r-globalnav-color-secondary</code>
+  <code class="spec-swatch-val">#333336</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000000"></span>
+  <code class="spec-swatch-name">--r-globalnav-color-hover</code>
+  <code class="spec-swatch-val">#000000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#333336"></span>
+  <code class="spec-swatch-name">--r-globalnav-search-icon-active-fill</code>
+  <code class="spec-swatch-val">#333336</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#333336"></span>
+  <code class="spec-swatch-name">--r-globalnav-search-input-value-color</code>
+  <code class="spec-swatch-val">#333336</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#333336"></span>
+  <code class="spec-swatch-name">--r-globalnav-search-list-item-color</code>
+  <code class="spec-swatch-val">#333336</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000000"></span>
+  <code class="spec-swatch-name">--r-globalnav-search-list-item-hover-color</code>
+  <code class="spec-swatch-val">#000000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#333336"></span>
+  <code class="spec-swatch-name">--r-globalnav-search-list-item-searchterm-color</code>
+  <code class="spec-swatch-val">#333336</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--r-globalnav-logical-factor</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-flyout-spacing</code></td><td><code>88px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-next-flyout-height</code></td><td><code>0px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-previous-flyout-height</code></td><td><code>0px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-height</code></td><td><code>44px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-font-size</code></td><td><code>17px</code></td><td></td></tr>
+<tr><td><code>--globalnav-backdrop-filter</code></td><td><code>saturate(180%) blur(20px)</code></td><td></td></tr>
+<tr><td><code>--sk-focus-offset</code></td><td><code>-7px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-flyout-height</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-search-input-vertical-shift</code></td><td><code>-4px</code></td><td></td></tr>
+<tr><td><code>--r-globalnav-search-shift-vertical</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--globalnav-preceding-element-height</code></td><td><code>var(--r-localeswitcher-height, 0px)</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>834px</code></li><li><code>833px</code></li><li><code>640px</code></li><li><code>641px</code></li><li><code>480px</code></li><li><code>734px</code></li><li><code>1068px</code></li><li><code>1441px</code></li><li><code>1023px</code></li><li><code>1044px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Apple | Discover the innovative world of Apple and shop everything iPhone, iPad, Apple Watch, Mac, and Apple TV, plus explore accessories, entertainment, and expert device support.
+Headings in DOM order: H1 Apple | H2 Surprise and shine. | H2 College, sorted. | H2 iPhone | H3 Mac mini | H3 MacBook Air | H3 iPad Pro | H2 Endless entertainment. | H2 Apple Footer | H3 Shop and Learn Shop and Learn | H3 Apple Wallet Apple Wallet | H3 Account Account | H3 Entertainment Entertainment | H3 Apple Store Apple Store | H3 For Business For Business | H3 For Education For Education | H3 For Healthcare For Healthcare | H3 For Government For Government | H3 Apple Values Apple Values | H3 About Apple About Apple
+Navigation labels: Apple | Store | Mac | iPad | iPhone | Watch | Vision | AirPods | TV &amp; Home | Entertainment | Accessories | Support | 0+ | AirTag | Gift Cards | Wallet | Apple Card | Apple Pay | Apple Cash | Manage Your Apple Account
+Buttons / calls to action: Main menu | Clear search | Submit search | 0+ | Menu | Add to calendar | Shop | Learn more | Shop iPhone | Pre-order | Buy | Get your estimate | Apply now | Shop and Learn | Apple Wallet | Account
+Body copy: Watch a special Apple Event online on 9/9 at 10 a.m. PT. | Get a gift card from $100 to $150* when you buy Mac or iPad with education savings. | Advanced AI performance and game-changing capabilities. | Get credit toward your next iPhone when you trade in an eligible device.1 | Get up to 3% Daily Cash back with every purchase. | ComedyThe hit comedy is back and Tedder than ever. | Every Grand Prix™, live and on demand—all in one place, all year long. | Watch every club, every match, live—all season long. | ActionAnya Taylor-Joy is a grifter running for her life after a heist goes sideways. | ComedyIt’s pickleball vs. tennis in the hilarious new movie.
+Form fields: Search apple.com | src | type | page | locale
+Footer links: here | support.apple.com/kb/HT209218 | Store | Mac | iPad | iPhone | Watch | Vision | AirPods | TV &amp; Home | AirTag | Accessories | Gift Cards | Wallet | Apple Card | Apple Pay
+Element counts: 5 sections | 2 cards | 141 links | 49 images | 16 buttons | 1 forms | 31 lists | 4 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Apple
+Source: https://www.apple.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --r-globalnav-background-opened: #fafafc
+  --r-globalnav-background-opened-dark: #161617
+  --r-globalnav-color: rgba(0, 0, 0, .8)
+  --r-globalnav-color-secondary: #333336
+  --r-globalnav-color-hover: #000000
+  --globalnav-background: rgba(250, 250, 252, .92)
+  --r-globalnav-submenu-header-color: rgb(110, 110, 115)
+  --r-globalnav-search-icon-fill: rgb(110, 110, 115)
+  --r-globalnav-search-icon-active-fill: #333336
+  --r-globalnav-search-input-placeholder-color: rgb(110, 110, 115)
+  --r-globalnav-search-input-value-color: #333336
+  --r-globalnav-search-list-header-color: rgb(110, 110, 115)
+  --r-globalnav-search-list-item-color: #333336
+  --r-globalnav-search-list-item-icon-fill: rgb(110, 110, 115)
+  --r-globalnav-search-list-item-hover-background: rgb(245, 245, 247)
+  --r-globalnav-search-list-item-hover-color: #000000
+  --r-globalnav-search-list-item-nonsearchterm-color: rgb(110, 110, 115)
+  --r-globalnav-search-list-item-searchterm-color: #333336
+  --globalmessage-segment-background: rgb(250, 250, 252)
+  --globalmessage-segment-scrim-background: rgba(0, 0, 0, .04)
+  --globalmessage-segment-text-color: rgba(0, 0, 0, .8)
+  --globalmessage-segment-border-color: rgba(0, 0, 0, .48)
+  --globalnav-badge-background: rgb(0, 0, 0)
+  --globalnav-badge-text-color: rgb(255, 255, 255)
+
+GEOMETRY (radius / spacing / size)
+  --r-globalnav-logical-factor: 1
+  --r-globalnav-flyout-spacing: 88px
+  --r-globalnav-next-flyout-height: 0px
+  --r-globalnav-previous-flyout-height: 0px
+  --r-globalnav-height: 44px
+  --r-globalnav-font-size: 17px
+  --globalnav-backdrop-filter: saturate(180%) blur(20px)
+  --sk-focus-offset: -7px
+  --r-globalnav-flyout-height: 0
+  --r-globalnav-search-input-vertical-shift: -4px
+  --r-globalnav-search-shift-vertical: 4px
+  --globalnav-preceding-element-height: var(--r-localeswitcher-height, 0px)
+
+BREAKPOINTS SEEN IN CSS
+  834px, 833px, 640px, 641px, 480px, 734px, 1068px, 1441px, 1023px, 1044px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Apple | Discover the innovative world of Apple and shop everything iPhone, iPad, Apple Watch, Mac, and Apple TV, plus explore accessories, entertainment, and expert device support.
+  Headings in DOM order: H1 Apple | H2 Surprise and shine. | H2 College, sorted. | H2 iPhone | H3 Mac mini | H3 MacBook Air | H3 iPad Pro | H2 Endless entertainment. | H2 Apple Footer | H3 Shop and Learn Shop and Learn | H3 Apple Wallet Apple Wallet | H3 Account Account | H3 Entertainment Entertainment | H3 Apple Store Apple Store | H3 For Business For Business | H3 For Education For Education | H3 For Healthcare For Healthcare | H3 For Government For Government | H3 Apple Values Apple Values | H3 About Apple About Apple
+  Navigation labels: Apple | Store | Mac | iPad | iPhone | Watch | Vision | AirPods | TV &amp; Home | Entertainment | Accessories | Support | 0+ | AirTag | Gift Cards | Wallet | Apple Card | Apple Pay | Apple Cash | Manage Your Apple Account
+  Buttons / calls to action: Main menu | Clear search | Submit search | 0+ | Menu | Add to calendar | Shop | Learn more | Shop iPhone | Pre-order | Buy | Get your estimate | Apply now | Shop and Learn | Apple Wallet | Account
+  Body copy: Watch a special Apple Event online on 9/9 at 10 a.m. PT. | Get a gift card from $100 to $150* when you buy Mac or iPad with education savings. | Advanced AI performance and game-changing capabilities. | Get credit toward your next iPhone when you trade in an eligible device.1 | Get up to 3% Daily Cash back with every purchase. | ComedyThe hit comedy is back and Tedder than ever. | Every Grand Prix™, live and on demand—all in one place, all year long. | Watch every club, every match, live—all season long. | ActionAnya Taylor-Joy is a grifter running for her life after a heist goes sideways. | ComedyIt’s pickleball vs. tennis in the hilarious new movie.
+  Form fields: Search apple.com | src | type | page | locale
+  Footer links: here | support.apple.com/kb/HT209218 | Store | Mac | iPad | iPhone | Watch | Vision | AirPods | TV &amp; Home | AirTag | Accessories | Gift Cards | Wallet | Apple Card | Apple Pay
+  Element counts: 5 sections | 2 cards | 141 links | 49 images | 16 buttons | 1 forms | 31 lists | 4 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

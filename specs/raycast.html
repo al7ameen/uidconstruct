@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Raycast design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Raycast colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/raycast" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Raycast design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Raycast colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/raycast" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Raycast design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Raycast colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Raycast design tokens","description":"Raycast colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/raycast","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://www.raycast.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Raycast</p>
+  <h1>Raycast design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.raycast.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>6 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.raycast.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#101111"></span>
+  <code class="spec-swatch-name">--color-bg-100</code>
+  <code class="spec-swatch-val">#101111</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#18191a"></span>
+  <code class="spec-swatch-name">--color-bg-200</code>
+  <code class="spec-swatch-val">#18191a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#313133"></span>
+  <code class="spec-swatch-name">--color-bg-300</code>
+  <code class="spec-swatch-val">#313133</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#494b4d"></span>
+  <code class="spec-swatch-name">--color-bg-400</code>
+  <code class="spec-swatch-val">#494b4d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffffd0"></span>
+  <code class="spec-swatch-name">--color-button-bg</code>
+  <code class="spec-swatch-val">#ffffffd0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--color-button-bg-hover</code>
+  <code class="spec-swatch-val">#fff</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f4f4f6"></span>
+  <code class="spec-swatch-name">--color-fg</code>
+  <code class="spec-swatch-val">#f4f4f6</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#c2c7ca"></span>
+  <code class="spec-swatch-name">--color-fg-200</code>
+  <code class="spec-swatch-val">#c2c7ca</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#78787c"></span>
+  <code class="spec-swatch-name">--color-fg-300</code>
+  <code class="spec-swatch-val">#78787c</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#5e6366"></span>
+  <code class="spec-swatch-name">--color-fg-400</code>
+  <code class="spec-swatch-val">#5e6366</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffc533"></span>
+  <code class="spec-swatch-name">--color-yellow</code>
+  <code class="spec-swatch-val">#ffc533</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffc53326"></span>
+  <code class="spec-swatch-name">--color-yellow-transparent</code>
+  <code class="spec-swatch-val">#ffc53326</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff6161"></span>
+  <code class="spec-swatch-name">--color-red</code>
+  <code class="spec-swatch-val">#ff6161</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff616126"></span>
+  <code class="spec-swatch-name">--color-red-transparent</code>
+  <code class="spec-swatch-val">#ff616126</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#57c1ff"></span>
+  <code class="spec-swatch-name">--color-blue</code>
+  <code class="spec-swatch-val">#57c1ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#57c1ff26"></span>
+  <code class="spec-swatch-name">--color-blue-transparent</code>
+  <code class="spec-swatch-val">#57c1ff26</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#59d499"></span>
+  <code class="spec-swatch-name">--color-green</code>
+  <code class="spec-swatch-val">#59d499</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#59d49926"></span>
+  <code class="spec-swatch-name">--color-green-transparent</code>
+  <code class="spec-swatch-val">#59d49926</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#242728"></span>
+  <code class="spec-swatch-name">--color-border</code>
+  <code class="spec-swatch-val">#242728</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#18191a"></span>
+  <code class="spec-swatch-name">--color-button-fg</code>
+  <code class="spec-swatch-val">#18191a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#d3b2ff"></span>
+  <code class="spec-swatch-name">--color-step-2</code>
+  <code class="spec-swatch-val">#d3b2ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--Base-White</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e6e6e6"></span>
+  <code class="spec-swatch-name">--grey-50</code>
+  <code class="spec-swatch-val">#e6e6e6</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Inter, Inter Fallback, JetBrains Mono, JetBrains Mono Fallback, GeistMono, SFMono-Regular, Apple Color Emoji, Consolas.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--font-inter</code></td><td><code>&quot;Inter&quot;, &quot;Inter Fallback&quot;</code></td><td></td></tr>
+<tr><td><code>--font-jetbrains-mono</code></td><td><code>&quot;JetBrains Mono&quot;, &quot;JetBrains Mono Fallback&quot;</code></td><td></td></tr>
+<tr><td><code>--font-geist-mono</code></td><td><code>&quot;GeistMono&quot;, ui-monospace, SFMono-Regular, Roboto Mono, Menl</code></td><td></td></tr>
+<tr><td><code>--font-instrument-serif</code></td><td><code>&quot;Instrument Serif&quot;, &quot;Instrument Serif Fallback&quot;</code></td><td></td></tr>
+<tr><td><code>--font-vt323</code></td><td><code>&quot;VT323&quot;, &quot;VT323 Fallback&quot;</code></td><td></td></tr>
+<tr><td><code>--font-size</code></td><td><code>24px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--bg-opacity</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--background-opacity</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--border</code></td><td><code>2.5px</code></td><td></td></tr>
+<tr><td><code>--size</code></td><td><code>32px</code></td><td></td></tr>
+<tr><td><code>--spacing-none</code></td><td><code>0px</code></td><td></td></tr>
+<tr><td><code>--spacing-0-5</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--spacing-1</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--spacing-1-5</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--spacing-2</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--spacing-2-5</code></td><td><code>20px</code></td><td></td></tr>
+<tr><td><code>--spacing-3</code></td><td><code>24px</code></td><td></td></tr>
+<tr><td><code>--spacing-4</code></td><td><code>32px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>720px</code></li><li><code>768px</code></li><li><code>880px</code></li><li><code>480px</code></li><li><code>1024px</code></li><li><code>520px</code></li><li><code>920px</code></li><li><code>400px</code></li><li><code>375px</code></li><li><code>530px</code></li><li><code>900px</code></li><li><code>1050px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: dark.
+Title / description: Raycast - Your shortcut to everything | A collection of powerful productivity tools all within an extendable launcher.
+Headings in DOM order: H1 Your shortcut to everything. | H2 It’s not about saving time. | H2 There’s an extension for that. | H3 Plus thousands more... | H2 Your Mac just got smarter. | H2 Built for professionals like you. | H2 Don't repeat yourself. | H2 Stay in the loop. | H3 Build the perfect tools. | H2 Take the short way.
+Buttons / calls to action: Log in | Send | It can take notes. | Track your flights. | Convert anything. | Search files. | Run scripts. | Manage your windows. | Plan your day. | Remind you of stuff. | Translate into any language. | Block distractions. | Find text in screenshots. | Insert Emojis. | Subscribe
+Element counts: 44 cards | 130 links | 97 images | 4 buttons | 1 forms</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Raycast
+Source: https://www.raycast.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-bg-100: #101111
+  --color-bg-200: #18191a
+  --color-bg-300: #313133
+  --color-bg-400: #494b4d
+  --color-fg: #f4f4f6
+  --color-fg-200: #c2c7ca
+  --color-fg-300: #78787c
+  --color-fg-400: #5e6366
+  --color-yellow: #ffc533
+  --color-yellow-transparent: #ffc53326
+  --color-red: #ff6161
+  --color-red-transparent: #ff616126
+  --color-blue: #57c1ff
+  --color-blue-transparent: #57c1ff26
+  --color-green: #59d499
+  --color-green-transparent: #59d49926
+  --color-border: #242728
+  --color-button-bg: #ffffffd0
+  --color-button-bg-hover: #fff
+  --color-button-fg: #18191a
+  --color-step-2: #d3b2ff
+  --color: var(--secondaryText,#fff9)
+  --Base-White: #fff
+  --grey-50: #e6e6e6
+
+TYPE TOKENS
+  --font-inter: &quot;Inter&quot;, &quot;Inter Fallback&quot;
+  --font-jetbrains-mono: &quot;JetBrains Mono&quot;, &quot;JetBrains Mono Fallback&quot;
+  --font-geist-mono: &quot;GeistMono&quot;, ui-monospace, SFMono-Regular, Roboto Mono, Menl
+  --font-instrument-serif: &quot;Instrument Serif&quot;, &quot;Instrument Serif Fallback&quot;
+  --font-vt323: &quot;VT323&quot;, &quot;VT323 Fallback&quot;
+  --font-size: 24px
+
+GEOMETRY (radius / spacing / size)
+  --bg-opacity: 0
+  --background-opacity: 0
+  --border: 2.5px
+  --size: 32px
+  --spacing-none: 0px
+  --spacing-0-5: 4px
+  --spacing-1: 8px
+  --spacing-1-5: 12px
+  --spacing-2: 16px
+  --spacing-2-5: 20px
+  --spacing-3: 24px
+  --spacing-4: 32px
+
+BREAKPOINTS SEEN IN CSS
+  720px, 768px, 880px, 480px, 1024px, 520px, 920px, 400px, 375px, 530px, 900px, 1050px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: dark.
+  Title / description: Raycast - Your shortcut to everything | A collection of powerful productivity tools all within an extendable launcher.
+  Headings in DOM order: H1 Your shortcut to everything. | H2 It’s not about saving time. | H2 There’s an extension for that. | H3 Plus thousands more... | H2 Your Mac just got smarter. | H2 Built for professionals like you. | H2 Don't repeat yourself. | H2 Stay in the loop. | H3 Build the perfect tools. | H2 Take the short way.
+  Buttons / calls to action: Log in | Send | It can take notes. | Track your flights. | Convert anything. | Search files. | Run scripts. | Manage your windows. | Plan your day. | Remind you of stuff. | Translate into any language. | Block distractions. | Find text in screenshots. | Insert Emojis. | Subscribe
+  Element counts: 44 cards | 130 links | 97 images | 4 buttons | 1 forms
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

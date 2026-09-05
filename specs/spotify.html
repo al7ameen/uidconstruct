@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Spotify design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Spotify colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/spotify" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Spotify design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Spotify colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/spotify" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Spotify design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Spotify colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Spotify design tokens","description":"Spotify colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/spotify","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://www.spotify.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Spotify</p>
+  <h1>Spotify design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.spotify.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>0 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.spotify.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1ed760"></span>
+  <code class="spec-swatch-name">--text-bright-accent</code>
+  <code class="spec-swatch-val">#1ed760</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffa42b"></span>
+  <code class="spec-swatch-name">--text-warning</code>
+  <code class="spec-swatch-val">#ffa42b</code>
+</li></ul>
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#121212"></span>
+  <code class="spec-swatch-name">--background-base</code>
+  <code class="spec-swatch-val">#121212</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1f1f1f"></span>
+  <code class="spec-swatch-name">--background-highlight</code>
+  <code class="spec-swatch-val">#1f1f1f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--background-press</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1f1f1f"></span>
+  <code class="spec-swatch-name">--background-elevated-base</code>
+  <code class="spec-swatch-val">#1f1f1f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2a2a2a"></span>
+  <code class="spec-swatch-name">--background-elevated-highlight</code>
+  <code class="spec-swatch-val">#2a2a2a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#191919"></span>
+  <code class="spec-swatch-name">--background-elevated-press</code>
+  <code class="spec-swatch-val">#191919</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff1a"></span>
+  <code class="spec-swatch-name">--background-tinted-base</code>
+  <code class="spec-swatch-val">#ffffff1a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff24"></span>
+  <code class="spec-swatch-name">--background-tinted-highlight</code>
+  <code class="spec-swatch-val">#ffffff24</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#121212"></span>
+  <code class="spec-swatch-name">--color-to</code>
+  <code class="spec-swatch-val">#121212</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--text-base</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#b3b3b3"></span>
+  <code class="spec-swatch-name">--text-subdued</code>
+  <code class="spec-swatch-val">#b3b3b3</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f3727f"></span>
+  <code class="spec-swatch-name">--text-negative</code>
+  <code class="spec-swatch-val">#f3727f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1ed760"></span>
+  <code class="spec-swatch-name">--text-positive</code>
+  <code class="spec-swatch-val">#1ed760</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#539df5"></span>
+  <code class="spec-swatch-name">--text-announcement</code>
+  <code class="spec-swatch-val">#539df5</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0000"></span>
+  <code class="spec-swatch-name">--start-gradient-color</code>
+  <code class="spec-swatch-val">#0000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0000"></span>
+  <code class="spec-swatch-name">--end-gradient-color</code>
+  <code class="spec-swatch-val">#0000</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--bg-inset-change-press</code></td><td><code>-4px</code></td><td></td></tr>
+<tr><td><code>--margin</code></td><td><code>calc(40px + var(--encore-cards-margin) + max(0px, (var(--hom</code></td><td></td></tr>
+<tr><td><code>--left-sidebar-width</code></td><td><code>232</code></td><td></td></tr>
+<tr><td><code>--content-spacing</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--content-max-width</code></td><td><code>1955px</code></td><td></td></tr>
+<tr><td><code>--main-view-grid-width</code></td><td><code>calc(100vw - 720px)</code></td><td></td></tr>
+<tr><td><code>--left-sidebar-grid-area-z-index</code></td><td><code>4</code></td><td></td></tr>
+<tr><td><code>--above-everything-except-now-playing-bar-z-index</code></td><td><code>5</code></td><td></td></tr>
+<tr><td><code>--above-everything-grid-area-z-index</code></td><td><code>7</code></td><td></td></tr>
+<tr><td><code>--bottom-bar-height</code></td><td><code>0px</code></td><td></td></tr>
+<tr><td><code>--context-menu-artwork-border-radius</code></td><td><code>2px</code></td><td></td></tr>
+<tr><td><code>--context-menu-submenu-item-height</code></td><td><code>32px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Spotify – Web Player</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Spotify
+Source: https://www.spotify.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-to: #121212
+  --background-base: #121212
+  --background-highlight: #1f1f1f
+  --background-press: #000
+  --background-elevated-base: #1f1f1f
+  --background-elevated-highlight: #2a2a2a
+  --background-elevated-press: #191919
+  --background-tinted-base: #ffffff1a
+  --background-tinted-highlight: #ffffff24
+  --background-tinted-press: #ffffff36
+  --text-base: #fff
+  --text-subdued: #b3b3b3
+  --text-bright-accent: #1ed760
+  --text-negative: #f3727f
+  --text-warning: #ffa42b
+  --text-positive: #1ed760
+  --text-announcement: #539df5
+  --generic-tooltip-background-color: #282828
+  --os-handle-bg: #00000070
+  --os-handle-bg-hover: #0000008c
+  --os-handle-bg-active: #000000a8
+  --start-gradient-color: #0000
+  --end-gradient-color: #0000
+  --radial-color-from: #0000 10%
+
+GEOMETRY (radius / spacing / size)
+  --bg-inset-change-press: -4px
+  --margin: calc(40px + var(--encore-cards-margin) + max(0px, (var(--hom
+  --left-sidebar-width: 232
+  --content-spacing: 16px
+  --content-max-width: 1955px
+  --main-view-grid-width: calc(100vw - 720px)
+  --left-sidebar-grid-area-z-index: 4
+  --above-everything-except-now-playing-bar-z-index: 5
+  --above-everything-grid-area-z-index: 7
+  --bottom-bar-height: 0px
+  --context-menu-artwork-border-radius: 2px
+  --context-menu-submenu-item-height: 32px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Spotify – Web Player
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

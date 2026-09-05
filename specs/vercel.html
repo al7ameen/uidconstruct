@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Vercel design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Vercel colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/vercel" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Vercel design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Vercel colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/vercel" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Vercel design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Vercel colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Vercel design tokens","description":"Vercel colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/vercel","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://vercel.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Vercel</p>
+  <h1>Vercel design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://vercel.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>20 colours</span> · <span>12 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fvercel.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fafafa"></span>
+  <code class="spec-swatch-name">--accents-1</code>
+  <code class="spec-swatch-val">#fafafa</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#eaeaea"></span>
+  <code class="spec-swatch-name">--accents-2</code>
+  <code class="spec-swatch-val">#eaeaea</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#999"></span>
+  <code class="spec-swatch-name">--accents-3</code>
+  <code class="spec-swatch-val">#999</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#888"></span>
+  <code class="spec-swatch-name">--accents-4</code>
+  <code class="spec-swatch-val">#888</code>
+</li></ul>
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fef2f2"></span>
+  <code class="spec-swatch-name">--color-red-50</code>
+  <code class="spec-swatch-val">#fef2f2</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fffbeb"></span>
+  <code class="spec-swatch-name">--color-amber-50</code>
+  <code class="spec-swatch-val">#fffbeb</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#edb200"></span>
+  <code class="spec-swatch-name">--color-yellow-500</code>
+  <code class="spec-swatch-val">#edb200</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#4f39f6"></span>
+  <code class="spec-swatch-name">--color-indigo-600</code>
+  <code class="spec-swatch-val">#4f39f6</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f5f3ff"></span>
+  <code class="spec-swatch-name">--color-violet-50</code>
+  <code class="spec-swatch-val">#f5f3ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ede9fe"></span>
+  <code class="spec-swatch-name">--color-violet-100</code>
+  <code class="spec-swatch-val">#ede9fe</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#7008e7"></span>
+  <code class="spec-swatch-name">--color-violet-700</code>
+  <code class="spec-swatch-val">#7008e7</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#cad5e2"></span>
+  <code class="spec-swatch-name">--color-slate-300</code>
+  <code class="spec-swatch-val">#cad5e2</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#62748e"></span>
+  <code class="spec-swatch-name">--color-slate-500</code>
+  <code class="spec-swatch-val">#62748e</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f9fafb"></span>
+  <code class="spec-swatch-name">--color-gray-50</code>
+  <code class="spec-swatch-val">#f9fafb</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#030712"></span>
+  <code class="spec-swatch-name">--color-gray-950</code>
+  <code class="spec-swatch-val">#030712</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f4f4f5"></span>
+  <code class="spec-swatch-name">--color-zinc-100</code>
+  <code class="spec-swatch-val">#f4f4f5</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#52525c"></span>
+  <code class="spec-swatch-name">--color-zinc-600</code>
+  <code class="spec-swatch-val">#52525c</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#18181b"></span>
+  <code class="spec-swatch-name">--color-zinc-900</code>
+  <code class="spec-swatch-val">#18181b</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#404040"></span>
+  <code class="spec-swatch-name">--color-neutral-700</code>
+  <code class="spec-swatch-val">#404040</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#262626"></span>
+  <code class="spec-swatch-name">--color-neutral-800</code>
+  <code class="spec-swatch-val">#262626</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: Apple Color Emoji, SFMono-Regular, Consolas, inherit, Georgia.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-lg</code></td><td><code>1.125rem</code></td><td></td></tr>
+<tr><td><code>--tracking-tighter</code></td><td><code>-.05em</code></td><td></td></tr>
+<tr><td><code>--text-xs</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--text-sm</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--text-base</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--text-xl</code></td><td><code>1.25rem</code></td><td></td></tr>
+<tr><td><code>--text-2xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--text-3xl</code></td><td><code>1.875rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl</code></td><td><code>3rem</code></td><td></td></tr>
+<tr><td><code>--text-5xl--line-height</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--text-7xl</code></td><td><code>4.5rem</code></td><td></td></tr>
+<tr><td><code>--text-7xl--line-height</code></td><td><code>1</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--blur-xl</code></td><td><code>24px</code></td><td></td></tr>
+<tr><td><code>--spacing</code></td><td><code>.25rem</code></td><td></td></tr>
+<tr><td><code>--radius-xl</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--radius-3xl</code></td><td><code>1.5rem</code></td><td></td></tr>
+<tr><td><code>--blur-xs</code></td><td><code>4px</code></td><td></td></tr>
+<tr><td><code>--blur-sm</code></td><td><code>8px</code></td><td></td></tr>
+<tr><td><code>--blur-md</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--blur-lg</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--spacing-fluid-16-24</code></td><td><code>clamp(1rem, .1429rem + 1.4286vi, 1.5rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-fluid-20-24</code></td><td><code>clamp(1.25rem, .8214rem + .7143vi, 1.5rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-fluid-20-32</code></td><td><code>clamp(1.25rem, -.0357rem + 2.1429vi, 2rem)</code></td><td></td></tr>
+<tr><td><code>--spacing-fluid-24-40</code></td><td><code>clamp(1.5rem, -.2143rem + 2.8571vi, 2.5rem)</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>961px</code></li><li><code>601px</code></li><li><code>600px</code></li><li><code>401px</code></li><li><code>1200px</code></li><li><code>1400px</code></li><li><code>1600px</code></li><li><code>992px</code></li><li><code>960px</code></li><li><code>880px</code></li><li><code>750px</code></li><li><code>540px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Agentic Infrastructure - Vercel | The autonomous stack for every app and agent.
+Headings in DOM order: H3 Agent Stack | H3 Core Platform | H3 Tools | H3 Learn | H3 Build | H3 Explore | H1 Agentic Infrastructure | H2 Build agents on infrastructure that thinks like them | H2 Ship apps that scale from zero to millions instantly | H2 Host platforms that serve every customer | H2 Recently shipped | H2 Built by you, or your agents | H2 Agent Stack | H2 Core Platform | H2 Security | H2 Tools | H2 Frameworks | H2 SDKs | H2 Build | H2 Learn | H2 Explore | H2 Company | H2 Legal &amp; Trust | H2 Social
+Navigation labels: AI SDK | AI Gateway | Sandbox | Passport | Connect | eve | Security | Content Delivery | Fluid Compute | Observability | Workflows | CI/CD | Next.js | Vercel Agent | Vercel Plugin | Open Source | Domains↗ | v0↗ | Docs | About
+Buttons / calls to action: Copy Wordmark | Copy Logo | Download Brand Assets | Brand Guidelines | Products | Resources | Ask AI | Open menu | Onboard your agentPaste to your agentOnboard your agent | Cookie Preferences | View as AI agent
+Body copy: To ship apps and agentsFor coding agentsFor coding agents to ship apps and agents automated by agents. | Notion powers millions of agent conversations daily on Vercel. | Zapier serves over 100 million monthly website visits on Vercel. | Mintlify powers documentation for over 20,000 companies on Vercel. | Secure every internal agent, app, and deployment with your identity provider. | Run production workloads in isolated containers on Vercel.
+Form fields: system | light | dark
+Footer links: AI SDK | AI Gateway | Sandbox | Workflows | ConnectNew | PassportNew | eveNew | CI/CD | Content Delivery | Fluid Compute | Observability | Platform Security | WAF | Bot Management | BotID | Vercel DropNew
+Element counts: 10 sections | 167 links | 17 images | 11 buttons | 30 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Vercel
+Source: https://vercel.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --color-red-50: #fef2f2
+  --color-amber-50: #fffbeb
+  --color-yellow-500: #edb200
+  --color-indigo-600: #4f39f6
+  --color-violet-50: #f5f3ff
+  --color-violet-100: #ede9fe
+  --color-violet-700: #7008e7
+  --color-slate-300: #cad5e2
+  --color-slate-500: #62748e
+  --color-gray-50: #f9fafb
+  --color-gray-950: #030712
+  --color-zinc-100: #f4f4f5
+  --color-zinc-600: #52525c
+  --color-zinc-900: #18181b
+  --color-neutral-700: #404040
+  --color-neutral-800: #262626
+  --accents-1: #fafafa
+  --accents-2: #eaeaea
+  --accents-3: #999
+  --accents-4: #888
+
+TYPE TOKENS
+  --text-lg: 1.125rem
+  --tracking-tighter: -.05em
+  --text-xs: .75rem
+  --text-sm: .875rem
+  --text-base: 1rem
+  --text-xl: 1.25rem
+  --text-2xl: 1.5rem
+  --text-3xl: 1.875rem
+  --text-5xl: 3rem
+  --text-5xl--line-height: 1
+  --text-7xl: 4.5rem
+  --text-7xl--line-height: 1
+
+GEOMETRY (radius / spacing / size)
+  --blur-xl: 24px
+  --spacing: .25rem
+  --radius-xl: .75rem
+  --radius-3xl: 1.5rem
+  --blur-xs: 4px
+  --blur-sm: 8px
+  --blur-md: 12px
+  --blur-lg: 16px
+  --spacing-fluid-16-24: clamp(1rem, .1429rem + 1.4286vi, 1.5rem)
+  --spacing-fluid-20-24: clamp(1.25rem, .8214rem + .7143vi, 1.5rem)
+  --spacing-fluid-20-32: clamp(1.25rem, -.0357rem + 2.1429vi, 2rem)
+  --spacing-fluid-24-40: clamp(1.5rem, -.2143rem + 2.8571vi, 2.5rem)
+
+BREAKPOINTS SEEN IN CSS
+  961px, 601px, 600px, 401px, 1200px, 1400px, 1600px, 992px, 960px, 880px, 750px, 540px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Agentic Infrastructure - Vercel | The autonomous stack for every app and agent.
+  Headings in DOM order: H3 Agent Stack | H3 Core Platform | H3 Tools | H3 Learn | H3 Build | H3 Explore | H1 Agentic Infrastructure | H2 Build agents on infrastructure that thinks like them | H2 Ship apps that scale from zero to millions instantly | H2 Host platforms that serve every customer | H2 Recently shipped | H2 Built by you, or your agents | H2 Agent Stack | H2 Core Platform | H2 Security | H2 Tools | H2 Frameworks | H2 SDKs | H2 Build | H2 Learn | H2 Explore | H2 Company | H2 Legal &amp; Trust | H2 Social
+  Navigation labels: AI SDK | AI Gateway | Sandbox | Passport | Connect | eve | Security | Content Delivery | Fluid Compute | Observability | Workflows | CI/CD | Next.js | Vercel Agent | Vercel Plugin | Open Source | Domains↗ | v0↗ | Docs | About
+  Buttons / calls to action: Copy Wordmark | Copy Logo | Download Brand Assets | Brand Guidelines | Products | Resources | Ask AI | Open menu | Onboard your agentPaste to your agentOnboard your agent | Cookie Preferences | View as AI agent
+  Body copy: To ship apps and agentsFor coding agentsFor coding agents to ship apps and agents automated by agents. | Notion powers millions of agent conversations daily on Vercel. | Zapier serves over 100 million monthly website visits on Vercel. | Mintlify powers documentation for over 20,000 companies on Vercel. | Secure every internal agent, app, and deployment with your identity provider. | Run production workloads in isolated containers on Vercel.
+  Form fields: system | light | dark
+  Footer links: AI SDK | AI Gateway | Sandbox | Workflows | ConnectNew | PassportNew | eveNew | CI/CD | Content Delivery | Fluid Compute | Observability | Platform Security | WAF | Bot Management | BotID | Vercel DropNew
+  Element counts: 10 sections | 167 links | 17 images | 11 buttons | 30 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

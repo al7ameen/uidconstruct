@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>GitHub design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every GitHub colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/github" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="GitHub design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every GitHub colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/github" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="GitHub design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every GitHub colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"GitHub design tokens","description":"GitHub colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/github","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://github.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> GitHub</p>
+  <h1>GitHub design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://github.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>0 type</span> · <span>0 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fgithub.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  <h3>Accents &amp; semantic</h3><ul class="spec-swatches spec-swatches--accent"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1f883d"></span>
+  <code class="spec-swatch-name">--bgColor-success-emphasis</code>
+  <code class="spec-swatch-val">#1f883d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0969da"></span>
+  <code class="spec-swatch-name">--bgColor-accent-emphasis</code>
+  <code class="spec-swatch-val">#0969da</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ddf4ff"></span>
+  <code class="spec-swatch-name">--bgColor-accent-muted</code>
+  <code class="spec-swatch-val">#ddf4ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#cf222e"></span>
+  <code class="spec-swatch-name">--bgColor-danger-emphasis</code>
+  <code class="spec-swatch-val">#cf222e</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffebe9"></span>
+  <code class="spec-swatch-name">--bgColor-danger-muted</code>
+  <code class="spec-swatch-val">#ffebe9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#dafbe1"></span>
+  <code class="spec-swatch-name">--bgColor-success-muted</code>
+  <code class="spec-swatch-val">#dafbe1</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0969da"></span>
+  <code class="spec-swatch-name">--borderColor-accent-emphasis</code>
+  <code class="spec-swatch-val">#0969da</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#54aeff66"></span>
+  <code class="spec-swatch-name">--borderColor-accent-muted</code>
+  <code class="spec-swatch-val">#54aeff66</code>
+</li></ul>
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1f883d"></span>
+  <code class="spec-swatch-name">--bgColor-success-emphasis</code>
+  <code class="spec-swatch-val">#1f883d</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0969da"></span>
+  <code class="spec-swatch-name">--bgColor-accent-emphasis</code>
+  <code class="spec-swatch-val">#0969da</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ddf4ff"></span>
+  <code class="spec-swatch-name">--bgColor-accent-muted</code>
+  <code class="spec-swatch-val">#ddf4ff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#9a6700"></span>
+  <code class="spec-swatch-name">--bgColor-attention-emphasis</code>
+  <code class="spec-swatch-val">#9a6700</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff8c5"></span>
+  <code class="spec-swatch-name">--bgColor-attention-muted</code>
+  <code class="spec-swatch-val">#fff8c5</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#cf222e"></span>
+  <code class="spec-swatch-name">--bgColor-danger-emphasis</code>
+  <code class="spec-swatch-val">#cf222e</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffebe9"></span>
+  <code class="spec-swatch-name">--bgColor-danger-muted</code>
+  <code class="spec-swatch-val">#ffebe9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#eff2f5"></span>
+  <code class="spec-swatch-name">--bgColor-disabled</code>
+  <code class="spec-swatch-val">#eff2f5</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#9a6700"></span>
+  <code class="spec-swatch-name">--borderColor-attention-emphasis</code>
+  <code class="spec-swatch-val">#9a6700</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+Title / description: GitHub · Change is constant. GitHub keeps you ahead. · GitHub
+Headings in DOM order: H2 Navigation Menu | H1 The future of building happens together | H2 GitHub features | H2 GitHub customers | H2 Accelerate your entire workflow | H3 Your AI partner everywhere. Copilot is ready to work with you at each step of the software development lifecycle. | H3 Automate your path to production | H3 Code instantly from anywhere | H3 Keep momentum on the go | H3 Shape your toolchain | H2 Built-in application security where found means fixed | H3 Apply fixes in seconds. Spend less time debugging and more time building features with Copilot Autofix. | H2 Work together, achieve more | H3 Plan with clarity. Organize everything from high-level roadmaps to everyday tasks. | H3 Keep track of your tasks | H3 Share ideas and ask questions | H3 Review code changes together | H3 Fund open source projects | H2 From startups to enterprises, GitHub scales with teams of any size in any industry. | H2 Millions of developers and businesses call GitHub home | H2 Site-wide Links | H3 The developer newsletter | H3 Platform | H3 Ecosystem
+Navigation labels: Sign in | GitHub CopilotWrite better code with AI | GitHub Copilot appDirect agents from issue to merge | MCP RegistryIntegrate external tools | ActionsAutomate any workflow | CodespacesInstant dev environments | IssuesPlan and track work | Code ReviewManage code changes | Code QualityEnforce quality at merge | GitHub Advanced SecurityFind and fix vulnerabilities | Code securitySecure your code as you build | Secret protectionStop leaks before they start | Why GitHub | Documentation | Blog | Changelog | Marketplace | View all features | Enterprises | Small and medium teams
+Buttons / calls to action: Close | Close navigation menu | Toggle navigation | Platform | Solutions | Resources | Open Source | Enterprise | Search/ | Sign up for GitHub | Pause | Code | Plan | Collaborate | Automate | Secure
+Form fields: source | you@domain.com
+Footer links: Subscribe | Features | Enterprise | Copilot | AI | Security | Pricing | Team | Resources | Roadmap | Compare GitHub | Developer API | Partners | Education | GitHub CLI | GitHub Desktop
+Element counts: 11 sections | 1 cards | 142 links | 24 images | 39 buttons | 2 forms | 28 lists | 2 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — GitHub
+Source: https://github.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --bgColor-success-emphasis: #1f883d
+  --bgColor-accent-emphasis: #0969da
+  --bgColor-accent-muted: #ddf4ff
+  --bgColor-attention-emphasis: #9a6700
+  --bgColor-attention-muted: #fff8c5
+  --bgColor-danger-emphasis: #cf222e
+  --bgColor-danger-muted: #ffebe9
+  --bgColor-disabled: #eff2f5
+  --bgColor-done-emphasis: #8250df
+  --bgColor-done-muted: #fbefff
+  --bgColor-emphasis: #25292e
+  --bgColor-inverse: #25292e
+  --bgColor-muted: #f6f8fa
+  --bgColor-neutral-emphasis: #59636e
+  --bgColor-neutral-muted: #818b981f
+  --bgColor-severe-emphasis: #bc4c00
+  --bgColor-severe-muted: #fff1e5
+  --bgColor-sponsors-emphasis: #bf3989
+  --bgColor-sponsors-muted: #ffeff7
+  --bgColor-success-muted: #dafbe1
+  --bgColor-transparent: #fff0
+  --borderColor-accent-emphasis: #0969da
+  --borderColor-accent-muted: #54aeff66
+  --borderColor-attention-emphasis: #9a6700
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light — a prefers-color-scheme: dark block exists, so the alternate theme may follow the OS rather than a class.
+  Title / description: GitHub · Change is constant. GitHub keeps you ahead. · GitHub
+  Headings in DOM order: H2 Navigation Menu | H1 The future of building happens together | H2 GitHub features | H2 GitHub customers | H2 Accelerate your entire workflow | H3 Your AI partner everywhere. Copilot is ready to work with you at each step of the software development lifecycle. | H3 Automate your path to production | H3 Code instantly from anywhere | H3 Keep momentum on the go | H3 Shape your toolchain | H2 Built-in application security where found means fixed | H3 Apply fixes in seconds. Spend less time debugging and more time building features with Copilot Autofix. | H2 Work together, achieve more | H3 Plan with clarity. Organize everything from high-level roadmaps to everyday tasks. | H3 Keep track of your tasks | H3 Share ideas and ask questions | H3 Review code changes together | H3 Fund open source projects | H2 From startups to enterprises, GitHub scales with teams of any size in any industry. | H2 Millions of developers and businesses call GitHub home | H2 Site-wide Links | H3 The developer newsletter | H3 Platform | H3 Ecosystem
+  Navigation labels: Sign in | GitHub CopilotWrite better code with AI | GitHub Copilot appDirect agents from issue to merge | MCP RegistryIntegrate external tools | ActionsAutomate any workflow | CodespacesInstant dev environments | IssuesPlan and track work | Code ReviewManage code changes | Code QualityEnforce quality at merge | GitHub Advanced SecurityFind and fix vulnerabilities | Code securitySecure your code as you build | Secret protectionStop leaks before they start | Why GitHub | Documentation | Blog | Changelog | Marketplace | View all features | Enterprises | Small and medium teams
+  Buttons / calls to action: Close | Close navigation menu | Toggle navigation | Platform | Solutions | Resources | Open Source | Enterprise | Search/ | Sign up for GitHub | Pause | Code | Plan | Collaborate | Automate | Secure
+  Form fields: source | you@domain.com
+  Footer links: Subscribe | Features | Enterprise | Copilot | AI | Security | Pricing | Team | Resources | Roadmap | Compare GitHub | Developer API | Partners | Education | GitHub CLI | GitHub Desktop
+  Element counts: 11 sections | 1 cards | 142 links | 24 images | 39 buttons | 2 forms | 28 lists | 2 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Stripe design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Stripe colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/stripe" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Stripe design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Stripe colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/stripe" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Stripe design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Stripe colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Stripe design tokens","description":"Stripe colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/stripe","datePublished":"2026-09-05","dateModified":"2026-09-05","isBasedOn":"https://stripe.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Stripe</p>
+  <h1>Stripe design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://stripe.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>21 colours</span> · <span>2 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-05</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fstripe.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--cardBackground</code>
+  <code class="spec-swatch-val">#fff</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#424770"></span>
+  <code class="spec-swatch-name">--textColor</code>
+  <code class="spec-swatch-val">#424770</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#cad2d9"></span>
+  <code class="spec-swatch-name">--closeButtonFill</code>
+  <code class="spec-swatch-val">#cad2d9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#929eaa"></span>
+  <code class="spec-swatch-name">--closeButtonFillHover</code>
+  <code class="spec-swatch-val">#929eaa</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff6118"></span>
+  <code class="spec-swatch-name">--suite-color</code>
+  <code class="spec-swatch-val">#ff6118</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fb76fa"></span>
+  <code class="spec-swatch-name">--stop-color</code>
+  <code class="spec-swatch-val">#fb76fa</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#533afd"></span>
+  <code class="spec-swatch-name">--gradient-color</code>
+  <code class="spec-swatch-val">#533afd</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fc5"></span>
+  <code class="spec-swatch-name">--bento-right-blob</code>
+  <code class="spec-swatch-val">#fc5</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#8a35df"></span>
+  <code class="spec-swatch-name">--stats-color</code>
+  <code class="spec-swatch-val">#8a35df</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Font families seen in the CSS: sohne-var, SourceCodePro, Ubuntu, inherit.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--fontWeightNormal</code></td><td><code>300</code></td><td></td></tr>
+<tr><td><code>--fontFamily</code></td><td><code>sohne-var,&quot;Helvetica Neue&quot;,Arial,sans-serif</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--horizontal-scale-left</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--border-hole-radius</code></td><td><code>0px</code></td><td></td></tr>
+<tr><td><code>--gap-inward</code></td><td><code>7px</code></td><td></td></tr>
+<tr><td><code>--navigation-height</code></td><td><code>76px</code></td><td></td></tr>
+<tr><td><code>--navigation-border-radius</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--section-container-padding-inline</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--section-container-pbs</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--section-container-pbe</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--navigation-menu-footer-height</code></td><td><code>80px</code></td><td></td></tr>
+<tr><td><code>--hero-font-lang-large</code></td><td><code>2.125rem</code></td><td></td></tr>
+<tr><td><code>--hero-font-lang-medium</code></td><td><code>2.125rem</code></td><td></td></tr>
+<tr><td><code>--hero-font-lang-small</code></td><td><code>2.125rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>600px</code></li><li><code>599px</code></li><li><code>640px</code></li><li><code>940px</code></li><li><code>1300px</code></li><li><code>939px</code></li><li><code>1051px</code></li><li><code>1264px</code></li><li><code>639px</code></li><li><code>1263px</code></li><li><code>840px</code></li><li><code>480px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Stripe | Financial Infrastructure to Grow Your Revenue | Stripe is a financial services platform that helps all types of businesses accept payments, build flexible billing models and manage money movement.
+Headings in DOM order: H1 Financial infrastructure to grow your revenue. Accept payments, offer financial services and implement custom revenue models – from your first transaction to your billionth. | H2 Flexible solutions for every business model. | H3 Accept and optimise payments globally – online and in person | H3 Enable any billing model | H3 Monetise through agentic commerce | H3 Create a card issuing programme | H3 Access borderless money movement with stablecoins and crypto | H3 Embed payments in your platform | H2 The backbone of global commerce | H2 Powering businesses of all sizes. | H3 Transform your enterprise with agile financial infrastructure | H3 Hertz unifies commerce with Stripe. | H3 URBN consolidates $5 billion in online and in-store revenue onto Stripe. | H3 Instacart powers online grocery delivery with Stripe. | H3 Le Monde improves local and international payments with Stripe. | H3 Build a foundation for your startup that enables faster growth | H3 Make your SaaS platform a complete financial operating system | H2 Reliable, extensible infrastructure for every stack. | H3 Connect to existing systems. | H3 Scale with confidence. | H3 Choose an integration path. | H2 What's happening | H3 Businesses on Stripe generated US$1.9tn in 2025. | H3 150K+ users have their best day ever on Stripe.
+Navigation labels: Pricing | Sign in | Start now | Contact sales | Sign inSign in | Stripe for enterprises | Stripe for startups | Stripe for platforms
+Buttons / calls to action: Products | Solutions | Developers | Resources | Pricing | Sign in | Start now | Contact sales | Back | Toggle navigation menu | Sign inSign in | Request an invite | Accept and optimise payments globally – online and in person | Enable any billing modelPro PlanBilled monthlyTokens₹0.95 per 1,000 unitsUsage meterTokens used in the last 30 days | Monetise through agentic commerce | Create a card issuing programme
+Footer links: Pricing | Atlas | Authorization Boost | Billing | Capital | Capital for platforms | Checkout | Climate | Connect | Crypto | Crypto Onramp | Data Pipeline | Elements | Financial Connections | Global Payouts | Identity
+Element counts: 15 sections | 215 cards | 180 links | 31 images | 29 buttons | 5 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Stripe
+Source: https://stripe.com
+Extracted: 2026-09-05
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --textColor: #424770
+  --cardBackground: #fff
+  --closeButtonFill: #cad2d9
+  --closeButtonFillHover: #929eaa
+  --suite-color: #ff6118
+  --stop-color: #fb76fa
+  --gradient-color: #533afd
+  --customerLogoColorAltShadeDarker: color-mix(in srgb,var(--customerLogoColor) 85%,#000)
+  --customerLogoColorAltShadeLighter: color-mix(in srgb,var(--customerLogoColor) 75%,#fff)
+  --bento-right-blob: #fc5
+  --browser-graphic-dots-color: color-mix(in srgb,var(--hds-color-util-neutral-200) 50%,tran
+  --agentic-box-shadow: 0 20.187px 40.374px -20.187px rgba(0,0,0,.1)
+  --stats-color: #8a35df
+  --stats-border-color: rgba(129,41,223,.2)
+  --stats-option-selected-background: rgba(129,41,223,.1)
+  --stats-option-active-background: rgba(129,41,223,.05)
+  --stats-indicator-color: var(--stats-color,#1318c1)
+  --startups-card-border-gradient-bg: radial-gradient(circle,#f72df3,#533afd 33%,var(--hds-color-c
+  --gradient-stat-one: linear-gradient(270deg,#ffd601 -380%,#ee30fb -60%,#635bff 11
+  --gradient-stat-two: linear-gradient(270deg,#ffd601 -265%,#ee30fb 60%,#635bff 240
+  --gradient-stat-three: linear-gradient(270deg,#ffd601 -20%,#ee30fb 190%,#635bff 365
+
+TYPE TOKENS
+  --fontWeightNormal: 300
+  --fontFamily: sohne-var,&quot;Helvetica Neue&quot;,Arial,sans-serif
+
+GEOMETRY (radius / spacing / size)
+  --horizontal-scale-left: 0
+  --border-hole-radius: 0px
+  --gap-inward: 7px
+  --navigation-height: 76px
+  --navigation-border-radius: 0
+  --section-container-padding-inline: 0
+  --section-container-pbs: 0
+  --section-container-pbe: 0
+  --navigation-menu-footer-height: 80px
+  --hero-font-lang-large: 2.125rem
+  --hero-font-lang-medium: 2.125rem
+  --hero-font-lang-small: 2.125rem
+
+BREAKPOINTS SEEN IN CSS
+  600px, 599px, 640px, 940px, 1300px, 939px, 1051px, 1264px, 639px, 1263px, 840px, 480px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Stripe | Financial Infrastructure to Grow Your Revenue | Stripe is a financial services platform that helps all types of businesses accept payments, build flexible billing models and manage money movement.
+  Headings in DOM order: H1 Financial infrastructure to grow your revenue. Accept payments, offer financial services and implement custom revenue models – from your first transaction to your billionth. | H2 Flexible solutions for every business model. | H3 Accept and optimise payments globally – online and in person | H3 Enable any billing model | H3 Monetise through agentic commerce | H3 Create a card issuing programme | H3 Access borderless money movement with stablecoins and crypto | H3 Embed payments in your platform | H2 The backbone of global commerce | H2 Powering businesses of all sizes. | H3 Transform your enterprise with agile financial infrastructure | H3 Hertz unifies commerce with Stripe. | H3 URBN consolidates $5 billion in online and in-store revenue onto Stripe. | H3 Instacart powers online grocery delivery with Stripe. | H3 Le Monde improves local and international payments with Stripe. | H3 Build a foundation for your startup that enables faster growth | H3 Make your SaaS platform a complete financial operating system | H2 Reliable, extensible infrastructure for every stack. | H3 Connect to existing systems. | H3 Scale with confidence. | H3 Choose an integration path. | H2 What's happening | H3 Businesses on Stripe generated US$1.9tn in 2025. | H3 150K+ users have their best day ever on Stripe.
+  Navigation labels: Pricing | Sign in | Start now | Contact sales | Sign inSign in | Stripe for enterprises | Stripe for startups | Stripe for platforms
+  Buttons / calls to action: Products | Solutions | Developers | Resources | Pricing | Sign in | Start now | Contact sales | Back | Toggle navigation menu | Sign inSign in | Request an invite | Accept and optimise payments globally – online and in person | Enable any billing modelPro PlanBilled monthlyTokens₹0.95 per 1,000 unitsUsage meterTokens used in the last 30 days | Monetise through agentic commerce | Create a card issuing programme
+  Footer links: Pricing | Atlas | Authorization Boost | Billing | Capital | Capital for platforms | Checkout | Climate | Connect | Crypto | Crypto Onramp | Data Pipeline | Elements | Financial Connections | Global Payouts | Identity
+  Element counts: 15 sections | 215 cards | 180 links | 31 images | 29 buttons | 5 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/figma">Figma</a></li><li><a href="/specs/framer">Framer</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/airbnb">Airbnb</a></li><li><a href="/specs/spotify">Spotify</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies.</span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>
