@@ -762,6 +762,79 @@ await ta('no live-looking credentials in tracked files', async () => {
     assert.deepStrictEqual(hits, [], 'tracked files contain live-looking keys:\n         ' + hits.join('\n         '));
 });
 
+section('font mining (mineFonts / mineFontFaces / decodeCssIdent)');
+// These functions had ZERO coverage while producing the font data shown on
+// every published spec page. Two live bugs slipped through unnoticed: an
+// icon-font filter whose regex was double-escaped (so it matched nothing at
+// all), and undecoded CSS escapes printed raw on apple.com's page.
+
+t('decodeCssIdent: hex escape consumes exactly one following space', () => {
+    assert.strictEqual(MINE.decodeCssIdent('\\30d2 x'), 'ヒx');
+});
+t('decodeCssIdent: 1-6 hex digits', () => {
+    assert.strictEqual(MINE.decodeCssIdent('\\0041 \\0042'), 'AB');
+    assert.strictEqual(MINE.decodeCssIdent('W\\00f6hrner'), 'Wöhrner');
+});
+t('decodeCssIdent: escaped ordinary char, including space', () => {
+    assert.strictEqual(MINE.decodeCssIdent('\\ '), ' ');
+    assert.strictEqual(MINE.decodeCssIdent('a\\-b'), 'a-b');
+});
+t('decodeCssIdent: lone trailing backslash dropped', () => {
+    assert.strictEqual(MINE.decodeCssIdent('a\\'), 'a');
+});
+t('decodeCssIdent: surrogate / out-of-range -> replacement char', () => {
+    assert.strictEqual(MINE.decodeCssIdent('\\d800'), '\ufffd');
+    assert.strictEqual(MINE.decodeCssIdent('\\110000'), '\ufffd');
+});
+t('decodeCssIdent: plain names untouched', () => {
+    assert.strictEqual(MINE.decodeCssIdent('Inter'), 'Inter');
+});
+t('mineFontFaces: decodes escapes inside @font-face', () => {
+    // Built from char codes: a backslash inside a JS string literal is
+    // eaten by string escaping, which is how this fixture failed twice.
+    const BS = String.fromCharCode(92);
+    const css = "@font-face{font-family:'" + BS + '30d2' + BS + '30e9' + BS + " Pro W3';src:url(a.woff2)}";
+    const faces = [...MINE.mineFontFaces(css)];
+    assert.deepStrictEqual(faces, ['ヒラ Pro W3']);
+});
+t('mineFonts: drops generic, fallback and CSS-wide keywords', () => {
+    const r = MINE.mineFonts("body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif,inherit}");
+    assert.deepStrictEqual(r, []);
+});
+t('mineFonts: drops icon fonts (regression for the dead double-escaped regex)', () => {
+    const r = MINE.mineFonts("body{font-family:'Apple Icons 100','Chevron Sans','Material Icons',Inter}");
+    assert.ok(!r.some(f => /icon|chevron/i.test(f)), 'kept junk: ' + r.join(','));
+    assert.ok(r.includes('Inter'), 'dropped real font: ' + r.join(','));
+});
+t('mineFonts: collapses script subsets of one family', () => {
+    const r = MINE.mineFonts("body{font-family:'Circular Sp-Arab','Circular Sp-Deva','Circular Sp-Grek','Circular Sp'}");
+    assert.strictEqual(r.length, 1, 'expected 1 family, got: ' + r.join(','));
+});
+t('mineFonts: fonts the site ships itself are listed first', () => {
+    const css = "@font-face{font-family:'Own Sans';src:url(x.woff2)}\nbody{font-family:'Zeta Custom','Own Sans'}";
+    assert.deepStrictEqual(MINE.mineFonts(css), ['Own Sans', 'Zeta Custom']);
+});
+t('mineFonts: decodes escapes in plain declarations (apple.com regression)', () => {
+    const B = String.fromCharCode(92);
+    // Real shape from apple.com: two hex escapes, then a double space (one is
+    // consumed by the escape, one is the separator), then 'Pro W3'.
+    const css = 'body{font-family:' + B + '30d2' + B + '30e9' + B + '30ae' + B + '30ce' + B + '89d2' + B + '30b4  Pro W3, SF Pro Text';
+    const r = MINE.mineFonts(css);
+    assert.ok(r.includes('ヒラギノ角ゴ Pro W3'), 'not decoded: ' + JSON.stringify(r));
+    assert.ok(!r.some(f => f.includes(B)), 'raw escape leaked: ' + JSON.stringify(r));
+});
+t('mineFonts: escaped name still matches its decoded @font-face for sorting', () => {
+    const B = String.fromCharCode(92);
+    const css = '@font-face{font-family:' + B + '30d2' + B + '30e9  Pro W3;src:url(a.woff2)}' +
+                '\nbody{font-family:Zeta Custom,' + B + '30d2' + B + '30e9  Pro W3}';
+    assert.deepStrictEqual(MINE.mineFonts(css), ['ヒラ Pro W3', 'Zeta Custom']);
+});
+
+t('mineFonts: capped at 10', () => {
+    const names = Array.from({ length: 12 }, (_, i) => "'Fam" + i + "'").join(',');
+    assert.strictEqual(MINE.mineFonts('body{font-family:' + names + '}').length, 10);
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
 })();

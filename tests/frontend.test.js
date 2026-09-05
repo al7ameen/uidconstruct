@@ -612,6 +612,30 @@ test('trademark notice present in every published spec page, exactly once', () =
     }
 });
 
+// Regression guard: CSS identifiers may contain escape sequences (\30d2 = a
+// Japanese char). If the miner stops decoding them the published pages show raw
+// backslash garbage where a font name should be. This shipped once, so assert it
+// cannot ship again. Scoped to the typeface sentence because a legitimate
+// content: "\2022" bullet elsewhere in a page must not trip it.
+test('no published spec page shows an undecoded CSS escape in its typeface list', () => {
+    const dir = path.join(ROOT, 'specs');
+    const pages = fs.readdirSync(dir).filter((f) => f.endsWith('.html'));
+    const BS = String.fromCharCode(92);
+    // The pattern SOURCE needs two backslash chars to match one literal backslash.
+    // BS + '[0-9a-f...]' yields \[ - an escaped literal bracket that can
+    // never match, which made this guard pass vacuously.
+    const raw = new RegExp(BS + BS + '[0-9a-fA-F]{2,6}');
+    assert.ok(pages.length >= 15, 'expected >=15 spec pages, found ' + pages.length);
+    for (const f of pages) {
+        const body = fs.readFileSync(path.join(dir, f), 'utf8');
+        const i = body.indexOf('Typefaces named');
+        if (i < 0) continue; // page has no typeface section (github: JS-injected fonts)
+        const region = body.slice(i, i + 700).replace(/<[^>]+>/g, '');
+        const m = region.match(raw);
+        assert.ok(!m, f + ' has an undecoded CSS escape in its font list: ' + JSON.stringify((m || []).slice(0, 3)));
+    }
+});
+
     const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }
