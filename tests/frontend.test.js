@@ -714,6 +714,69 @@ test('spec pages: sticky navbar is opaque (page text must not bleed through the 
     assert.ok(/background:\s*var\(--bg\)/.test(r[1]), '.navbar lost its solid background');
 });
 
+
+// ---- chip-row integrity -------------------------------------------------
+// The launch-blocking bug this guards: otherSitesBlock built the "Other specs"
+// row from the CURATED 25-site list and never intersected it with what was
+// actually published, so 16 pages each linked 4 slugs that have no page behind
+// them (linear/figma/framer/airbnb) = 64 live 404s. Nothing caught it because
+// no test ever RESOLVED a link. A grep for the CSS rule would also pass on a
+// no-op selector, so these parse the rendered DOM and hit the filesystem.
+
+test('spec pages: every Other-specs chip resolves to a page on disk', () => {
+    const dir = path.join(ROOT, 'specs');
+    const rows = JSON.parse(fs.readFileSync(path.join(dir, 'slugs.json'), 'utf8'));
+    const published = new Set(rows.map((r) => r.slug));
+    assert.ok(published.size >= 10, 'slugs.json holds only ' + published.size + ' rows - merge regression?');
+    const pages = fs.readdirSync(dir).filter((f) => f.endsWith('.html') && f !== 'index.html');
+    assert.strictEqual(pages.length, published.size, 'pages on disk (' + pages.length + ') != slugs.json rows (' + published.size + ')');
+    const dead = [];
+    let links = 0;
+    for (const f of pages) {
+        const body = fs.readFileSync(path.join(dir, f), 'utf8');
+        const sec = body.match(/<h2>Other specs<\/h2>[\s\S]*?<\/section>/);
+        assert.ok(sec, f + ': has no Other-specs block at all');
+        const chips = [...sec[0].matchAll(/\/specs\/([a-z0-9-]+)/g)].map((m) => m[1]);
+        assert.ok(chips.length >= 6, f + ': only ' + chips.length + ' chips - the row looks empty');
+        for (const slug of chips) {
+            links++;
+            if (!published.has(slug)) dead.push(f + ' -> ' + slug + ' (absent from slugs.json)');
+            else if (!fs.existsSync(path.join(dir, slug + '.html'))) dead.push(f + ' -> ' + slug + ' (no file on disk)');
+        }
+    }
+    assert.ok(links >= 150, 'only ' + links + ' chip links found across all pages - scan looks broken');
+    assert.strictEqual(dead.length, 0, dead.length + ' dead chip link(s):\n      ' + dead.slice(0, 8).join('\n      '));
+});
+
+test('gen-specs: otherSitesBlock links only published slugs, never the curated list', () => {
+    const gen = require(path.join(ROOT, 'lib', 'gen-specs.js'));
+    assert.strictEqual(typeof gen.otherSitesBlock, 'function', 'otherSitesBlock is not exported - this guard cannot run');
+    const SITES = require(path.join(ROOT, 'lib', 'spec-sites.js'));
+    const published = [
+        { slug: 'stripe', name: 'Stripe' },
+        { slug: 'vercel', name: 'Vercel' },
+        { slug: 'apple', name: 'Apple' },
+        { slug: 'neon', name: 'Neon' },
+    ];
+    const html = gen.otherSitesBlock(published[0], published);
+    const slugs = [...html.matchAll(/\/specs\/([a-z0-9-]+)/g)].map((m) => m[1]);
+    assert.ok(slugs.includes('vercel'), 'a published slug is missing from the chip row');
+    assert.ok(!slugs.includes('stripe'), 'the page links to itself');
+    const unpublished = SITES.map((x) => x.slug).filter((c) => !published.some((x) => x.slug === c));
+    assert.ok(unpublished.length > 5, 'curated list is unexpectedly small - this test assumes gated sites exist');
+    const leaked = unpublished.filter((c) => slugs.includes(c));
+    assert.strictEqual(leaked.length, 0, 'chip row links curated-but-unpublished slug(s): ' + leaked.join(', ') + ' - the 404 bug is back');
+});
+
+test('hub: every card link resolves to a page on disk', () => {
+    const dir = path.join(ROOT, 'specs');
+    const body = fs.readFileSync(path.join(dir, 'index.html'), 'utf8');
+    const hrefs = [...body.matchAll(/class="spec-card"[\s\S]*?\/specs\/([a-z0-9-]+)/g)].map((m) => m[1]);
+    assert.ok(hrefs.length >= 10, 'hub renders only ' + hrefs.length + ' cards');
+    const dead = hrefs.filter((x) => !fs.existsSync(path.join(dir, x + '.html')));
+    assert.strictEqual(dead.length, 0, 'hub cards point at missing pages: ' + dead.join(', '));
+});
+
     const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }
