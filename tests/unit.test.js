@@ -725,8 +725,43 @@ await ta('a concurrent duplicate shares the failure, not a fake success', async 
 });
 
 
-console.log(`\n${pass} passed, ${fail} failed`);
-process.exit(fail ? 1 : 0);
+
+// --- secret-leak guard -----------------------------------------------------
+// A credential once committed to a PUBLIC repo is in git history forever; the
+// only real remedy is revocation at the provider. This test cannot fix history
+// but it fails loudly if a live-looking key is present in the working tree, so
+// the class of mistake that shipped sk-... in .env.example cannot repeat.
+await ta('no live-looking credentials in tracked files', async () => {
+    const { execFileSync } = require('child_process');
+    const path = require('path');
+    const REPO = path.join(__dirname, '..');
+    const files = execFileSync('git', ['ls-files'], { cwd: REPO, encoding: 'utf8' })
+        .trim().split('\n').filter(Boolean);
+
+    const SECRET = /\b(?:sk|ghp|github_pat|AKIA|xox[baprs])[-_][A-Za-z0-9]{16,}\b/g;
+    // Placeholders are fine here - they are documentation. Only high-entropy
+    // looking values count as a leak.
+    const PLACEHOLDER = /your|placeholder|example|changeme|replace|redacted|dummy|sample|fake|test|xxxx|0000|abcd/i;
+    const isReal = (s) => {
+        const body = s.replace(/^(?:sk|ghp|github_pat|AKIA|xox[baprs])[-_]/, '');
+        if (PLACEHOLDER.test(s)) return false;
+        if (/^(.)(\1*)$/.test(body)) return false;          // one repeated char
+        const uniq = new Set(body).size;
+        return uniq >= 8;                                     // low entropy = not a key
+    };
+
+    const hits = [];
+    for (const f of files) {
+        let text;
+        try { text = fs.readFileSync(path.join(REPO, f), 'utf8'); }
+        catch { continue; }                                   // binary/unreadable
+        for (const m of text.match(SECRET) || []) {
+            if (isReal(m)) hits.push(f + ' -> ' + m.slice(0, 7) + '…');
+        }
+    }
+    assert.deepStrictEqual(hits, [], 'tracked files contain live-looking keys:\n         ' + hits.join('\n         '));
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
 })();
