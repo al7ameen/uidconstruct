@@ -380,6 +380,87 @@ test('custom option is actually offered in the provider select', () => {
     assert.ok(/<option value="custom"/.test(HTML), 'no custom option in #byokProvider');
 });
 
+// ---- BYOK REJECTION NOTICE (rendering). Backend already proves the field
+// exists and cannot cross the cache. These prove the browser path: it shows,
+// it hides, it escapes, and it is readable on both themes.
+const warnFetch = (body) => () => Promise.resolve({
+    ok: true, json: () => Promise.resolve(Object.assign({ prompt: SPEC, domain: 'x.com', signals: {} }, body))
+});
+test('a rejected key shows the notice', async () => {
+    const b = boot({ fetch: warnFetch({ byokWarning: 'Your base URL must start with https:// - your key was NOT sent anywhere.' }) });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 30));
+    const el = b.els.get('byokWarning');
+    assert.ok(el, 'no #byokWarning element');
+    assert.strictEqual(el.hidden, false, 'notice stayed hidden');
+    assert.ok(/NOT sent/i.test(el.textContent), 'text: ' + JSON.stringify(el.textContent));
+});
+test('a normal result shows no notice', async () => {
+    const b = boot({ fetch: warnFetch({}) });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 30));
+    const el = b.els.get('byokWarning');
+    assert.strictEqual(el.hidden, true, 'notice shown with nothing to say');
+    assert.strictEqual(el.textContent, '', 'stale text: ' + el.textContent);
+});
+test('the notice cannot persist from one run into the next', async () => {
+    // Same page, two analyses: warned then clean. A warning that survives reads
+    // as a permanent defect and is worse than no warning.
+    let n = 0;
+    const b = boot({ fetch: () => { n++; return warnFetch(n === 1 ? { byokWarning: 'first run warning' } : {})(); } });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 30));
+    assert.strictEqual(b.els.get('byokWarning').hidden, false, 'run 1 should warn');
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 30));
+    assert.strictEqual(b.els.get('byokWarning').hidden, true, 'run 2 inherited run 1\'s warning');
+});
+test('the notice is text, never markup (it interpolates user input)', async () => {
+    // baseUrl and model are user-supplied and land inside this string. If the
+    // render path ever switches to innerHTML this payload becomes an executor.
+    const b = boot({ fetch: warnFetch({ byokWarning: '<img src=x onerror=alert(1)><b>bold</b>' }) });
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 30));
+    const el = b.els.get('byokWarning');
+    assert.strictEqual(el.innerHTML, '', 'innerHTML was written — XSS surface reopened');
+    assert.ok(el.textContent.includes('<img'), 'textContent should hold the raw string');
+});
+test('byok-warning: notice text passes WCAG AA in both themes', () => {
+    const rule = block(/\.byok-warning\s*{[^}]*}/);
+    const dark = block(/\[data-theme="dark"\]\s*\.byok-warning\s*{[^}]*}/);
+    assert.ok(rule, 'no .byok-warning rule in style.css');
+    for (const theme of ['light', 'dark']) {
+        const base = theme === 'dark'
+            ? Object.assign(tokens(block(/:root\s*{[^}]*}/)), tokens(block(/\[data-theme="dark"\]\s*{[^}]*}/)))
+            : tokens(block(/:root\s*{[^}]*}/));
+        // tokens() only captures --custom-props; this rule uses plain
+        // declarations, so read them with decl() instead.
+        const pick = (blk, prop) => { const m = blk.match(new RegExp('(?:^|[;\\s])' + prop + '\\s*:\\s*([^;]+)')); return m ? m[1].trim() : null; };
+        // dark override must WIN in dark theme, not fall behind the base rule
+        const color = (theme === 'dark' ? pick(dark, 'color') : null) || pick(rule, 'color');
+        const bgs = (theme === 'dark' && pick(dark, 'background')) || pick(rule, 'background');
+        assert.ok(color, theme + ': no color declaration found for .byok-warning');
+        const bg = toRGB(resolve(base['--bg'], base));
+        const fg = toRGB(color);
+        const tint = bgs ? toRGB(bgs) : null;
+        assert.ok(bg && fg, theme + ': could not resolve colours');
+        // text sits on the tinted background, so composite the alpha first
+        const surface = (tint && tint[3] < 1) ? over(tint, bg) : bg;
+        const ratio = contrast(fg, surface);
+        assert.ok(ratio >= 4.5, theme + ' theme: notice is ' + ratio.toFixed(2) + ':1 (needs 4.5:1)');
+    }
+});
+test('the notice is wired, not just declared', () => {
+    assert.ok(/byokWarning/.test(APP), 'app.js never reads the field');
+    assert.ok(/showResult\(result\.prompt, result\.timings, result\.byokWarning\)/.test(APP),
+        'call site does not pass the warning through');
+    assert.ok(/id="byokWarning"/.test(HTML), 'no element in index.html');
+});
+
 (async () => {
     const unhandled = [];
     process.on('unhandledRejection', r => unhandled.push(String((r && r.message) || r)));

@@ -1537,3 +1537,28 @@ main.legal { padding: 140px 0 80px; }
 }
 .copy-prompt-btn:hover { background: var(--accent-subtle); border-color: var(--link-text); }
 .copy-prompt-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* ============================================================
+   BYOK REJECTION NOTICE
+   --warning (#f59e0b) measures 2.15:1 on the light surface, so it
+   cannot carry text here. #92400e is 6.74:1 on #faf9f7; dark mode
+   needs its own value for the same reason the inverted pricing card
+   did -- one colour cannot clear 4.5:1 on both #faf9f7 and #0a0a0a.
+   ============================================================ */
+.byok-warning {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: #92400e;
+    background: rgba(245, 158, 11, 0.10);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin: 0 0 var(--space-4);
+}
+.byok-warning[hidden] { display: none; }
+[data-theme="dark"] .byok-warning {
+    color: #fbbf24;
+    background: rgba(245, 158, 11, 0.12);
+    border-color: rgba(245, 158, 11, 0.30);
+}

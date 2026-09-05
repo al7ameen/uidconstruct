@@ -345,6 +345,90 @@ function check(name, fn) {
         assert.ok(!/our ai|your model/i.test(bodyTO.body.error), 'misattributed to AI: ' + bodyTO.body.error);
     });
 
+
+    // ---- 11. BYOK REJECTION NOTICE. Measured live 2026-09-04: pasting
+    // http://api.openai.com/v1 (plain http, the most common paste error there
+    // is) returned HTTP 200 with a real spec built by OUR free-tier key. The
+    // user had no way to learn their key was never used. diagnoseByok names the
+    // rejection; these tests lock the wiring AND the cache boundary.
+    const { diagnoseByok } = require('../lib/ai.js');
+    const GOOD_KEY = 'sk-good-' + 'k'.repeat(34);
+
+    check('diagnoseByok: null for a valid payload and for an untouched panel', () => {
+        assert.strictEqual(diagnoseByok(null), null, 'null raw must be silent');
+        assert.strictEqual(diagnoseByok({}), null, 'empty object must be silent');
+        assert.strictEqual(diagnoseByok({ provider: 'openai', model: '', key: '   ' }), null,
+            'no key = panel left open, must not nag');
+        assert.strictEqual(diagnoseByok({ provider: 'openai', model: 'gpt-4o-mini', key: GOOD_KEY }), null,
+            'valid payload must not warn');
+    });
+    check('diagnoseByok: plain-http base url says https and that the key was not sent', () => {
+        const m = diagnoseByok({ provider: 'custom', baseUrl: 'http://api.openai.com/v1', key: GOOD_KEY, model: 'x/y' });
+        assert.ok(m, 'expected a message');
+        assert.ok(/https:\/\//i.test(m), m);
+        assert.ok(/NOT sent/i.test(m), 'must reassure the key did not travel: ' + m);
+    });
+    check('diagnoseByok: private address and missing url get distinct messages', () => {
+        const priv = diagnoseByok({ provider: 'custom', baseUrl: 'https://10.0.0.5/v1', key: GOOD_KEY, model: 'x/y' });
+        assert.ok(priv && /private or internal/i.test(priv), priv);
+        const none = diagnoseByok({ provider: 'custom', baseUrl: '', key: GOOD_KEY, model: 'x/y' });
+        assert.ok(none && /needs a base url/i.test(none), none);
+    });
+    check('diagnoseByok: short key, unknown provider, missing model each named', () => {
+        assert.ok(/too short/i.test(diagnoseByok({ provider: 'openai', model: 'gpt-4o-mini', key: 'abc' })), 'short key');
+        assert.ok(/unknown provider/i.test(diagnoseByok({ provider: 'nope', model: 'm', key: GOOD_KEY })), 'provider');
+        assert.ok(/model name/i.test(diagnoseByok({ provider: 'openai', model: '', key: GOOD_KEY })), 'model');
+    });
+    check('diagnoseByok NEVER echoes the key (it interpolates user input)', () => {
+        for (const raw of [
+            { provider: 'custom', baseUrl: 'http://api.openai.com/v1', key: GOOD_KEY, model: 'x/y' },
+            { provider: 'custom', baseUrl: 'https://10.0.0.5/v1', key: GOOD_KEY, model: 'x/y' },
+            { provider: 'openai', model: 'gpt-4o-mini', key: 'short' },
+            { provider: 'nope', model: 'm', key: GOOD_KEY }]) {
+            const m = diagnoseByok(raw) || '';
+            assert.ok(!m.includes(GOOD_KEY), 'key leaked into: ' + m);
+            assert.ok(!m.includes('sk-good'), 'key fragment leaked: ' + m);
+        }
+    });
+
+    // The seam this whole section depends on. If clear() were silently missing,
+    // the leak test below would pass for the wrong reason -- that exact trap has
+    // bitten this suite twice, so assert it rather than assume it.
+    check('cache seam is real before we rely on it', () => {
+        assert.strictEqual(typeof clear, 'function', 'lib/cache.js does not export clear()');
+    });
+
+    if (clear) clear();
+    const LEAK_URL = 'https://warn-leak.example';
+    const badByok = { provider: 'custom', baseUrl: 'http://api.openai.com/v1', key: GOOD_KEY, model: 'x/y' };
+    const warned = await postByok(LEAK_URL, '198.51.100.21', badByok);
+    const cleanFree = await post(LEAK_URL, '198.51.100.22');
+    const cleanByok = await postByok('https://warn-ok.example', '198.51.100.23',
+        { provider: 'openai', model: 'gpt-4o-mini', key: GOOD_KEY });
+
+    check('a rejected key still succeeds but says so', () => {
+        assert.strictEqual(warned.statusCode, 200, JSON.stringify(warned.body).slice(0, 160));
+        assert.ok(warned.body.prompt, 'no prompt');
+        assert.ok(warned.body.byokWarning, 'expected byokWarning, got: ' + JSON.stringify(warned.body).slice(0, 160));
+        assert.ok(/NOT sent/i.test(warned.body.byokWarning), warned.body.byokWarning);
+    });
+    check('a valid key gets no warning', () => {
+        assert.strictEqual(cleanByok.statusCode, 200);
+        assert.ok(!cleanByok.body.byokWarning, 'unexpected warning: ' + cleanByok.body.byokWarning);
+    });
+    check('free tier gets no warning', () => {
+        assert.ok(!cleanFree.body.byokWarning, 'unexpected warning: ' + cleanFree.body.byokWarning);
+    });
+    // THE reason byokWarning is computed per-request and never stored: a rejected
+    // BYOK produces the FREE-TIER cache key, so a warning inside the cached value
+    // would be served to people who never touched the panel.
+    check('the warning cannot cross the cache to a genuine free-tier user', () => {
+        assert.strictEqual(cleanFree.body.cached, true,
+            'second request should be a cache hit or the test proves nothing (cached=' + cleanFree.body.cached + ')');
+        assert.ok(!cleanFree.body.byokWarning,
+            'LEAK: free-tier user inherited another user\'s BYOK warning: ' + cleanFree.body.byokWarning);
+    });
+
     let failed = 0;
     for (const [ok, name, msg] of results) {
         console.log((ok ? '  ok  ' : ' FAIL ') + name + (ok ? '' : '  <-- ' + msg));

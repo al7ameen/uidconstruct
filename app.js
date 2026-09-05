@@ -27,6 +27,7 @@
     const reconstructBtn = document.getElementById('reconstructBtn');
     const resultStatus = document.getElementById('resultStatus');
     const resultLabel = document.getElementById('resultLabel');
+    const byokWarningEl = document.getElementById('byokWarning');
     const ctaBtn = document.getElementById('ctaBtn');
     const byokToggle = document.getElementById('byokToggle');
     const byokPanel = document.getElementById('byokPanel');
@@ -387,7 +388,15 @@
         }
     }
 
-    function showResult(promptText, timings) {
+    function showResult(promptText, timings, warning) {
+        // BYOK rejection notice. textContent, never innerHTML: this string is
+        // built partly from user-supplied provider/model/baseUrl values, so it
+        // must not be parsed as markup. Cleared on every render so a warning
+        // from one run cannot survive into the next.
+        if (byokWarningEl) {
+            byokWarningEl.textContent = warning ? String(warning) : '';
+            byokWarningEl.hidden = !warning;
+        }
         lastSpecText = promptText;
         lastBuildPrompt = extractBuildPrompt(promptText);
         if (buildPromptCard) {
@@ -596,7 +605,7 @@
             track('Analysis started', { domain: extractDomain(url) });
             const t0 = Date.now();
             const result = await deconstructWebsite(url);
-            showResult(result.prompt, result.timings);
+            showResult(result.prompt, result.timings, result.byokWarning);
             track('Analysis success', { domain: extractDomain(url), ms: String(Date.now() - t0) });
             if (byokReady()) track('BYOK used');
         } catch (err) {

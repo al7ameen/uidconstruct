@@ -17,7 +17,7 @@
 // native fetch (Node 18+)
 const cheerio = require('cheerio');
 
-const { ByokAuthError, FreeTierUnavailableError, ProviderRateLimitError, callAIWithFallback, normalizeByok } = require('../lib/ai.js');
+const { ByokAuthError, FreeTierUnavailableError, ProviderRateLimitError, callAIWithFallback, diagnoseByok, normalizeByok } = require('../lib/ai.js');
 const { BROWSER_UA, BlockedUrlError, extractDomain, safeFetch, sanitizeUrl } = require('../lib/net.js');
 const { buildAnalysisPrompt } = require('../lib/pipeline.js');
 const { SYSTEM_PROMPT, USER_PROMPT } = require('../lib/prompts.js');
@@ -57,6 +57,12 @@ module.exports = async (req, res) => {
     // Validate before anything else: an invalid key shape just falls back to
     // the free tier rather than erroring, so a half-filled form can't wedge us.
     const byok = normalizeByok(byokRaw);
+    // If a key WAS entered but rejected, say so. Without this the request
+    // silently becomes a free-tier run and the user believes their key worked.
+    // Computed per request and deliberately NOT stored in the cache: the cache
+    // key for a rejected BYOK is the free-tier key, so a warning inside the
+    // cached value would be served to people who never touched the panel.
+    const byokWarning = byok ? null : diagnoseByok(byokRaw);
 
     if (!url) {
         return res.status(400).json({ error: 'Missing "url" in request body.' });
@@ -74,7 +80,7 @@ module.exports = async (req, res) => {
     const cached = cacheGet(key);
     if (cached) {
         console.log('cache:', JSON.stringify({ domain: extractDomain(cleanUrl), source: 'hit' }));
-        return res.status(200).json({ ...cached, cached: true });
+        return res.status(200).json({ ...cached, cached: true, ...(byokWarning ? { byokWarning } : {}) });
     }
 
     // Free tier is capped because it spends OUR credits. BYOK spends THEIRS,
@@ -160,7 +166,7 @@ module.exports = async (req, res) => {
     }
 
     console.log('perf:', JSON.stringify({ domain, source: result.source, byok: byok ? byok.provider : 'free', ...timings, totalMs: Date.now() - timings.start }));
-    return res.status(200).json({ ...result.value, cached: result.source !== 'miss' });
+    return res.status(200).json({ ...result.value, cached: result.source !== 'miss', ...(byokWarning ? { byokWarning } : {}) });
 };
 
 // The work itself. Kept out of the handler so the handler's only job is status
