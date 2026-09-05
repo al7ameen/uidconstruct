@@ -529,6 +529,49 @@ test('a heading never inherits a weight its serif cannot render', () => {
     assert.deepStrictEqual(offenders, [], '\n      ' + offenders.join('\n      '));
 });
 
+test('a rule that only sets font-weight inherits a family it may not fit', () => {
+    // Both audits above read font-family from the SAME rule that sets the
+    // weight. But inheritance does not work that way: a rule can set ONLY
+    // font-weight and still land on a family its ancestor chose. This shipped
+    // on the hero -- `.hero h1` sets var(--font-serif) (Instrument Serif, 400
+    // ONLY) and a nested `.hero h1 .highlight` asked for 500. A synthesised
+    // faux bold on the largest text on the page, invisible to both audits.
+    const loaded = loadedWeights();
+    const bare = CSS.replace(/\/\*[\s\S]*?\*\//g, '');
+    // Flatten comma groups so `.a h1, .b h1 { font-family: ... }` registers
+    // each selector -- otherwise a grouped ancestor silently escapes the audit.
+    const flat = [];
+    for (const [, sel, body] of bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        for (const one of sel.split(',')) {
+            const s = one.trim().replace(/\s+/g, ' ');
+            if (s && !s.startsWith('@')) flat.push({ sel: s, body });
+        }
+    }
+    const familyOf = new Map();
+    for (const r of flat) {
+        const fam = r.body.match(/font-family:\s*var\(--font-(sans|serif|mono)\)/);
+        if (fam && !familyOf.has(r.sel)) familyOf.set(r.sel, FAMILY[fam[1]]);
+    }
+    const offenders = [];
+    for (const r of flat) {
+        if (/font-family:/.test(r.body)) continue;          // declares its own family
+        const w = r.body.match(/font-weight:\s*(\d+)/);
+        if (!w) continue;
+        const toks = r.sel.split(/\s+/);
+        const chain = [];
+        for (let n = toks.length - 1; n >= 1; n--) chain.push(toks.slice(0, n).join(' '));
+        const el = (toks[toks.length - 1] || '').replace(/[.#\[:].*/, '');
+        if (el) chain.push(el);                             // element-name ancestor
+        const src = chain.find(a => familyOf.has(a));
+        if (!src) continue;
+        const name = familyOf.get(src);
+        if (!loaded[name].includes(parseInt(w[1], 10))) {
+            offenders.push(`${name} @ ${w[1]} on "${r.sel}" (inherits family from "${src}")`);
+        }
+    }
+    assert.deepStrictEqual(offenders, [], 'browser will synthesise these:\n      ' + offenders.join('\n      '));
+});
+
 test('card headings are not inline-styled (inline styles outrank the audit)', () => {
     // The bug survived for weeks because it lived in a style="" attribute, which
     // no stylesheet rule can override and this file's CSS parser cannot see.

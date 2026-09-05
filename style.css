@@ -372,7 +372,7 @@ button:hover { opacity: 0.85; }
     color: var(--text);
     margin-bottom: var(--space-4);
 }
-.hero h1 .highlight { font-style: italic; color: var(--text-muted); font-weight: 500; }
+.hero h1 .highlight { font-style: italic; color: var(--text-muted); font-weight: 400; }
 
 .hero .subhead {
     font-size: clamp(1.05rem, 2vw, 1.25rem);
