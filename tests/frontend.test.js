@@ -93,6 +93,8 @@ function withSpec(spec, fetch) {
 }
 
 const tests = [];
+const NOTICE = 'Not affiliated with or endorsed by the sites analysed; all trademarks belong to their owners.';
+
 const test = (name, fn) => tests.push([name, fn]);
 
 test('app.js boots without throwing', () => {
@@ -586,12 +588,42 @@ test('card headings are not inline-styled (inline styles outrank the audit)', ()
     const unhandled = [];
     process.on('unhandledRejection', r => unhandled.push(String((r && r.message) || r)));
     let fail = 0;
+// --- legal notice guard ----------------------------------------------------
+// The non-affiliation / trademark notice is the cheapest insurance this site
+// has: it publishes extracted design tokens for 16 named companies. It lives in
+// a generated template AND in 17 already-rendered pages, so it can be lost in
+// either place - a template edit drops it from every future regeneration, a
+// hand edit to a page drops it from that page. Assert both.
+test('trademark notice present in the generator template', () => {
+    const gen = fs.readFileSync(path.join(ROOT, 'lib', 'gen-specs.js'), 'utf8');
+    assert.ok(gen.includes(NOTICE), 'lib/gen-specs.js template is missing the notice');
+});
+test('trademark notice present in index.html', () => {
+    assert.ok(HTML.includes(NOTICE), 'index.html is missing the notice');
+});
+test('trademark notice present in every published spec page, exactly once', () => {
+    const dir = path.join(ROOT, 'specs');
+    const pages = fs.readdirSync(dir).filter((f) => f.endsWith('.html'));
+    assert.ok(pages.length >= 16, 'expected >=16 spec pages, found ' + pages.length);
+    for (const f of pages) {
+        const body = fs.readFileSync(path.join(dir, f), 'utf8');
+        const n = body.split(NOTICE).length - 1;
+        assert.strictEqual(n, 1, f + ' has the notice ' + n + ' times (want exactly 1)');
+    }
+});
+
+    const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }
         catch (e) { fail++; console.log('FAIL  ' + name + '\n      ' + e.message.split('\n')[0]); }
     }
     if (unhandled.length) { fail++; console.log('FAIL  no unhandled rejections\n      ' + unhandled.join(' | ')); }
     else console.log('  ok  no unhandled rejections');
+
+    if (tests.length !== registeredAtStart) {
+        fail++;
+        console.log('FAIL  ' + (tests.length - registeredAtStart) + ' test(s) registered AFTER the runner loop - they never ran');
+    }
     console.log(`\n${tests.length - fail}/${tests.length} frontend tests passed`);
     process.exit(fail ? 1 : 0);
 })();
