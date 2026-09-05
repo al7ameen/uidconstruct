@@ -762,6 +762,33 @@ await ta('no live-looking credentials in tracked files', async () => {
     assert.deepStrictEqual(hits, [], 'tracked files contain live-looking keys:\n         ' + hits.join('\n         '));
 });
 
+// --- BYOK capacity claim guard ---------------------------------------------
+// "Unlimited" shipped in 3 strings while api/deconstruct.js caps BYOK at
+// 60/hr per IP. The app contradicted itself: the CTA said 60, the badge said
+// 60, the error said unlimited. On HN that is a screenshot waiting to happen -
+// someone pastes a key, gets throttled at 60, and quotes our own word back.
+// c5d6faa fixed the pricing copy, the badge fix covered app.js; this stops the
+// phrase reappearing in a fourth place.
+await ta('no shipped copy claims BYOK is unlimited', async () => {
+    const { execSync } = require('child_process');
+    const files = execSync('git ls-files', { cwd: ROOT, encoding: 'utf8' })
+        .trim().split('\n')
+        .filter(x => /^(api|lib)\/.*\.js$/.test(x) || x === 'app.js' || x === 'index.html');
+    const offenders = [];
+    for (const rel of files) {
+        const text = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+        // Strip comments: "unlimited proxy" inside a rationale is honest prose,
+        // not a promise made to the user.
+        const code = text.replace(/\/\*[\s\S]*?\*\//g, '')
+                         .replace(/(^|[^:])\/\/.*$/gm, '$1');
+        if (/unlimited/i.test(code)) offenders.push(rel + ' claims BYOK is unlimited');
+        const caps = new Set([...code.matchAll(/([0-9]+)\s*(?:runs|analyses)\s*\/\s*hour|([0-9]+)\s*runs an hour/g)]
+            .map(m => m[1] || m[2]));
+        if (caps.size > 1) offenders.push(rel + ' states inconsistent caps: ' + [...caps].join(', '));
+    }
+    assert.deepStrictEqual(offenders, [], 'BYOK capacity copy is wrong:\n         ' + offenders.join('\n         '));
+});
+
 section('font mining (mineFonts / mineFontFaces / decodeCssIdent)');
 // These functions had ZERO coverage while producing the font data shown on
 // every published spec page. Two live bugs slipped through unnoticed: an

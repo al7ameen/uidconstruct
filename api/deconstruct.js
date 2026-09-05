@@ -93,7 +93,7 @@ module.exports = async (req, res) => {
         return res.status(429).json({
             error: byok
                 ? 'Too many requests this hour (60). Slow down and try again.'
-                : 'Hourly limit reached (10 analyses). Try again later, or use your own AI key for unlimited runs.'
+                : 'Hourly limit reached (10 analyses). Try again later, or use your own AI key for 60 runs an hour.'
         });
     }
 
