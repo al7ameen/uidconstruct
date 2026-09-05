@@ -29,6 +29,8 @@ const EXTRACT = require(path.join(ROOT, 'lib', 'extract.js'));
 const PROMPTS = require(path.join(ROOT, 'lib', 'prompts.js'));
 const AI = require(path.join(ROOT, 'lib', 'ai.js'));
 const CACHE = require(path.join(ROOT, 'lib', 'cache.js'));
+const CSS = require(path.join(ROOT, 'lib', 'css.js'));
+const PIPELINE = require(path.join(ROOT, 'lib', 'pipeline.js'));
 
 // Frontend is a browser IIFE with no module system, so it still has to be
 // sliced. Kept deliberately narrow: escapeHtml/renderMarkdown/inlineMd and the
@@ -581,6 +583,147 @@ await ta('a 307 from a custom endpoint is refused, not followed', async () => {
     assert.strictEqual(calls, 1, 'followed the redirect (' + calls + ' calls)');
     assert.ok(err && /redirect/i.test(err.message), 'wrong error: ' + (err && err.message));
 });
+
+// ---------------------------------------------------------------- css.js
+// The silent-degradation bug class: fetchCssFiles() used to return '' on failure,
+// making "we could not read the CSS" indistinguishable from "this site has no
+// CSS". Both produced a confident, well-formatted spec full of zeros.
+
+await ta('a site with no stylesheets is NOT degraded (example.com case)', async () => {
+    const $ = cheerio.load('<html><head></head><body><h1>hi</h1></body></html>');
+    const r = await CSS.fetchCssFiles($, 'https://example.com/');
+    assert.strictEqual(r.degraded, false, 'legitimately-empty must not read as failure');
+    assert.strictEqual(r.status.linked, 0);
+    assert.strictEqual(r.css, '');
+});
+
+await ta('stylesheets present but ALL unreachable IS degraded', async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = async () => { throw new Error('HTTP 403'); };
+    try {
+        const $ = cheerio.load('<html><head><link rel="stylesheet" href="/a.css"><link rel="stylesheet" href="/b.css"></head><body></body></html>');
+        const r = await CSS.fetchCssFiles($, 'https://site.test/');
+        assert.strictEqual(r.degraded, true, 'all-failed must be flagged');
+        assert.strictEqual(r.status.linked, 2);
+        assert.strictEqual(r.status.failed, 2, 'failed count wrong: ' + JSON.stringify(r.status));
+        assert.strictEqual(r.status.ok, 0);
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('one stylesheet succeeding is enough to not be degraded', async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = async (u) => ({
+        ok: true, status: 200,
+        text: async () => String(u).endsWith('a.css') ? '--brand: #123456;' : ''
+    });
+    try {
+        const $ = cheerio.load('<html><head><link rel="stylesheet" href="/a.css"><link rel="stylesheet" href="/b.css"></head><body></body></html>');
+        const r = await CSS.fetchCssFiles($, 'https://site.test/');
+        assert.strictEqual(r.degraded, false);
+        assert.ok(r.css.includes('--brand'), 'css lost despite a good response');
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('tally stays complete when CSS_MAX_BYTES truncates', async () => {
+    // Regression: the original loop `break`ed on truncation, so
+    // ok+timedOut+failed silently disagreed with `linked`. A wrong denominator
+    // is how a health signal starts lying.
+    const real = globalThis.fetch;
+    const big = 'x'.repeat(CSS.CSS_MAX_BYTES + 10);
+    globalThis.fetch = async () => ({ ok: true, status: 200, text: async () => big });
+    try {
+        const $ = cheerio.load('<html><head>' +
+            '<link rel="stylesheet" href="/1.css"><link rel="stylesheet" href="/2.css">' +
+            '<link rel="stylesheet" href="/3.css"><link rel="stylesheet" href="/4.css">' +
+            '</head><body></body></html>');
+        const r = await CSS.fetchCssFiles($, 'https://site.test/');
+        assert.strictEqual(r.status.truncated, true, 'should have truncated');
+        const sum = r.status.ok + r.status.timedOut + r.status.failed;
+        assert.strictEqual(sum, r.status.linked,
+            `tally disagrees: ${sum} != ${r.status.linked} (${JSON.stringify(r.status)})`);
+        assert.strictEqual(r.degraded, false, 'truncation is not degradation');
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('pipeline throws CssUnavailableError rather than emitting zeros', async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = async () => { throw new Error('socket hang up'); };
+    try {
+        const html = '<html><head><link rel="stylesheet" href="/a.css"></head><body><h1>hi</h1></body></html>';
+        let err = null;
+        try { await PIPELINE.buildAnalysisPrompt(html, cheerio.load(html), 'https://site.test/', 'site.test'); }
+        catch (e) { err = e; }
+        assert.ok(err instanceof CSS.CssUnavailableError, 'expected CssUnavailableError, got: ' + (err && err.name));
+        assert.ok(err.status && err.status.linked === 1, 'status not carried');
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('diagnostics never reach the AI prompt', async () => {
+    // USER_PROMPT reads extracted fields by NAME (no Object.keys iteration), so a
+    // new top-level field cannot leak. This asserts that property holds, because
+    // if someone refactors USER_PROMPT to iterate keys, our internals go to the model.
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'prompts.js'), 'utf8');
+    assert.ok(!/Object\.keys\(\s*(e|data\.extracted)\s*\)/.test(src),
+        'USER_PROMPT now iterates extracted keys — cssStatus could leak into the prompt');
+});
+
+
+// ------------------------------------------------- degraded CSS must not be cached
+// The entire reason the throw exists: CACHE_TTL_MS is 6 hours, so a stored
+// degraded result is not one bad page view — it is every visitor of that URL
+// for half a day, served with cached:true and no hint anything failed.
+// cache.js documents "a failure is never stored"; these tests make that true
+// for this specific failure rather than by analogy with the AI errors.
+
+await ta('a degraded CSS run leaves the cache empty', async () => {
+    CACHE.clear();
+    const key = 'free|https://degraded.test';
+    let attempts = 0;
+    const failing = async () => { attempts++; throw new CSS.CssUnavailableError({ linked: 3, ok: 0 }); };
+
+    let err = null;
+    try { await CACHE.remember(key, failing); } catch (e) { err = e; }
+    assert.ok(err instanceof CSS.CssUnavailableError, 'producer error not propagated: ' + (err && err.name));
+    assert.strictEqual(attempts, 1);
+    assert.strictEqual(CACHE.get(key), null, 'DEGRADED RESULT WAS CACHED');
+    assert.strictEqual(CACHE.stats().entries, 0, 'cache not empty: ' + CACHE.stats().entries);
+});
+
+await ta('the next request re-runs rather than serving a poisoned entry', async () => {
+    CACHE.clear();
+    const key = 'free|https://recover.test';
+    let attempts = 0;
+    const flaky = () => { attempts++; return Promise.reject(new CSS.CssUnavailableError({ linked: 2 })); };
+    try { await CACHE.remember(key, flaky); } catch (e) { /* expected */ }
+    assert.strictEqual(attempts, 1);
+
+    // Same URL, now healthy: must actually run, not return a cached zero-spec.
+    const ok = () => { attempts++; return Promise.resolve({ prompt: 'real spec' }); };
+    const r = await CACHE.remember(key, ok);
+    assert.strictEqual(attempts, 2, 'healthy retry was skipped — cache was poisoned');
+    assert.strictEqual(r.source, 'miss');
+    assert.strictEqual(r.value.prompt, 'real spec');
+    CACHE.clear();
+});
+
+await ta('a concurrent duplicate shares the failure, not a fake success', async () => {
+    CACHE.clear();
+    const key = 'free|https://dup.test';
+    let attempts = 0;
+    const slowFail = () => new Promise((_, rej) => {
+        attempts++;
+        setTimeout(() => rej(new CSS.CssUnavailableError({ linked: 1 })), 30);
+    });
+    const both = await Promise.allSettled([
+        CACHE.remember(key, slowFail),
+        CACHE.remember(key, slowFail)
+    ]);
+    assert.strictEqual(attempts, 1, 'duplicate fired a second producer: ' + attempts);
+    assert.ok(both.every((b) => b.status === 'rejected'), 'a duplicate resolved successfully');
+    assert.strictEqual(CACHE.get(key), null, 'poisoned entry after shared failure');
+    CACHE.clear();
+});
+
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

@@ -19,6 +19,7 @@ const cheerio = require('cheerio');
 
 const { ByokAuthError, FreeTierUnavailableError, ProviderRateLimitError, callAIWithFallback, diagnoseByok, normalizeByok } = require('../lib/ai.js');
 const { BROWSER_UA, BlockedUrlError, extractDomain, safeFetch, sanitizeUrl } = require('../lib/net.js');
+const { CssUnavailableError } = require('../lib/css.js');
 const { buildAnalysisPrompt } = require('../lib/pipeline.js');
 const { SYSTEM_PROMPT, USER_PROMPT } = require('../lib/prompts.js');
 const { RATE_LIMIT, getClientIp, rateLimit } = require('../lib/rate.js');
@@ -144,6 +145,16 @@ module.exports = async (req, res) => {
         }
         if (err instanceof ByokAuthError) {
             return res.status(401).json({ error: err.message });
+        }
+        if (err instanceof CssUnavailableError) {
+            // The page loaded fine; only its stylesheets eluded us. 502 because the
+            // upstream (the site's CDN) is what failed us, with Retry-After because
+            // the correct user action is to try again rather than pick another URL.
+            // Logged loudly: before this, this exact condition returned HTTP 200
+            // with a confident-looking empty spec, so we had no way to count it.
+            console.error('CSS_UNAVAILABLE:', JSON.stringify({ domain, ...(err.status || {}) }));
+            res.setHeader('Retry-After', '15');
+            return res.status(502).json({ error: err.message, retryAfterSec: 15 });
         }
         if (err && err.name === 'TimeoutError') {
             // Reaching here means the MODEL ran out of time, not the site: the
