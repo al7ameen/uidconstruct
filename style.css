@@ -451,6 +451,21 @@ button:hover { opacity: 0.85; }
     transform: translateY(-1px);
 }
 .btn-primary:active { transform: scale(0.97); }
+
+/* An <a> is inline by default: height and vertical padding cannot apply to an
+   inline box, so the accent background painted over the paragraph above and
+   below it. Every spec-page CTA is an <a> inside a plain <p>, which is why this
+   only showed up there — the homepage buttons are <button> elements in flex
+   containers, and flex items are blockified, so the box model worked by
+   accident. Scoped to <a> deliberately: making the base .btn-primary a flex
+   container would discard the whitespace between the homepage label and its
+   arrow SVG. Reset zeroes margins, so the CTA also needs its own top spacing. */
+a.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-4);
+}
 .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
 .btn-primary .spinner {
