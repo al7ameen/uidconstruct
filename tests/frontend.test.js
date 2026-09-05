@@ -777,6 +777,109 @@ test('hub: every card link resolves to a page on disk', () => {
     assert.strictEqual(dead.length, 0, 'hub cards point at missing pages: ' + dead.join(', '));
 });
 
+
+// ---- author note (self-promo slot) ---------------------------------------
+// Deliberately guards the DECEPTION direction too: the label must not read
+// "Sponsored" while the slot carries no sponsor and pays nothing. That would
+// violate the same no-deception rule that requires disclosure for real ads.
+const SPEC_PAGES = fs.readdirSync(path.join(ROOT, 'specs')).filter((f) => f.endsWith('.html'));
+
+function authorNoteRule(prop) {
+    const re = new RegExp('\\.author-note' + (prop === 'root' ? '\\s' : '') + '\\s*\\{([^}]*)\\}');
+    const m = CSS.match(re);
+    return m ? m[1] : null;
+}
+
+test('author-note: every page carries exactly one, including the generator template', () => {
+    const gen = fs.readFileSync(path.join(ROOT, 'lib', 'gen-specs.js'), 'utf8');
+    assert.strictEqual((gen.match(/class="author-note"/g) || []).length, 1,
+        'generator template has ' + (gen.match(/class="author-note"/g) || []).length + ' author-note blocks - a regen would drop or duplicate it');
+    const files = ['index.html', ...SPEC_PAGES.map((f) => path.join('specs', f))];
+    for (const f of files) {
+        const body = fs.readFileSync(path.join(ROOT, f), 'utf8');
+        const n = (body.match(/class="author-note"/g) || []).length;
+        assert.strictEqual(n, 1, f + ' has ' + n + ' author-note blocks (expected 1)');
+    }
+});
+
+test('author-note: label is honest - says "From the author", never "Sponsored"', () => {
+    const files = ['index.html', ...SPEC_PAGES.map((f) => path.join('specs', f))];
+    for (const f of files) {
+        const body = fs.readFileSync(path.join(ROOT, f), 'utf8');
+        const m = body.match(/class="author-note-label"[^>]*>([^<]*)</);
+        assert.ok(m, f + ': author-note has no label span');
+        assert.strictEqual(m[1].trim(), 'From the author',
+            f + ': label reads "' + m[1].trim() + '" - "Sponsored" is a lie while the slot is unpaid self-promo');
+    }
+});
+
+test('author-note: contact link is external, nofollow-free but rel-protected', () => {
+    const files = ['index.html', ...SPEC_PAGES.map((f) => path.join('specs', f))];
+    for (const f of files) {
+        const body = fs.readFileSync(path.join(ROOT, f), 'utf8');
+        const block = body.match(/<div class="author-note">[\s\S]*?<\/div>/);
+        assert.ok(block, f + ': cannot isolate the author-note block');
+        const a = block[0].match(/<a [^>]*>/g) || [];
+        assert.strictEqual(a.length, 1, f + ': expected exactly 1 link in the note, found ' + a.length);
+        assert.ok(/href="https:\/\//.test(a[0]), f + ': contact link is not an absolute https URL');
+        assert.ok(/rel="[^"]*noopener/.test(a[0]), f + ': contact link lost rel="noopener" (tabnabbing)');
+        assert.ok(/target="_blank"/.test(a[0]), f + ': external contact link has no target="_blank"');
+    }
+});
+
+test('author-note: every colour is a var() - no hardcoded alpha (inverted-card bug class)', () => {
+    const rule = authorNoteRule('root');
+    assert.ok(rule, 'no .author-note rule in style.css');
+    const label = CSS.match(/\.author-note-label\s*\{([^}]*)\}/);
+    assert.ok(label, 'no .author-note-label rule in style.css');
+    for (const [name, body] of [['.author-note', rule], ['.author-note-label', label[1]]]) {
+        const colors = body.match(/(?:^|;|\s)(?:color|background|border[^:]*):[^;]*/g) || [];
+        for (const decl of colors) {
+            if (/var\(/.test(decl)) continue;
+            if (/none|transparent|\d/.test(decl) && !/#|rgba?\(/.test(decl)) continue;
+            assert.ok(!/#|rgba?\(/.test(decl),
+                name + ' hardcodes a colour: "' + decl.trim() + '" - it will not survive a theme switch');
+        }
+    }
+});
+
+test('author-note: text, label and link all pass WCAG AA in both themes', () => {
+    // tokens() only captures --custom-props; .author-note uses plain
+    // declarations, so read them with a decl picker (same lesson as byok-warning).
+    const decl = (blk, prop) => {
+        const m = blk.match(new RegExp('(?:^|[;\\s])' + prop + '\\s*:([^;]+)'));
+        return m ? m[1].trim() : null;
+    };
+    const scope = (theme) => theme === 'dark'
+        ? Object.assign(tokens(block(/:root\s*{[^}]*}/)), tokens(block(/\[data-theme="dark"\]\s*{[^}]*}/)))
+        : tokens(block(/:root\s*{[^}]*}/));
+    const rule = authorNoteRule('root');
+    const labelBlk = (CSS.match(/\.author-note-label\s*\{([^}]*)\}/) || [, ''])[1];
+    const linkBlk = (CSS.match(/\.author-note\s+a\s*\{([^}]*)\}/) || [, ''])[1];
+    assert.ok(rule && labelBlk && linkBlk, 'missing .author-note / -label / a rules to audit');
+    for (const theme of ['light', 'dark']) {
+        const sc = scope(theme);
+        const bgRaw = decl(rule, 'background');
+        assert.ok(bgRaw, theme + ': .author-note has no background declared');
+        const bg = toRGB(resolve(bgRaw, sc));
+        assert.ok(bg, theme + ': cannot resolve author-note background: ' + bgRaw);
+        const cases = [['body text', decl(rule, 'color')],
+                       ['label', decl(labelBlk, 'color')],
+                       ['link', decl(linkBlk, 'color')]];
+        for (const [what, raw] of cases) {
+            assert.ok(raw, theme + ': ' + what + ' has no colour declared');
+            assert.ok(!/var\(--accent\)/.test(raw),
+                theme + ': ' + what + ' uses --accent, which is #f5f5f5 (near-white) in dark');
+            const rgb = toRGB(resolve(raw, sc));
+            assert.ok(rgb, theme + ': ' + what + ' colour unresolved: ' + raw);
+            const surface = rgb[3] < 1 ? over(rgb, bg) : rgb;
+            const ratio = contrast(surface, bg);
+            assert.ok(ratio >= 4.5,
+                theme + ' theme: author-note ' + what + ' is ' + ratio.toFixed(2) + ':1 (needs 4.5:1)');
+        }
+    }
+});
+
     const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }

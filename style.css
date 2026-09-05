@@ -1598,3 +1598,56 @@ main.legal { padding: 140px 0 80px; }
     background: rgba(245, 158, 11, 0.12);
     border-color: rgba(245, 158, 11, 0.30);
 }
+
+/* ============================================================
+   AUTHOR NOTE
+   One quiet strip in the footer. Deliberately the lowest visual
+   weight on the page: 13px, muted, no accent fill, no image.
+
+   Every colour is a var(). A hardcoded rgba() here would repeat
+   the inverted-card bug (.pricing-card.pro) that shipped twice:
+   white-on-white in one theme, invisible in the other.
+
+   font-family is set explicitly so the fake-bold audit can
+   resolve the weight of the nested <a> by walking the selector
+   chain instead of guessing at inherited values.
+   ============================================================ */
+.author-note {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-alt);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+
+.author-note-label {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    font-weight: 400;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 2px 6px;
+    white-space: nowrap;
+}
+
+.author-note a {
+    color: var(--link-text);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.author-note a:hover { text-decoration: underline; }
+
+@media (max-width: 768px) {
+    .author-note { font-size: 12.5px; }
+}
