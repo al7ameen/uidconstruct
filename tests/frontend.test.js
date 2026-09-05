@@ -19,6 +19,11 @@ const CSS = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
 
 function makeEl(id) {
     const cls = new Set();
+    // Attributes must be REAL. The BYOK toggle drives the panel through
+    // hasAttribute/removeAttribute('hidden'), and these were no-ops that
+    // always returned null - so any test asserting that behaviour could only
+    // ever pass vacuously, and firing the click threw TypeError outright.
+    const attrs = new Map();
     return {
         id, tagName: 'DIV', hidden: false, value: '', textContent: '', innerHTML: '',
         disabled: false, checked: false, style: {}, scrollTop: 0, offsetTop: 0,
@@ -28,7 +33,11 @@ function makeEl(id) {
             toggle: (c, f) => (f ? cls.add(c) : cls.delete(c)),
             contains: c => cls.has(c)
         },
-        setAttribute() {}, removeAttribute() {}, getAttribute: () => null, focus() {}, blur() {}, click() {},
+        setAttribute(k, v) { attrs.set(k, v === undefined ? '' : String(v)); },
+        removeAttribute(k) { attrs.delete(k); },
+        getAttribute(k) { return attrs.has(k) ? attrs.get(k) : null; },
+        hasAttribute(k) { return attrs.has(k); },
+        focus() {}, blur() {}, click() {},
         appendChild() {}, removeChild() {}, scrollIntoView() {},
         querySelectorAll: () => [], querySelector: () => null,
         addEventListener(type, fn) { (this._h ||= {})[type] = fn; },
@@ -39,6 +48,25 @@ function makeEl(id) {
 function boot(opts = {}) {
     const els = new Map();
     for (const m of HTML.matchAll(/id="([^"]+)"/g)) els.set(m[1], makeEl(m[1]));
+    // Seed each element's REAL opening-tag attributes. Before this,
+    // hasAttribute('hidden') was false for every element, so nothing in this
+    // repo could verify that the BYOK panel starts closed - the single most
+    // visible property of the feature, and the one the promotion depends on.
+    // NOTE: the harness deliberately keeps the ATTRIBUTE and the .hidden
+    // PROPERTY independent, which a real browser does not. app.js drives some
+    // elements by property and the panel by attribute, and 11 existing tests
+    // assert on the property - coupling them here would be a behaviour change
+    // dressed up as a test fix.
+    for (const tag of HTML.matchAll(/<([a-zA-Z][\w-]*)\s([^>]*?)\/?>/g)) {
+        const raw = tag[2];
+        const idm = raw.match(/\bid="([^"]+)"/);
+        if (!idm) continue;
+        const el = els.get(idm[1]);
+        if (!el) continue;
+        for (const a of raw.matchAll(/([\w:-]+)(?:\s*=\s*"([^"]*)")?/g)) {
+            el.setAttribute(a[1], a[2] === undefined ? '' : a[2]);
+        }
+    }
     const errors = [];
     const store = {};
     const doc = {
@@ -653,6 +681,149 @@ test('no published spec page shows an undecoded CSS escape in its typeface list'
         const m = region.match(raw);
         assert.ok(!m, f + ' has an undecoded CSS escape in its font list: ' + JSON.stringify((m || []).slice(0, 3)));
     }
+});
+
+// ---- BYOK PROMOTION (launch 2026-09-07). The panel used to be an underlined
+// afterthought below the waitlist, worded for someone already blocked. These
+// pin the new placement, the copy, the click path, and - most importantly -
+// WHICH failures may open it. Auto-opening on a 502 or a timeout would tell a
+// user to paste a secret for no benefit: BYOK fixes queue/rate/provider 429s,
+// it cannot fix an unreachable target site or a slow model.
+const r429 = (retryAfterSec) => () => Promise.resolve({
+    ok: false, status: 429,
+    json: () => Promise.resolve({ error: 'Hourly limit reached (10 analyses).', retryAfterSec })
+});
+const httpErr = (code) => () => Promise.resolve({
+    ok: false, status: code, json: () => Promise.resolve({ error: 'upstream said no' })
+});
+async function runTo429(b) {
+    b.els.get('urlInput').value = 'https://x.com';
+    b.els.get('deconstructBtn')._fire('click');
+    await new Promise(r => setTimeout(r, 80));
+}
+// The panel is closed iff the hidden attribute is present. Asserted both ways
+// so a panel that never opens and one that never closes cannot both pass.
+const panelShut = b => b.els.get('byokPanel').hasAttribute('hidden');
+
+test('the BYOK trigger sits directly above its panel (nothing between)', () => {
+    // Regression guard: when the CTA moved up, the panel stayed behind the
+    // waitlist, so clicking opened a form 40px further down the page.
+    const ti = HTML.indexOf('id="byokToggle"'), pi = HTML.indexOf('id="byokPanel"');
+    assert.ok(ti > 0 && pi > ti, 'panel must come after the trigger');
+    const trigEnd  = HTML.indexOf('</button>', ti) + '</button>'.length;
+    const panelTag = HTML.lastIndexOf('<', pi);          // start of the panel's own tag
+    assert.ok(trigEnd < panelTag, 'panel tag starts before the trigger closes');
+    // Strip comments: a note between the two is harmless, an ELEMENT is not.
+    const between = HTML.slice(trigEnd, panelTag).replace(/<!--[\s\S]*?-->/g, '');
+    assert.ok(!/</.test(between), 'something sits between trigger and panel: ' + JSON.stringify(between.trim().slice(0, 80)));
+});
+
+test('trigger no longer asks about a limit before the user has hit one', () => {
+    assert.ok(!/Hit the limit\?/.test(HTML), 'old copy still present');
+    assert.ok(/Use your own AI key/.test(HTML), 'no plain-language label');
+});
+
+test('trigger states the real ceiling (60/hr), not unlimited', () => {
+    assert.ok(/60\/hr/.test(HTML), 'chip does not name the 60/hr ceiling');
+    assert.ok(!/unlimited/i.test(HTML), 'the word "unlimited" is back in index.html');
+});
+
+test('the panel ships closed in the markup, not opened by JS', () => {
+    // The attribute is what hides it for the 99% who never click. If this ever
+    // reads false, the panel is open on first paint and the hero is broken.
+    const pi = HTML.indexOf('id="byokPanel"');
+    const tag = HTML.slice(HTML.lastIndexOf('<', pi), HTML.indexOf('>', pi) + 1);
+    assert.ok(/\shidden(\s|=|>)/.test(tag), 'byokPanel tag lost its hidden attribute: ' + tag);
+});
+
+test('clicking the trigger opens and closes the panel via [hidden]', () => {
+    // Only testable after makeEl got real attribute storage. Before that
+    // hasAttribute was missing entirely and firing this click threw TypeError.
+    const b = boot();
+    const panel = b.els.get('byokPanel'), trig = b.els.get('byokToggle');
+    assert.ok(panel && trig, 'missing #byokPanel / #byokToggle');
+    assert.strictEqual(panelShut(b), true, 'panel should start hidden');
+    trig._fire('click');
+    assert.strictEqual(panelShut(b), false, 'click did not open the panel');
+    assert.strictEqual(trig.getAttribute('aria-expanded'), 'true', 'aria-expanded not synced');
+    trig._fire('click');
+    assert.strictEqual(panelShut(b), true, 'second click did not close it');
+    assert.strictEqual(trig.getAttribute('aria-expanded'), 'false', 'aria-expanded stuck open');
+});
+
+// A short queue is NOT supposed to bother the user: app.js waits Retry-After
+// and fires again silently. Asserting the panel opens there would pin the wrong
+// contract - and the wait is real time, so the old 80ms poll could never have
+// seen the retry anyway. retryAfterSec is kept at 1 so the test costs ~1s.
+const okSpec = () => {
+    const f = () => { f.calls++; return f.calls <= 1
+        ? Promise.resolve({ ok: false, status: 429, json: () => Promise.resolve({ error: 'busy', retryAfterSec: 1 }) })
+        : Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve({ prompt: SPEC, domain: 'x.com', signals: {} }) }); };
+    f.calls = 0;
+    return f;
+};
+
+test('a short 429 retries silently and never shows the panel when the retry works', async () => {
+    const fetchImpl = okSpec();
+    const b = boot({ fetch: fetchImpl });
+    await runTo429(b);
+    await new Promise(r => setTimeout(r, 1400));
+    assert.ok(fetchImpl.calls >= 2, 'no silent retry happened - calls: ' + fetchImpl.calls);
+    assert.strictEqual(panelShut(b), true, 'panel opened for a queue jam the retry already fixed');
+    assert.strictEqual(b.els.get('buildPromptCard').hidden, false, 'retry succeeded but no result rendered');
+});
+
+test('a short 429 whose retry ALSO fails does open the panel', async () => {
+    const b = boot({ fetch: r429(1) });
+    await runTo429(b);
+    await new Promise(r => setTimeout(r, 1400));
+    assert.strictEqual(panelShut(b), false,
+        'two 429s in a row is a real jam; the escape hatch must appear');
+});
+
+test('a LONG-wait 429 opens it too (the branch that used to drop .status)', async () => {
+    const b = boot({ fetch: r429(45) });
+    await runTo429(b);
+    assert.strictEqual(panelShut(b), false,
+        'retryAfterSec>20 throws a bare Error; without .status the panel never opens');
+});
+
+test('a 502 does NOT open it - a key cannot fix an unreachable site', async () => {
+    const b = boot({ fetch: httpErr(502) });
+    await runTo429(b);
+    assert.strictEqual(panelShut(b), true, 'panel opened for a non-BYOK failure');
+});
+
+test('a 429 does not nag someone already using their own key', async () => {
+    const b = boot({ fetch: r429(10) });
+    setByok(b.els, { provider: 'openai', model: 'gpt-4o-mini', key: 'sk-' + 'a'.repeat(40) });
+    await runTo429(b);
+    assert.strictEqual(panelShut(b), true, 'opened the panel at a BYOK user');
+});
+
+test('.byok-cta text + chip + icon pass WCAG AA on both themes', () => {
+    const base = tokens(block(/:root\s*{[^}]*}/));
+    const dark = Object.assign({}, base, tokens(block(/\[data-theme="dark"\]\s*{[^}]*}/)));
+    for (const [name, tk] of [['light', base], ['dark', dark]]) {
+        const bg = toRGB(resolve(tk['--bg-alt'], tk));
+        assert.ok(bg, name + ': --bg-alt unparseable');
+        const label = contrast(toRGB(resolve(tk['--text'], tk)), bg);
+        const chip  = contrast(over(toRGB(resolve(tk['--text-muted'], tk)), bg), bg);
+        const icon  = contrast(toRGB(resolve(tk['--link-text'], tk)), bg);
+        assert.ok(label >= 4.5, name + ': cta label ' + label.toFixed(2) + ':1');
+        assert.ok(chip  >= 4.5, name + ': chip ' + chip.toFixed(2) + ':1');
+        assert.ok(icon  >= 3.0, name + ': icon ' + icon.toFixed(2) + ':1 (non-text, AA is 3:1)');
+    }
+});
+
+test('.byok-cta uses no literal white and no --accent as text', () => {
+    // --accent is #f5f5f5 in dark mode: white-on-white. This bit the pricing
+    // card twice, so it is pinned for the new component too.
+    const rules = [...CSS.matchAll(/\.byok-cta[^{{]*\{[^}]*\}/g)].map(m => m[0]).join('\n');
+    assert.ok(rules.length > 0, 'no .byok-cta rules found');
+    assert.ok(!/rgba\(\s*255\s*,\s*255\s*,\s*255/.test(rules), 'literal white alpha in .byok-cta');
+    assert.ok(!/(?:^|[;{\s])color\s*:\s*var\(--accent\)/.test(rules), 'color:var(--accent) is near-white in dark mode');
+    assert.ok(/\.byok-cta\s+svg\s*\{[^}]*var\(--link-text\)/.test(CSS), 'icon is not using --link-text');
 });
 
     const registeredAtStart = tests.length;

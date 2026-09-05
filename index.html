@@ -104,20 +104,13 @@
                         </div>
                         <div id="url-error" class="error-message" role="alert" aria-live="assertive"></div>
 
-                        <!-- Email capture: only useful list we can build pre-launch -->
-                        <div class="waitlist" id="waitlist">
-                            <span class="wl-prompt" id="wlPrompt">Get notified when Pro launches — no spam, one email.</span>
-                            <form class="wl-form" id="wlForm" novalidate>
-                                <label for="wlEmail" class="sr-only">Email address</label>
-                                <input type="email" id="wlEmail" placeholder="you@company.com" autocomplete="email" />
-                                <button type="submit" class="btn-secondary" id="wlBtn">Notify me</button>
-                            </form>
-                        </div>
-
-                        <!-- BYOK: removes our cost + our rate limit -->
-                        <button type="button" class="byok-toggle" id="byokToggle" aria-expanded="false" aria-controls="byokPanel">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-                            Hit the limit? Use your own AI key
+                        <!-- BYOK, surfaced BEFORE the user is blocked. The old
+                             wording assumed a refusal had already happened, and it
+                             sat under the waitlist, where nobody reached it. -->
+                        <button type="button" class="byok-cta" id="byokToggle" aria-expanded="false" aria-controls="byokPanel">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+                            <span class="byok-cta-label">Use your own AI key</span>
+                            <span class="byok-cta-chip">60/hr &middot; skips the shared queue</span>
                         </button>
 
                         <div class="byok-panel" id="byokPanel" hidden>
@@ -155,6 +148,16 @@
                                 Your key is sent with each request straight to the provider and is never written to our logs or database.
                                 We can't recover it if you lose it.
                             </p>
+                        </div>
+
+                        <!-- Email capture: only useful list we can build pre-launch -->
+                        <div class="waitlist" id="waitlist">
+                            <span class="wl-prompt" id="wlPrompt">Get notified when Pro launches — no spam, one email.</span>
+                            <form class="wl-form" id="wlForm" novalidate>
+                                <label for="wlEmail" class="sr-only">Email address</label>
+                                <input type="email" id="wlEmail" placeholder="you@company.com" autocomplete="email" />
+                                <button type="submit" class="btn-secondary" id="wlBtn">Notify me</button>
+                            </form>
                         </div>
 
                         <!-- Usage stats -->

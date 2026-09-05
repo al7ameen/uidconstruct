@@ -269,14 +269,24 @@
         }
     }
 
+    // Hoisted out of the wiring block so the failure path can open the panel
+    // too. Driven by attributes, not a class, so aria-expanded and [hidden]
+    // cannot drift apart.
+    function setByokOpen(open) {
+        if (!byokPanel) return;
+        if (open) byokPanel.removeAttribute('hidden');
+        else byokPanel.setAttribute('hidden', '');
+        if (byokToggle) byokToggle.setAttribute('aria-expanded', String(open));
+        if (open && byokKey) byokKey.focus();
+    }
+
     if (byokToggle && byokPanel) {
         byokToggle.addEventListener('click', () => {
             const open = byokPanel.hasAttribute('hidden');
-            if (open) byokPanel.removeAttribute('hidden');
-            else byokPanel.setAttribute('hidden', '');
-            byokToggle.setAttribute('aria-expanded', String(open));
-            if (open && byokKey) byokKey.focus();
-            track('BYOK opened');
+            setByokOpen(open);
+            // Only counted as an open when it actually opens. The old code
+            // tracked on every click, so closing the panel inflated the event.
+            if (open) track('BYOK opened');
         });
         [byokProvider, byokModel, byokKey, byokBaseUrl, byokRemember].forEach(el => {
             if (el) el.addEventListener('change', readByokFromForm);
@@ -355,7 +365,13 @@
                 await new Promise(r => setTimeout(r, waitSecs * 1000));
                 response = await attempt();
             } else {
-                throw new Error(err.error || 'Busy right now. Try again in a moment.');
+                // .status must survive here. Without it the catch block cannot
+                // tell a long-queue 429 from any other failure, and the BYOK
+                // panel - the one thing that actually resolves a queue jam -
+                // stayed shut for exactly the users who needed it most.
+                const e = new Error(err.error || 'Busy right now. Try again in a moment.');
+                e.status = 429;
+                throw e;
             }
         }
 
@@ -613,6 +629,18 @@
             showError(err.message || 'Something went wrong. Please try again.');
             resultStatus.textContent = 'Error';
             resultLabel.textContent = 'Error';
+            // Deliberately 429 ONLY. Every source of 429 is fixed by the user's
+            // own key - the hourly rate limit, our concurrency gate (BYOK bypasses
+            // it entirely, lib/gate.js), and the provider's limit on OUR key all
+            // disappear once requests spend their credits instead of ours.
+            // A 502 or a timeout is NOT: that is the target site being unreachable
+            // or the model being slow, and no API key changes either. Opening the
+            // panel there would push users into pasting a secret for no benefit,
+            // which is worse than not offering it.
+            if (err.status === 429 && !byokReady()) {
+                setByokOpen(true);
+                track('BYOK surfaced');
+            }
         } finally {
             setLoading(false);
         }
