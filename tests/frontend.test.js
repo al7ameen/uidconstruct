@@ -16,6 +16,9 @@ const ROOT = path.join(__dirname, '..');
 const HTML = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const APP = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
 const CSS = fs.readFileSync(path.join(ROOT, 'style.css'), 'utf8');
+// specs.css was never loaded here until 05-Sep: two shipped layout bugs were
+// invisible to every test in the repo because of it.
+const SPECCSS = fs.readFileSync(path.join(ROOT, 'specs', 'specs.css'), 'utf8');
 
 function makeEl(id) {
     const cls = new Set();
@@ -653,6 +656,62 @@ test('no published spec page shows an undecoded CSS escape in its typeface list'
         const m = region.match(raw);
         assert.ok(!m, f + ' has an undecoded CSS escape in its font list: ' + JSON.stringify((m || []).slice(0, 3)));
     }
+});
+
+
+// ---- spec-page layout guards -------------------------------------------------
+// The last section of a spec page is the "Other specs" chip row. It had
+// padding-top only, so it sat flush against the footer divider. A test that
+// merely greps for the CSS rule would pass on a selector that matches nothing
+// (my first two attempts did exactly that), so these verify the DOM too.
+function lastSectionDirectChildOfSpecPage(body) {
+    const m = body.match(/<div class="spec-page">([\s\S]*)<\/main>/);
+    if (!m) return null;
+    let depth = 0, last = null;
+    for (const tok of m[1].matchAll(/<(\/?)(section|div)([^>]*?)>/g)) {
+        if (tok[1] === '/') { depth--; continue; }
+        if (depth === 0 && tok[2] === 'section') {
+            last = (tok[3].match(/class="([^"]*)"/) || [, ''])[1];
+        }
+        if (!tok[0].endsWith('/>')) depth++;
+    }
+    return last;
+}
+
+test('spec pages: last section is a direct child of .spec-page (selector is not a no-op)', () => {
+    const dir = path.join(ROOT, 'specs');
+    const pages = fs.readdirSync(dir).filter((f) => f.endsWith('.html') && f !== 'index.html');
+    assert.ok(pages.length >= 15, 'expected >=15 spec pages, found ' + pages.length);
+    for (const f of pages) {
+        const body = fs.readFileSync(path.join(dir, f), 'utf8');
+        const last = lastSectionDirectChildOfSpecPage(body);
+        assert.ok(last !== null, f + ': no section is a direct child of .spec-page - the spacing selector matches nothing');
+        assert.ok(/(^| )spec-section( |$)/.test(last), f + ': last section is not .spec-section: "' + last + '"');
+        assert.ok(!/(^| )spec-more( |$)/.test(last), f + ': last section IS .spec-more, so :not(.spec-more) no longer applies - recheck its bottom spacing');
+    }
+});
+
+test('spec pages: the bottom-spacing rule exists and carries padding-bottom', () => {
+    const r = SPECCSS.match(/\.spec-page\s*>\s*\.spec-section:last-child:not\(\.spec-more\)\s*\{([^}]*)\}/);
+    assert.ok(r, 'no bottom-spacing rule for the last .spec-section - chip row sits flush on the footer divider');
+    assert.ok(/padding-bottom/.test(r[1]), 'last-section rule lost its padding-bottom');
+});
+
+test('hub: .spec-more keeps its own bottom padding (must not be shrunk by the new rule)', () => {
+    const body = fs.readFileSync(path.join(ROOT, 'specs', 'index.html'), 'utf8');
+    const secs = [...body.matchAll(/<section class="([^"]*)"/g)];
+    const last = secs[secs.length - 1][1];
+    assert.ok(/(^| )spec-more( |$)/.test(last), 'hub last section is not .spec-more: "' + last + '" - it would lose 64px of bottom padding');
+    const more = SPECCSS.match(/\.spec-more\s*\{([^}]*)\}/);
+    assert.ok(more && /padding-bottom/.test(more[1]), '.spec-more lost its padding-bottom');
+});
+
+test('spec pages: sticky navbar is opaque (page text must not bleed through the wordmark)', () => {
+    const body = fs.readFileSync(path.join(ROOT, 'specs', 'index.html'), 'utf8');
+    assert.ok(!/app\.js/.test(body), 'spec pages now load app.js - the always-opaque navbar rule may be redundant, recheck');
+    const r = SPECCSS.match(/\.navbar\s*\{([^}]*)\}/);
+    assert.ok(r, 'no .navbar rule in specs.css - the transparent sticky bar lets content scroll under the wordmark');
+    assert.ok(/background:\s*var\(--bg\)/.test(r[1]), '.navbar lost its solid background');
 });
 
     const registeredAtStart = tests.length;

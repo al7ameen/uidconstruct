@@ -40,3 +40,17 @@
 .spec-card-name { font-size: 17px; font-weight: 600; color: var(--text); }
 .spec-card-stat { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-muted); }
 .spec-card-blurb { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+/* Spec pages never load app.js, so the .navbar.scrolled class is never
+   applied. The sticky bar stayed transparent and page text bled through
+   the wordmark. Make it solid on spec pages only. */
+.navbar { background: var(--bg); border-bottom: 1px solid var(--border); }
+
+/* Every spec page ends with a .spec-section that had padding-top only, so
+   its last chip row sat flush against the footer divider. */
+/* Spec pages nest sections inside div.spec-page, so the last one (the
+   "Other specs" chip row) had no bottom spacing and sat flush against the
+   footer divider. :not(.spec-more) is load-bearing: .spec-more already has
+   64px of padding-bottom and this rule is more specific, so without it the
+   hub's spacing would shrink from 64px to 48px. */
+.spec-page > .spec-section:last-child:not(.spec-more) { padding-bottom: var(--space-9); }
