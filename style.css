@@ -852,6 +852,22 @@ button:hover { opacity: 0.85; }
     box-shadow: var(--shadow-md);
 }
 
+/* Card headings. These three used to be inline-styled Instrument Serif at
+   font-weight:600 -- but Google serves Instrument Serif at 400 ONLY, so the
+   browser was synthesising a fake bold, which reads muddy at small sizes.
+   Every other serif heading on the site is 400; these were the outliers.
+   Now matched to .step-item .content h3 on the same page: DM Sans 600, which
+   IS loaded at 600. margin-bottom keeps the previous 8px rhythm (the card's
+   flex gap supplies the rest). */
+.testimonial-card h3 {
+    font-family: var(--font-sans);
+    font-size: 1.05rem;
+    font-weight: 600;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    margin: 0 0 var(--space-2);
+}
+
 .testimonial-stars { color: var(--warning); display: flex; gap: 2px; }
 .testimonial-text {
     font-size: 15px;

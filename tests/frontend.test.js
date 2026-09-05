@@ -461,6 +461,84 @@ test('the notice is wired, not just declared', () => {
     assert.ok(/id="byokWarning"/.test(HTML), 'no element in index.html');
 });
 
+/* ---- fake-bold bug class --------------------------------------------------
+   A font-weight the family was never loaded at is not ignored by the browser:
+   it synthesises a faux bold from the 400 outline. At small sizes that reads
+   muddy, which is how the three card headings looked. The bug is invisible in
+   the CSS (the declaration is perfectly legal) — you can only catch it by
+   cross-checking every declared weight against the weights the Google Fonts
+   link actually requests. So: parse the link, then audit the stylesheet. */
+const FAMILY = { sans: 'DM Sans', serif: 'Instrument Serif', mono: 'JetBrains Mono' };
+
+function loadedWeights() {
+    const link = HTML.match(/fonts\.googleapis\.com\/css2\?[^"]*/);
+    assert.ok(link, 'no Google Fonts stylesheet link in index.html');
+    const loaded = {};
+    for (const m of link[0].matchAll(/family=([^:&]+)(?::([^&]*))?/g)) {
+        const name = decodeURIComponent(m[1]).replace(/\+/g, ' ');
+        const weights = [...(m[2] || '').matchAll(/wght@([\d;.,a-z]+)/gi)]
+            .flatMap(x => x[1].split(';').map(s => parseInt(s.split(',').pop(), 10)))
+            .filter(Number.isFinite);
+        // a family with no wght axis is served at its single default weight
+        loaded[name] = weights.length ? weights : [400];
+    }
+    return loaded;
+}
+
+test('no rule asks for a font weight the family was not loaded at', () => {
+    const loaded = loadedWeights();
+    // Instrument Serif ships ONE weight — that constraint is the whole bug
+    assert.ok(loaded['Instrument Serif'], 'Instrument Serif is not loaded at all');
+    assert.deepStrictEqual(loaded['Instrument Serif'], [400],
+        'serif now ships extra weights; revisit the 400-only assumption below');
+
+    const bare = CSS.replace(/\/\*[\s\S]*?\*\//g, '');   // comments outrank selectors
+    const offenders = [];
+    for (const [, sel, body] of bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const fam = body.match(/font-family:\s*var\(--font-(sans|serif|mono)\)/);
+        const w = body.match(/font-weight:\s*(\d+)/);
+        if (!fam || !w) continue;
+        const name = FAMILY[fam[1]];
+        if (!loaded[name].includes(parseInt(w[1], 10))) {
+            offenders.push(name + ' ' + w[1] + ' @ ' + sel.trim().replace(/\s+/g, ' ').slice(0, 50));
+        }
+    }
+    assert.deepStrictEqual(offenders, [], 'browser will synthesise these:\n      ' + offenders.join('\n      '));
+});
+
+test('a heading never inherits a weight its serif cannot render', () => {
+    // The audit above only sees rules declaring BOTH properties. But h1-h6 carry
+    // a UA default of font-weight:700, so a rule like `h2 { font-family:
+    // var(--font-serif) }` -- weight nowhere -- synthesises the same fake bold
+    // that shipped on the card headings. Check inherited weight too.
+    const loaded = loadedWeights();
+    const bare = CSS.replace(/\/\*[\s\S]*?\*\//g, '');
+    const offenders = [];
+    for (const [, sel, body] of bare.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+        const fam = body.match(/font-family:\s*var\(--font-(sans|serif|mono)\)/);
+        if (!fam) continue;
+        const weights = loaded[FAMILY[fam[1]]];
+        if (!/(^|[\s,>+~])h[1-6](?![\w-])/.test(sel)) continue;   // not a heading
+        if (/font-weight:\s*\d/.test(body)) continue;             // weight is explicit
+        // no declared weight -> UA default 700 for headings
+        if (!weights.includes(700)) {
+            offenders.push(fam[1] + ' heading with no font-weight (UA 700 not loaded) @ '
+                + sel.trim().replace(/\s+/g, ' ').slice(0, 50));
+        }
+    }
+    assert.deepStrictEqual(offenders, [], '\n      ' + offenders.join('\n      '));
+});
+
+test('card headings are not inline-styled (inline styles outrank the audit)', () => {
+    // The bug survived for weeks because it lived in a style="" attribute, which
+    // no stylesheet rule can override and this file's CSS parser cannot see.
+    const inline = [...HTML.matchAll(/style="([^"]*)"/g)]
+        .map(m => m[1])
+        .filter(v => /font-family|font-weight/.test(v));
+    assert.deepStrictEqual(inline, [],
+        'typography belongs in style.css, not the markup: ' + inline.join(' | '));
+});
+
 (async () => {
     const unhandled = [];
     process.on('unhandledRejection', r => unhandled.push(String((r && r.message) || r)));
