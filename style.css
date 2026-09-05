@@ -1282,6 +1282,11 @@ button:hover { opacity: 0.85; }
     font-size: 13px;
 }
 
+/* Footer credit links: inherit the accent so the line reads as one unit,
+   but earn an underline on hover so they are still recognisably links. */
+.footer-bottom .made-with a { color: inherit; }
+.footer-bottom .made-with a:hover { text-decoration: underline; }
+
 @media (max-width: 768px) {
     .footer-top, .footer-bottom { flex-direction: column; align-items: flex-start; }
     .footer .links { gap: var(--space-4); }

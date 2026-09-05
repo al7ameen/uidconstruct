@@ -617,6 +617,25 @@ test('trademark notice present in every published spec page, exactly once', () =
 // backslash garbage where a font name should be. This shipped once, so assert it
 // cannot ship again. Scoped to the typeface sentence because a legitimate
 // content: "\2022" bullet elsewhere in a page must not trip it.
+// Attribution must survive every regeneration. The generator template is the
+// source of truth, so guard both it and the rendered pages: a regen that drops
+// the credit line should fail here, not ship silently.
+test('every published page and the generator template carry the Built-by credit', () => {
+    const fs = require('fs');
+    const gen = fs.readFileSync('lib/gen-specs.js', 'utf8');
+    assert.ok(/Built by /.test(gen), 'generator template lost the Built-by credit');
+    assert.ok(/name="author"/.test(gen), 'generator template lost the author meta');
+    for (const f of fs.readdirSync('specs')) {
+        if (!f.endsWith('.html')) continue;
+        const t = fs.readFileSync('specs/' + f, 'utf8');
+        assert.ok(/Built by <a href="https:\/\/github\.com\/al7ameen"/.test(t),
+            'specs/' + f + ' lost the Built-by credit');
+    }
+    const home = fs.readFileSync('index.html', 'utf8');
+    assert.ok(/Built by <a href="https:\/\/github\.com\/al7ameen"/.test(home), 'home lost the credit');
+    assert.ok(/"creator":\{"@type":"Person","name":"al7ameen"/.test(home), 'home lost JSON-LD creator');
+});
+
 test('no published spec page shows an undecoded CSS escape in its typeface list', () => {
     const dir = path.join(ROOT, 'specs');
     const pages = fs.readdirSync(dir).filter((f) => f.endsWith('.html'));
