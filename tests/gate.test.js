@@ -47,17 +47,23 @@ function tracker(delay) {
     // 3. When the queue itself overflows we must fail FAST and HONESTLY rather
     //    than hold a request until the platform kills it (the original 500).
     const hold = () => sleep(700);           // outlasts AI_QUEUE_WAIT_MS
-    const inflight = [0,1,2].map(() => withAiGate(hold).catch((e) => e));
+    // MAX + 1: MAX of them occupy every slot, the extra one sits in the queue
+    // and is the caller that must time out into a GateFullError. The count has
+    // to be derived from MAX -- with a literal [0,1,2] this section silently
+    // stopped overflowing as soon as MAX_CONCURRENT_AI > 2, `overflow` resolved
+    // to null, and the assertions below read properties off nothing.
+    const inflight = Array.from({ length: MAX + 1 }, () => withAiGate(hold).catch((e) => e));
     const overflow = await withAiGate(hold).then(() => null).catch((e) => e);
     ok('queue overflow throws GateFullError', overflow instanceof GateFullError, overflow && overflow.name);
     ok('overflow carries a Retry-After the client can honour',
         typeof overflow.retryAfterSec === 'number' && overflow.retryAfterSec > 0,
         JSON.stringify(overflow && overflow.retryAfterSec));
     ok('overflow message offers BYOK as the way out', /key/i.test(overflow.message), overflow.message);
-    ok('overflowed caller left no waiter behind', stats().waiting <= 2, JSON.stringify(stats()));
+    ok('overflowed caller left no waiter behind', stats().waiting <= MAX, JSON.stringify(stats()));
     const settled = await Promise.all(inflight);
-    ok('the two queued holders also get an honest GateFullError, not a hang',
-        settled.filter((e) => e instanceof GateFullError).length >= 1, JSON.stringify(settled.map((e) => e && e.name)));
+    ok('the queued waiter gets an honest GateFullError, not a hang',
+        settled.filter((e) => e instanceof GateFullError).length === 1,
+        JSON.stringify(settled.map((e) => e && e.name)));
     ok('gate drains back to zero after a saturated burst', stats().active === 0, JSON.stringify(stats()));
 
     // 4. Hand-off fairness: a fresh arrival must not cut ahead of someone who
