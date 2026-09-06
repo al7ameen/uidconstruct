@@ -390,10 +390,11 @@ t("index.html tags balance (no stray/missing close)", () => {
     const errs = unbalanced(htmlSrc);
     assert.deepStrictEqual(errs, [], errs.slice(0, 4).join(" | "));
 });
-t("resting panel shows a real spec, not a hand-written mock", () => {
+t("idle prompt box is empty — no hardcoded spec visible before JS runs", () => {
     assert.ok(!/Replicate the UI of linear\.app with/.test(htmlSrc), "fake hand-written sample is still on the page");
-    assert.ok(/id="resultLabel">Real output/.test(htmlSrc), "idle label does not say it is real output");
-    assert.ok(/class="prompt-box is-rendered" id="promptContent"/.test(htmlSrc), "sample is not marked is-rendered, so it renders as raw text");
+    assert.ok(/id="resultLabel">Real output/.test(htmlSrc), "idle label is present");
+    // promptContent is empty on idle load so nothing flashes before JS runs
+    assert.ok(/<div class="prompt-box" id="promptContent"[^>]*>\s*<\/div>/.test(htmlSrc), "prompt box is empty on idle");
 });
 t("no cherry-picked signal count claim", () => {
     assert.ok(!/~120<\/span> design signals/.test(htmlSrc), "still claims ~120 design signals (that was the best case only)");
