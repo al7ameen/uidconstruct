@@ -1319,6 +1319,11 @@ a.btn-primary {
    fill-mode stays `forwards` (not `both`) so a stalled animation can never
    leave content permanently invisible. */
 .fade-in { opacity: 0; transform: translateY(8px); animation: fadeUp var(--duration-med) var(--ease) forwards; }
+
+/* Set by the inline head script on reload / back-forward. A reload is not a
+   first impression, so show content immediately instead of replaying the
+   entrance animation. Without this rule the JS attribute does nothing. */
+[data-anim="off"] .fade-in { animation: none; opacity: 1; transform: none; }
 .fade-in-d1 { animation-delay: 40ms; }
 .fade-in-d2 { animation-delay: 80ms; }
 .fade-in-d3 { animation-delay: 120ms; }
