@@ -62,8 +62,15 @@
 
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
 
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="style.css" />
+    <!--
+        Non-blocking CSS preload. The browser does not block first paint
+        waiting for the stylesheet, but the CSS still applies once loaded.
+        Without this, every refresh shows a flash of unstyled HTML while
+        style.css is downloaded and parsed. The fallback link keeps
+        progressive enhancement for clients without JS.
+    -->
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="style.css" /></noscript>
 </head>
 <body>
 
@@ -220,7 +227,7 @@
                              aria-live on the panel itself made screen readers
                              announce the entire ~4000-char spec on every
                              analysis; readers navigate the spec manually. -->
-                        <div class="result-panel" id="resultPanel">
+                        <div class="result-panel" id="resultPanel" hidden>
                             <div class="panel-header" role="status" aria-live="polite">
                                 <span class="panel-label" id="resultLabel">Real output · tailwindcss.com</span>
                                 <span class="panel-status" id="resultStatus">Ready</span>
