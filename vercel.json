@@ -10,11 +10,59 @@
           "value": "nosniff"
         }
       ]
+    },
+    {
+      "source": "/style.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/app.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/specs/specs.css",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/og.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, immutable"
+        }
+      ]
     }
   ],
   "redirects": [
-    { "source": "/lib/(.*)", "destination": "/api/hidden", "permanent": false },
-    { "source": "/tests/(.*)", "destination": "/api/hidden", "permanent": false },
-    { "source": "/node_modules/(.*)", "destination": "/api/hidden", "permanent": false }
+    {
+      "source": "/lib/(.*)",
+      "destination": "/api/hidden",
+      "permanent": false
+    },
+    {
+      "source": "/tests/(.*)",
+      "destination": "/api/hidden",
+      "permanent": false
+    },
+    {
+      "source": "/node_modules/(.*)",
+      "destination": "/api/hidden",
+      "permanent": false
+    }
   ]
 }
