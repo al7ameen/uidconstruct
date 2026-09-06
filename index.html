@@ -25,6 +25,36 @@
 
     <script defer data-domain="uidconstruct.vercel.app" src="https://plausible.io/js/script.outbound-links.js"></script>
 
+    <!-- Theme must be resolved before first paint. The hardcoded
+         data-theme="light" on the root element is what a dark-mode user
+         flashes past while app.js (loaded at end of body) runs setTheme().
+         Inline + tiny, so it executes during head parsing. -->
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('uid-theme');
+                if (t !== 'dark' && t !== 'light') {
+                    t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                }
+                document.documentElement.setAttribute('data-theme', t);
+            } catch (_) { /* private mode / blocked storage -> keep light */ }
+
+            // Entrance animations are a first-impression nicety. Replaying
+            // them on every refresh is what looked like a "skeleton": the
+            // hero sat at opacity:0 for ~570ms while the navbar, background
+            // and footer were already painted. A reload is not a first
+            // impression, so skip it. Runs here, before first paint, so
+            // there is no flash-then-hide.
+            try {
+                var nav = performance.getEntriesByType('navigation')[0];
+                var type = nav ? nav.type : (performance.navigation && performance.navigation.type);
+                if (type === 'reload' || type === 1 || type === 'back_forward' || type === 2) {
+                    document.documentElement.setAttribute('data-anim', 'off');
+                }
+            } catch (_) { /* no Navigation Timing -> keep the animation */ }
+        })();
+    </script>
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -395,6 +425,6 @@
     </footer>
 
     <!-- JavaScript -->
-    <script src="app.js"></script>
+    <script defer src="app.js"></script>
 </body>
 </html>

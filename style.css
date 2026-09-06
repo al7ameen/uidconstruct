@@ -1310,14 +1310,23 @@ a.btn-primary {
 /* ============================================================
    ANIMATIONS
    ============================================================ */
-.fade-in { opacity: 0; transform: translateY(12px); animation: fadeUp var(--duration-slow) var(--ease) forwards; }
-.fade-in-d1 { animation-delay: 80ms; }
-.fade-in-d2 { animation-delay: 150ms; }
-.fade-in-d3 { animation-delay: 220ms; }
-.fade-in-d4 { animation-delay: 300ms; }
+/* Entrance animation. Kept, but the blank window is halved: the hero
+   previously sat at opacity:0 for up to 220ms of delay + 350ms of
+   animation (~570ms) on EVERY load, including refreshes. That read as a
+   skeleton flash. Delays are now 40/80/120/160ms and the run is 250ms, so
+   the last element is fully in at ~410ms (was ~570ms). Duration
+   uses the existing --duration-med token, not a literal.
+   fill-mode stays `forwards` (not `both`) so a stalled animation can never
+   leave content permanently invisible. */
+.fade-in { opacity: 0; transform: translateY(8px); animation: fadeUp var(--duration-med) var(--ease) forwards; }
+.fade-in-d1 { animation-delay: 40ms; }
+.fade-in-d2 { animation-delay: 80ms; }
+.fade-in-d3 { animation-delay: 120ms; }
+.fade-in-d4 { animation-delay: 160ms; }
+
 
 @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(8px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
