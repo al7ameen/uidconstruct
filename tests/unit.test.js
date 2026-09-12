@@ -714,6 +714,79 @@ await ta('diagnostics never reach the AI prompt', async () => {
 });
 
 
+
+// ------------------------------------------------------ inline <style> mining
+// THE BUG: a site can ship its whole design system in inline <style> tags and
+// link zero stylesheets. extractCssHrefs() alone saw none, and the early return
+// reported degraded:false — so we served a confident spec containing no colours
+// and called it "this site has no design tokens". Measured on framer.com:
+// 0 linked, 7 <style> tags, 492KB CSS, 1,263 custom properties -> OLD HEX=0,
+// NEW HEX=23. These tests exist because the 217-test suite passed WITHOUT
+// touching extractInlineCss at all: coverage that cannot fail is not coverage.
+
+await ta('inline-only site yields tokens and is NOT degraded (framer case)', async () => {
+    const $ = cheerio.load(
+        '<html><head><style>:root{--brand:#1E3CC8;--bg:#0b0d12;--radius:8px}</style>' +
+        '<style>body{--text-lg:24px;--pad:16px}</style></head><body></body></html>');
+    const r = await CSS.fetchCssFiles($, 'https://framer.test/');
+    assert.strictEqual(r.status.linked, 0, 'premise: no linked stylesheets');
+    assert.strictEqual(r.degraded, false, 'inline CSS means we learned something');
+    assert.ok(r.css.includes('--brand:#1E3CC8'), 'inline tokens dropped: ' + r.css);
+    assert.ok(r.css.includes('--text-lg'), 'second <style> tag dropped');
+    assert.ok(r.status.inline > 0, 'status.inline must report inline byte count');
+});
+
+await ta('non-CSS style types are ignored', async () => {
+    const $ = cheerio.load(
+        '<html><head><script type="application/json">{"--fake":"#000000"}</script>' +
+        '<style type="text/plain">--nope:#111111</style>' +
+        '<style type="text/css">--yes:#222222</style></head><body></body></html>');
+    const r = await CSS.fetchCssFiles($, 'https://type.test/');
+    assert.ok(r.css.includes('--yes'), 'text/css style must be kept');
+    assert.ok(!r.css.includes('--nope'), 'text/plain must be skipped');
+    assert.ok(!r.css.includes('--fake'), 'JSON in a script tag is not CSS');
+});
+
+await ta('linked CSS keeps precedence over inline (append order)', async () => {
+    const real = globalThis.fetch;
+    globalThis.fetch = async () => ({ ok: true, status: 200,
+        text: async () => ':root{--brand:#AAAAAA}' });
+    try {
+        const $ = cheerio.load(
+            '<html><head><link rel="stylesheet" href="/a.css">' +
+            '<style>:root{--brand:#BBBBBB}</style></head><body></body></html>');
+        const r = await CSS.fetchCssFiles($, 'https://prec.test/');
+        const li = r.css.indexOf('#AAAAAA'), ii = r.css.indexOf('#BBBBBB');
+        assert.ok(li >= 0 && ii > li, 'linked must come first: ' + r.css);
+        assert.strictEqual(r.status.ok, 1);
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('failed links + token-free inline still reports degraded', async () => {
+    // The regression this whole fix could have re-introduced: if "we fetched no
+    // links" were enough to clear degraded, a site whose links 403 and whose
+    // inline CSS is only body{color:red} would silently yield a zero spec.
+    const real = globalThis.fetch;
+    globalThis.fetch = async () => { throw new Error('HTTP 403'); };
+    try {
+        const $ = cheerio.load(
+            '<html><head><link rel="stylesheet" href="/a.css">' +
+            '<style>body{color:red}</style></head><body></body></html>');
+        const r = await CSS.fetchCssFiles($, 'https://part.test/');
+        assert.strictEqual(r.degraded, true, 'presence of bytes is not the test');
+        assert.strictEqual(r.status.inlineYields, false, 'no custom properties in inline');
+    } finally { globalThis.fetch = real; }
+});
+
+await ta('inline CSS respects the combined byte ceiling', async () => {
+    const big = '--x' + 'z'.repeat(80) + ': #' + 'A'.repeat(6) + ';';
+    const blob = new Array(60000).fill(big).join('');
+    const $ = cheerio.load('<html><head><style>' + blob + '</style></head><body></body></html>');
+    const r = await CSS.fetchCssFiles($, 'https://cap.test/');
+    assert.ok(r.css.length <= CSS.CSS_MAX_BYTES,
+        'inline bypassed the cap: ' + r.css.length + ' > ' + CSS.CSS_MAX_BYTES);
+});
+
 // ------------------------------------------------- degraded CSS must not be cached
 // The entire reason the throw exists: CACHE_TTL_MS is 6 hours, so a stored
 // degraded result is not one bad page view — it is every visitor of that URL
