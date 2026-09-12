@@ -54,15 +54,6 @@
     // so the caption has to survive the init call to hideResult().
     const IDLE_LABEL = 'Real output · tailwindcss.com';
 
-    // ============================================================
-    // ANALYTICS — fire-and-forget custom events (Plausible)
-    // No-op if Plausible isn't loaded yet, so it can never break the UI.
-    // ============================================================
-    function track(event, props) {
-        try {
-            if (window.plausible) window.plausible(event, { props: props || {} });
-        } catch (_) { /* analytics must never break the product */ }
-    }
 
     // ============================================================
     // THEME MANAGEMENT
@@ -276,7 +267,6 @@
             else byokPanel.setAttribute('hidden', '');
             byokToggle.setAttribute('aria-expanded', String(open));
             if (open && byokKey) byokKey.focus();
-            track('BYOK opened');
         });
         [byokProvider, byokModel, byokKey, byokBaseUrl, byokRemember].forEach(el => {
             if (el) el.addEventListener('change', readByokFromForm);
@@ -317,7 +307,6 @@
                 document.getElementById('wlPrompt').textContent =
                     'Saved — ' + email + '. We will email once before launch.';
                 wlForm.style.display = 'none';
-                track('Waitlist join');
             } catch (_) {
                 btn.disabled = false;
                 document.getElementById('wlPrompt').textContent =
@@ -602,14 +591,10 @@
         setLoading(true);
 
         try {
-            track('Analysis started', { domain: extractDomain(url) });
             const t0 = Date.now();
             const result = await deconstructWebsite(url);
             showResult(result.prompt, result.timings, result.byokWarning);
-            track('Analysis success', { domain: extractDomain(url), ms: String(Date.now() - t0) });
-            if (byokReady()) track('BYOK used');
         } catch (err) {
-            track('Analysis failed', { domain: extractDomain(url), status: String(err.status || '') });
             showError(err.message || 'Something went wrong. Please try again.');
             resultStatus.textContent = 'Error';
             resultLabel.textContent = 'Error';
@@ -622,7 +607,6 @@
     // EVENT BINDING
     // ============================================================
     deconstructBtn.addEventListener('click', handleDeconstruct);
-    track('Tool viewed');
 
     urlInput.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {

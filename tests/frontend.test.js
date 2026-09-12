@@ -881,6 +881,58 @@ test('author-note: text, label and link all pass WCAG AA in both themes', () => 
 });
 
 
+// ---- third-party script guard (added 2026-09-12) --------------------------
+// The site's own footer says "No tracking pixels. No cookies." A Plausible
+// snippet sat in three HTML files for nine days loading a third-party script
+// on every page view, against a site that was never registered -- so it
+// leaked visitor data for exactly zero benefit and made that sentence false.
+// This asserts the CLASS, not the instance: no served HTML may load a <script>
+// from any origin but our own, and no analytics vendor may reappear. A
+// gen-specs regeneration would otherwise be free to put it back on 18 pages.
+// SCOPE: scripts only. Google Fonts <link> is a known separate gap (it does
+// leak IP+UA to Google) and is handled by the font self-hosting backlog, not here.
+test('no served HTML loads a third-party script or analytics vendor', () => {
+    const html = ['index.html', 'privacy.html', 'terms.html']
+        .map((f) => path.join(ROOT, f))
+        .concat(SPEC_PAGES.map((f) => path.join(ROOT, 'specs', f)));
+    assert.ok(html.length >= 20, 'expected the whole page set, got ' + html.length);
+    for (const file of html) {
+        const body = fs.readFileSync(file, 'utf8');
+        const rel = path.relative(ROOT, file);
+        for (const m of body.matchAll(/<script[^>]*\bsrc\s*=\s*"([^"]*)"/gi)) {
+            const u = m[1];
+            // A relative src is OUR file (app.js) -- not a vendor. Only an
+            // absolute or protocol-relative URL pointing at someone else's
+            // host counts. data: URIs are the inline favicon fallback.
+            if (u.startsWith('data:') || u.startsWith('#')) continue;
+            const host = (u.match(/^(?:https?:)?\/\/([^\/#?]+)/i) || [])[1];
+            if (!host) continue;                       // no scheme -> first party
+            if (/(^|\.)uidconstruct\.vercel\.app$/i.test(host)) continue;
+            assert.fail(rel + ' loads a script from a third party: ' + u.slice(0, 80));
+        }
+        assert.ok(!/plausible\.io|google-analytics|googletagmanager|doubleclick|hotjar|segment\.io|mixpanel|fathom/i.test(body),
+            rel + ' references an analytics/tracking vendor');
+    }
+});
+
+// The privacy page must not claim we run analytics we do not run. It named
+// Plausible affirmatively for nine days while no Plausible site existed.
+test('privacy page does not name an analytics vendor we do not use', () => {
+    const body = fs.readFileSync(path.join(ROOT, 'privacy.html'), 'utf8');
+    assert.ok(!/Plausible/i.test(body), 'privacy.html still names Plausible');
+    assert.ok(/No third-party trackers/i.test(body),
+        'privacy.html lost its "no third-party trackers" statement');
+});
+
+// app.js must not reference a global that no longer has a loader: the old
+// track() helper was a silent no-op without window.plausible, which is how
+// the dead integration stayed invisible for nine days.
+test('app.js has no dead analytics shim', () => {
+    const body = fs.readFileSync(path.join(ROOT, 'app.js'), 'utf8');
+    assert.ok(!/window\.plausible/.test(body), 'app.js still calls window.plausible');
+    assert.ok(!/\bfunction track\s*\(/.test(body), 'app.js still defines a track() helper');
+});
+
 // ---- generator/output drift guard (added 2026-09-12) ----------------------
 // Root cause of a silent regression: specs.css carried 14 lines that existed
 // only in the GENERATED file, not in the SPECS_CSS template in gen-specs.js.
