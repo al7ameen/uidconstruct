@@ -118,3 +118,7 @@ Design tokens are facts about how a site is built, not creative expression — e
 normal practice. uidconstruct positions itself as a **spec and inspiration tool**, not a clone
 button. Not affiliated with or endorsed by any site analysed; all trademarks belong to their owners.
 
+
+## License
+
+MIT — see [LICENSE](LICENSE).
