@@ -475,19 +475,28 @@ test('the notice is wired, not just declared', () => {
    link actually requests. So: parse the link, then audit the stylesheet. */
 const FAMILY = { sans: 'DM Sans', serif: 'Instrument Serif', mono: 'JetBrains Mono' };
 
+// The fonts are self-hosted now, so the set of weights a browser can actually
+// load comes from our own @font-face rules, not from a Google URL we no longer
+// reference. Parsing the stylesheet instead of hardcoding keeps every weight
+// audit below live: add a 700 face and they start accepting 700.
 function loadedWeights() {
-    const link = HTML.match(/fonts\.googleapis\.com\/css2\?[^"]*/);
-    assert.ok(link, 'no Google Fonts stylesheet link in index.html');
-    const loaded = {};
-    for (const m of link[0].matchAll(/family=([^:&]+)(?::([^&]*))?/g)) {
-        const name = decodeURIComponent(m[1]).replace(/\+/g, ' ');
-        const weights = [...(m[2] || '').matchAll(/wght@([\d;.,a-z]+)/gi)]
-            .flatMap(x => x[1].split(';').map(s => parseInt(s.split(',').pop(), 10)))
-            .filter(Number.isFinite);
-        // a family with no wght axis is served at its single default weight
-        loaded[name] = weights.length ? weights : [400];
+    const css = fs.readFileSync(path.join(ROOT, 'fonts.css'), 'utf8');
+    const seen = {};
+    for (const b of css.split('@font-face').slice(1)) {
+        const body = b.split('}')[0];
+        const fam = (body.match(/font-family:\s*'([^']+)'/) || [])[1];
+        if (!fam) continue;
+        const set = (seen[fam] = seen[fam] || new Set());
+        for (const m of body.matchAll(/font-weight:\s*([\d\s]+)/g)) {
+            for (const w of m[1].trim().split(/\s+/)) {
+                const n = parseInt(w, 10);
+                if (Number.isFinite(n)) set.add(n);
+            }
+        }
+        if (!set.size) set.add(400);   // a face declaring no weight is the 400 default
     }
-    return loaded;
+    return Object.fromEntries(
+        Object.entries(seen).map(([k, v]) => [k, [...v].sort((a, b) => a - b)]));
 }
 
 test('no rule asks for a font weight the family was not loaded at', () => {
@@ -889,8 +898,10 @@ test('author-note: text, label and link all pass WCAG AA in both themes', () => 
 // This asserts the CLASS, not the instance: no served HTML may load a <script>
 // from any origin but our own, and no analytics vendor may reappear. A
 // gen-specs regeneration would otherwise be free to put it back on 18 pages.
-// SCOPE: scripts only. Google Fonts <link> is a known separate gap (it does
-// leak IP+UA to Google) and is handled by the font self-hosting backlog, not here.
+// SCOPE: scripts AND fonts. Google Fonts was the other half of this gap -- a
+// cross-origin <link> leaked visitor IP + referrer to Google on every page view.
+// The families are self-hosted now, so a font CDN link reappearing is a regression
+// of the same class, and is asserted against below.
 test('no served HTML loads a third-party script or analytics vendor', () => {
     const html = ['index.html', 'privacy.html', 'terms.html']
         .map((f) => path.join(ROOT, f))
@@ -912,6 +923,10 @@ test('no served HTML loads a third-party script or analytics vendor', () => {
         }
         assert.ok(!/plausible\.io|google-analytics|googletagmanager|doubleclick|hotjar|segment\.io|mixpanel|fathom/i.test(body),
             rel + ' references an analytics/tracking vendor');
+        // Fonts too: a cross-origin font <link> leaks visitor IP + referrer to
+        // Google on every page view. Same leak class as the Plausible snippet.
+        assert.ok(!/fonts\.(googleapis|gstatic)\.com/i.test(body),
+            rel + ' loads fonts from a third party');
     }
 });
 
