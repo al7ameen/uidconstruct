@@ -33,6 +33,17 @@
     }
   },
   {
+    "slug": "framer",
+    "name": "Framer",
+    "blurb": "High-contrast dark marketing with generous type scale.",
+    "stats": {
+      "colors": 23,
+      "type": 1,
+      "geometry": 12,
+      "total": 37
+    }
+  },
+  {
     "slug": "github",
     "name": "GitHub",
     "blurb": "Primer design system, the most familiar dark UI in developer land.",

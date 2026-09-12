@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Framer design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Framer colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/framer" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Framer design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Framer colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/framer" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Framer design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Framer colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta name="author" content="al7ameen" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Framer design tokens","description":"Framer colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/framer","datePublished":"2026-09-12","dateModified":"2026-09-12","isBasedOn":"https://www.framer.com","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Framer</p>
+  <h1>Framer design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://www.framer.com's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>1 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-12</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Fwww.framer.com">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff1a"></span>
+  <code class="spec-swatch-name">--token-c534b380-e14e-4ddc-9802-ad88d1f94f8e</code>
+  <code class="spec-swatch-val">#ffffff1a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#cbff00"></span>
+  <code class="spec-swatch-name">--token-6ecb0037-dab8-4348-b657-00f38b638028</code>
+  <code class="spec-swatch-val">#cbff00</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--token-1ef30da2-9620-422c-b321-d10088e14610</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0000001a"></span>
+  <code class="spec-swatch-name">--token-3d980185-7d0f-4837-b1d0-e3a68e16a293</code>
+  <code class="spec-swatch-val">#0000001a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#1a1a1a"></span>
+  <code class="spec-swatch-name">--token-5e0b3b72-9a97-43f8-96f2-85d741f3d8ca</code>
+  <code class="spec-swatch-val">#1a1a1a</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#000"></span>
+  <code class="spec-swatch-name">--token-958e2cd1-b113-4aa3-9235-7a2b959c8feb</code>
+  <code class="spec-swatch-val">#000</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff"></span>
+  <code class="spec-swatch-name">--token-26e3cb56-8447-4a64-9b7d-37f16a9909d4</code>
+  <code class="spec-swatch-val">#fff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fffc"></span>
+  <code class="spec-swatch-name">--token-289cb3ad-ad59-4cce-aee5-0850b842d9c8</code>
+  <code class="spec-swatch-val">#fffc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff9"></span>
+  <code class="spec-swatch-name">--token-8f5eb515-7a13-452b-a4ab-f35e2208a3f3</code>
+  <code class="spec-swatch-val">#fff9</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fff6"></span>
+  <code class="spec-swatch-name">--token-f5637926-8ee6-41cb-a320-ec3462d62cd5</code>
+  <code class="spec-swatch-val">#fff6</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#09f"></span>
+  <code class="spec-swatch-name">--token-bd71055c-0a2c-4476-8cc9-4310acba652d</code>
+  <code class="spec-swatch-val">#09f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#05f"></span>
+  <code class="spec-swatch-name">--token-eb0d9e00-7216-491c-99d5-7c1c2f3d0dbe</code>
+  <code class="spec-swatch-val">#05f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#60f"></span>
+  <code class="spec-swatch-name">--token-0245ad54-dffa-4280-9b49-9d43ad68acaa</code>
+  <code class="spec-swatch-val">#60f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#90f"></span>
+  <code class="spec-swatch-name">--token-66dfdba2-b084-43a3-a18d-237c2893b6a7</code>
+  <code class="spec-swatch-val">#90f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f06"></span>
+  <code class="spec-swatch-name">--token-0c4c4e00-f4fc-4e6a-9a97-509a95a3e5d4</code>
+  <code class="spec-swatch-val">#f06</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f02"></span>
+  <code class="spec-swatch-name">--token-88cad303-8ee5-4c22-877f-e434faf14eee</code>
+  <code class="spec-swatch-val">#f02</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fd7702"></span>
+  <code class="spec-swatch-name">--token-61e699c7-742b-47d0-bb16-f42065b06637</code>
+  <code class="spec-swatch-val">#fd7702</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fb0"></span>
+  <code class="spec-swatch-name">--token-be530db7-18b2-4273-89ab-17e94ce4aa9f</code>
+  <code class="spec-swatch-val">#fb0</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0cf"></span>
+  <code class="spec-swatch-name">--token-ee053477-e115-4fec-a5f5-cdc637ed6ddc</code>
+  <code class="spec-swatch-val">#0cf</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2dd"></span>
+  <code class="spec-swatch-name">--token-893b117c-1037-4f46-becb-94bc264ede3a</code>
+  <code class="spec-swatch-val">#2dd</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#141414"></span>
+  <code class="spec-swatch-name">--token-2fbf5c4b-adb8-4940-91a4-ad94f8d791ba</code>
+  <code class="spec-swatch-val">#141414</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#4cd963"></span>
+  <code class="spec-swatch-name">--token-281f665e-69f0-4f4c-a171-f40f50fe70d5</code>
+  <code class="spec-swatch-val">#4cd963</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff12"></span>
+  <code class="spec-swatch-name">--token-81eeded8-7d17-49fd-8f9d-4b09d4083be5</code>
+  <code class="spec-swatch-val">#ffffff12</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Typefaces named in its own stylesheets, the fonts it ships itself first: EB Garamond, Geist, Inter Tight, Mona Sans, JetBrains Mono, Geist Variable, Luxurious Script, Inter Framer SemiBold.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--text-truncation-line-break-for-safari-16</code></td><td><code>&quot;\a &quot;</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--border-bottom-width</code></td><td><code>1px</code></td><td></td></tr>
+<tr><td><code>--border-left-width</code></td><td><code>1px</code></td><td></td></tr>
+<tr><td><code>--border-right-width</code></td><td><code>1px</code></td><td></td></tr>
+<tr><td><code>--border-top-width</code></td><td><code>1px</code></td><td></td></tr>
+<tr><td><code>--one-if-corner-shape-supported</code></td><td><code>1</code></td><td></td></tr>
+<tr><td><code>--framer-font-family</code></td><td><code>&quot;GT Walsheim Medium&quot;, &quot;GT Walsheim Medium Placeholder&quot;, sans</code></td><td></td></tr>
+<tr><td><code>--framer-font-family-bold</code></td><td><code>&quot;GT Walsheim Bold&quot;, &quot;GT Walsheim Bold Placeholder&quot;, sans-ser</code></td><td></td></tr>
+<tr><td><code>--framer-font-family-bold-italic</code></td><td><code>&quot;GT Walsheim Bold Oblique&quot;, &quot;GT Walsheim Bold Oblique Placeh</code></td><td></td></tr>
+<tr><td><code>--framer-font-family-italic</code></td><td><code>&quot;GT Walsheim Medium Oblique&quot;, &quot;GT Walsheim Medium Oblique Pl</code></td><td></td></tr>
+<tr><td><code>--framer-font-open-type-features</code></td><td><code>&quot;ss02&quot; on</code></td><td></td></tr>
+<tr><td><code>--framer-font-size</code></td><td><code>42px</code></td><td></td></tr>
+<tr><td><code>--framer-font-weight</code></td><td><code>500</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>1200px</code></li><li><code>810px</code></li><li><code>809.98px</code></li><li><code>1199px</code></li><li><code>809px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Framer: AI design agent | Go from idea to launch with an agent that designs and builds on the canvas. Keep each change editable, with hosting, security, analytics, CMS, and SEO built in.
+Headings in DOM order: H1 Framer is the AI design agent for every step from idea to launch | H2 Agents that work alongside you, not instead of you | H3 Design with an agent | H3 Run your CMS with an agent | H3 Code with an agent | H3 Connect to any AI | H2 Not just vibes, a full platform | H3 Performance | H3 CMS | H3 SEO | H3 Collaboration | H3 Localization | H3 Hosting | H3 Security | H3 Analytics | H3 A/B Testing | H2 Shipped with Framer | H2 Trusted by teams shipping big sites | H2 Built on a community that isn’t going anywhere | H2 Your next idea starts here
+Navigation labels: Framer | Platform | Solutions | Resources | Enterprise | Pricing | Log in | Sign up | Copy logo SVG | Brand guidelines | Overview | Compare | FAQ | Plugins | Introduction | Quick Start | Publishing | Changelog | Reference | Examples
+Buttons / calls to action: Search Icon | CopyCopy | Copy
+Body copy: A professional design agent, native to the canvas. It works directly on your site to generate and refine in place, with every change visible, editable, and under your control. | Designing calmer interfaces inspired by nature | Organic shapes and natural motion in modern UI | Earthy color palettes inspired by the natural world | Designing with growth: how nature shapes UX patterns | From forests to pixels: textures rooted in nature | Manage more. Publish faster. The CMS agent sets up, organizes, and updates your entire CMS, connecting it directly to the canvas so content and design stay in sync. | Agents turn your wildest ideas into code and put them on your site. From simple custom effects to complex interactions. | Take action on your site from anywhere. Update copy from Slack. Trigger CMS changes from the terminal. Ship from a GitHub PR. Drive it all from your Terminal, Codex, Claude Code, C | variations of my site. Keep the content but try some different compositions.
+Form fields: Add follow up... | Prompt | website | company | message | subject | title | description | feedback | notes | details | remarks | comments
+Footer links: Framer | Product | AINew | AgentsNew | External AgentsNew | Design | CollaborateNew | CMS | Hosting | Performance | SEO | Convert | Publish | UpdatesNew | Resources | Academy
+Element counts: 6 sections | 464 links | 163 images | 8 buttons | 1 forms | 31 lists | 5 videos</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Framer
+Source: https://www.framer.com
+Extracted: 2026-09-12
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --border-color: var(--token-c534b380-e14e-4ddc-9802-ad88d1f94f8e,#ffffff14)
+  --token-c534b380-e14e-4ddc-9802-ad88d1f94f8e: #ffffff1a
+  --token-6ecb0037-dab8-4348-b657-00f38b638028: #cbff00
+  --token-1ef30da2-9620-422c-b321-d10088e14610: #000
+  --token-3d980185-7d0f-4837-b1d0-e3a68e16a293: #0000001a
+  --token-5e0b3b72-9a97-43f8-96f2-85d741f3d8ca: #1a1a1a
+  --token-958e2cd1-b113-4aa3-9235-7a2b959c8feb: #000
+  --token-26e3cb56-8447-4a64-9b7d-37f16a9909d4: #fff
+  --token-289cb3ad-ad59-4cce-aee5-0850b842d9c8: #fffc
+  --token-8f5eb515-7a13-452b-a4ab-f35e2208a3f3: #fff9
+  --token-f5637926-8ee6-41cb-a320-ec3462d62cd5: #fff6
+  --token-bd71055c-0a2c-4476-8cc9-4310acba652d: #09f
+  --token-eb0d9e00-7216-491c-99d5-7c1c2f3d0dbe: #05f
+  --token-0245ad54-dffa-4280-9b49-9d43ad68acaa: #60f
+  --token-66dfdba2-b084-43a3-a18d-237c2893b6a7: #90f
+  --token-0c4c4e00-f4fc-4e6a-9a97-509a95a3e5d4: #f06
+  --token-88cad303-8ee5-4c22-877f-e434faf14eee: #f02
+  --token-61e699c7-742b-47d0-bb16-f42065b06637: #fd7702
+  --token-be530db7-18b2-4273-89ab-17e94ce4aa9f: #fb0
+  --token-ee053477-e115-4fec-a5f5-cdc637ed6ddc: #0cf
+  --token-893b117c-1037-4f46-becb-94bc264ede3a: #2dd
+  --token-2fbf5c4b-adb8-4940-91a4-ad94f8d791ba: #141414
+  --token-281f665e-69f0-4f4c-a171-f40f50fe70d5: #4cd963
+  --token-81eeded8-7d17-49fd-8f9d-4b09d4083be5: #ffffff12
+
+TYPE TOKENS
+  --text-truncation-line-break-for-safari-16: &quot;\a &quot;
+
+GEOMETRY (radius / spacing / size)
+  --border-bottom-width: 1px
+  --border-left-width: 1px
+  --border-right-width: 1px
+  --border-top-width: 1px
+  --one-if-corner-shape-supported: 1
+  --framer-font-family: &quot;GT Walsheim Medium&quot;, &quot;GT Walsheim Medium Placeholder&quot;, sans
+  --framer-font-family-bold: &quot;GT Walsheim Bold&quot;, &quot;GT Walsheim Bold Placeholder&quot;, sans-ser
+  --framer-font-family-bold-italic: &quot;GT Walsheim Bold Oblique&quot;, &quot;GT Walsheim Bold Oblique Placeh
+  --framer-font-family-italic: &quot;GT Walsheim Medium Oblique&quot;, &quot;GT Walsheim Medium Oblique Pl
+  --framer-font-open-type-features: &quot;ss02&quot; on
+  --framer-font-size: 42px
+  --framer-font-weight: 500
+
+BREAKPOINTS SEEN IN CSS
+  1200px, 810px, 809.98px, 1199px, 809px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Framer: AI design agent | Go from idea to launch with an agent that designs and builds on the canvas. Keep each change editable, with hosting, security, analytics, CMS, and SEO built in.
+  Headings in DOM order: H1 Framer is the AI design agent for every step from idea to launch | H2 Agents that work alongside you, not instead of you | H3 Design with an agent | H3 Run your CMS with an agent | H3 Code with an agent | H3 Connect to any AI | H2 Not just vibes, a full platform | H3 Performance | H3 CMS | H3 SEO | H3 Collaboration | H3 Localization | H3 Hosting | H3 Security | H3 Analytics | H3 A/B Testing | H2 Shipped with Framer | H2 Trusted by teams shipping big sites | H2 Built on a community that isn’t going anywhere | H2 Your next idea starts here
+  Navigation labels: Framer | Platform | Solutions | Resources | Enterprise | Pricing | Log in | Sign up | Copy logo SVG | Brand guidelines | Overview | Compare | FAQ | Plugins | Introduction | Quick Start | Publishing | Changelog | Reference | Examples
+  Buttons / calls to action: Search Icon | CopyCopy | Copy
+  Body copy: A professional design agent, native to the canvas. It works directly on your site to generate and refine in place, with every change visible, editable, and under your control. | Designing calmer interfaces inspired by nature | Organic shapes and natural motion in modern UI | Earthy color palettes inspired by the natural world | Designing with growth: how nature shapes UX patterns | From forests to pixels: textures rooted in nature | Manage more. Publish faster. The CMS agent sets up, organizes, and updates your entire CMS, connecting it directly to the canvas so content and design stay in sync. | Agents turn your wildest ideas into code and put them on your site. From simple custom effects to complex interactions. | Take action on your site from anywhere. Update copy from Slack. Trigger CMS changes from the terminal. Ship from a GitHub PR. Drive it all from your Terminal, Codex, Claude Code, C | variations of my site. Keep the content but try some different compositions.
+  Form fields: Add follow up... | Prompt | website | company | message | subject | title | description | feedback | notes | details | remarks | comments
+  Footer links: Framer | Product | AINew | AgentsNew | External AgentsNew | Design | CollaborateNew | CMS | Hosting | Performance | SEO | Convert | Publish | UpdatesNew | Resources | Academy
+  Element counts: 6 sections | 464 links | 163 images | 8 buttons | 1 forms | 31 lists | 5 videos
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/linear">Linear</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/spotify">Spotify</a></li><li><a href="/specs/apple">Apple</a></li><li><a href="/specs/github">GitHub</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="author-note">
+      <span class="author-note-label">From the author</span>
+      <span>I build production UIs from specs like these &mdash; <a href="https://www.instagram.com/al7.ameen" target="_blank" rel="noopener noreferrer">get in touch</a>.</span>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies. Not affiliated with or endorsed by the sites analysed; all trademarks belong to their owners.</span>
+    <span class="made-with">Built by <a href="https://github.com/al7ameen" target="_blank" rel="noopener noreferrer">al7ameen</a> <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> &middot; <a href="https://www.instagram.com/al7.ameen" target="_blank" rel="noopener noreferrer">Instagram</a></span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>
