@@ -646,6 +646,51 @@ await ta('tally stays complete when CSS_MAX_BYTES truncates', async () => {
     } finally { globalThis.fetch = real; }
 });
 
+await ta('cssFetchBudget shrinks as the request deadline approaches', async () => {
+    // The raised CSS caps are only safe if a slow page fetch cannot leave the
+    // model no time. This is the pure half of that guarantee.
+    assert.strictEqual(CSS.cssFetchBudget(0), CSS.CSS_FETCH_MS, 'no deadline must not change behaviour');
+    assert.strictEqual(CSS.cssFetchBudget(undefined), CSS.CSS_FETCH_MS, 'absent deadline must not change behaviour');
+    // Plenty of time left -> capped at the normal per-file ceiling, not more.
+    assert.strictEqual(CSS.cssFetchBudget(Date.now() + 60000), CSS.CSS_FETCH_MS);
+    // Deadline already blown -> must clamp to the floor, never zero or negative
+    // (AbortSignal.timeout(0) aborts instantly and would read as a broken site).
+    const blown = CSS.cssFetchBudget(Date.now() - 60000);
+    assert.strictEqual(blown, CSS.CSS_FETCH_MIN_MS, 'past deadline should clamp to floor, got ' + blown);
+    // Mid-range: 20s left with a 15s reserve -> 5s, and it must sit between bounds.
+    const mid = CSS.cssFetchBudget(Date.now() + 20000);
+    assert.ok(mid > CSS.CSS_FETCH_MIN_MS && mid < CSS.CSS_FETCH_MS, 'mid-range budget: ' + mid);
+});
+
+await ta('fetchCssFiles applies the deadline budget to the real fetch', async () => {
+    // Mutation-proof by construction: the stub NEVER resolves, so the only thing
+    // that can end the wait is the per-file timeout. Elapsed time therefore
+    // measures the budget actually APPLIED -- not a status field reporting
+    // intent. (An earlier version asserted status.fetchMs and survived deleting
+    // the wiring; before that, relying on AbortSignal.timeout alone made the
+    // event loop drain and Node exited 0 mid-suite, silently truncating it.)
+    const real = globalThis.fetch;
+    globalThis.fetch = (u, o) => new Promise((_, rej) => {
+        const sig = o && o.signal;
+        if (!sig) return rej(new Error('no signal forwarded — budget not wired'));
+        const keepAlive = setTimeout(() => rej(new Error('stub outlived the budget')), CSS.CSS_FETCH_MS + 4000);
+        const abort = () => { clearTimeout(keepAlive); const e = new Error('aborted'); e.name = 'TimeoutError'; rej(e); };
+        if (sig.aborted) return abort();
+        sig.addEventListener('abort', abort, { once: true });
+    });
+    try {
+        const $ = cheerio.load('<html><head><link rel="stylesheet" href="/a.css"></head><body></body></html>');
+        const t0 = Date.now();
+        const blown = await CSS.fetchCssFiles($, 'https://site.test/', { deadlineAt: Date.now() - 60000 });
+        const elapsed = Date.now() - t0;
+        assert.ok(elapsed < 5000,
+            'blown deadline still waited ' + elapsed + 'ms — budget NOT applied (floor ' +
+            CSS.CSS_FETCH_MIN_MS + 'ms vs constant ' + CSS.CSS_FETCH_MS + 'ms)');
+        assert.ok(blown.status.timedOut >= 1, 'stall must classify as timeout: ' + JSON.stringify(blown.status));
+        assert.strictEqual(blown.degraded, true, 'no CSS retrieved, so it must report degraded');
+    } finally { globalThis.fetch = real; }
+});
+
 await ta('pipeline throws CssUnavailableError rather than emitting zeros', async () => {
     const real = globalThis.fetch;
     globalThis.fetch = async () => { throw new Error('socket hang up'); };

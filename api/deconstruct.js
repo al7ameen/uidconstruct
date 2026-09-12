@@ -236,7 +236,7 @@ async function analyse(cleanUrl, domain, byok, timings, deadlineAt) {
     const $ = cheerio.load(html);
 
     // 2. Build analysis data
-    const analysis = await buildAnalysisPrompt(html, $, cleanUrl, domain);
+    const analysis = await buildAnalysisPrompt(html, $, cleanUrl, domain, { deadlineAt });
 
     // 3. Call AI
     const prompt = USER_PROMPT(analysis);
