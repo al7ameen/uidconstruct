@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<script>(function(){try{var s=null;try{s=localStorage.getItem('uid-theme')}catch(e){}var d=window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches;if((s||d)==='dark')document.documentElement.setAttribute('data-theme','dark')}catch(e){}})();</script>
+<title>Linear design tokens — colours, fonts, spacing | uidconstruct</title>
+<meta name="description" content="Every Linear colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<link rel="canonical" href="https://uidconstruct.vercel.app/specs/linear" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="uidconstruct" />
+<meta property="og:title" content="Linear design tokens — colours, fonts, spacing | uidconstruct" />
+<meta property="og:description" content="Every Linear colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta property="og:url" content="https://uidconstruct.vercel.app/specs/linear" />
+<meta property="og:image" content="https://uidconstruct.vercel.app/og.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Linear design tokens — colours, fonts, spacing | uidconstruct" />
+<meta name="twitter:description" content="Every Linear colour, font-size and spacing value extracted from its live stylesheets, as a copy-paste build prompt for v0, Cursor, Bolt and Lovable." />
+<meta name="author" content="al7ameen" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23e63b2e'/%3E%3Ctext x='16' y='22' font-family='Georgia,serif' font-size='17' fill='white' text-anchor='middle'%3Eu%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="/style.css" />
+<link rel="stylesheet" href="/specs/specs.css" />
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Linear design tokens","description":"Linear colour, type and spacing tokens extracted from its public stylesheets.","url":"https://uidconstruct.vercel.app/specs/linear","datePublished":"2026-09-12","dateModified":"2026-09-12","isBasedOn":"https://linear.app","publisher":{"@type":"Organization","name":"uidconstruct","url":"https://uidconstruct.vercel.app"}}</script>
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<header class="navbar" role="banner">
+  <div class="container">
+    <a href="/" class="logo" aria-label="uidconstruct home">uid<span>construct</span></a>
+    <nav class="nav-links" role="navigation" aria-label="Main navigation">
+      <a href="/specs/">Spec library</a>
+      <a href="/#pricing">Pricing</a>
+      <a href="https://github.com/al7ameen/uidconstruct" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <button class="theme-toggle-btn" data-theme-toggle aria-label="Toggle theme">
+        <span data-theme-icon aria-hidden="true"></span> <span data-theme-label>Dark</span>
+      </button>
+    </nav>
+  </div>
+</header>
+<main id="main">
+<div class="spec-page"><section class="spec-hero container">
+  <p class="spec-eyebrow"><a href="/specs/">Spec library</a> <span aria-hidden="true">/</span> Linear</p>
+  <h1>Linear design tokens</h1>
+  <p class="spec-lede">Every value below was read from https://linear.app's own public stylesheets — not eyeballed, not guessed. Copy the prompt straight into v0, Cursor, Bolt or Lovable.</p>
+  <p class="spec-meta"><span>24 colours</span> · <span>8 type</span> · <span>12 geometry</span> · <span>extracted 2026-09-12</span></p>
+  <p class="spec-cta-row"><a class="btn-primary" href="/?url=https%3A%2F%2Flinear.app">Analyse a different site</a></p>
+</section><section class="spec-section container">
+  <h2>Colours</h2>
+  <p class="spec-note">Grouped by the token's own name, which is the site author's claim about intent — not a guarantee. Values marked <em>dark-only</em> appear only under a theme variant.</p>
+  
+  <h3>Surfaces</h3><ul class="spec-swatches spec-swatches--surface"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#0f1011"></span>
+  <code class="spec-swatch-name">--bg-base</code>
+  <code class="spec-swatch-val">#0f1011</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#191d20"></span>
+  <code class="spec-swatch-name">--bg-shade</code>
+  <code class="spec-swatch-val">#191d20</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#161718"></span>
+  <code class="spec-swatch-name">--color-bg-panel</code>
+  <code class="spec-swatch-val">#161718</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff26"></span>
+  <code class="spec-swatch-name">--kbd-bg</code>
+  <code class="spec-swatch-val">#ffffff26</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#fffc"></span>
+  <code class="spec-swatch-name">--header-bg</code>
+  <code class="spec-swatch-val">#fffc</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff14"></span>
+  <code class="spec-swatch-name">--anchor-glass-bg</code>
+  <code class="spec-swatch-val">#ffffff14</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#111213"></span>
+  <code class="spec-swatch-name">--row-bg</code>
+  <code class="spec-swatch-val">#111213</code>
+</li></ul>
+  <h3>Full ramp</h3><ul class="spec-swatches spec-swatches--ramp"><li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2a2e33"></span>
+  <code class="spec-swatch-name">--border-solid</code>
+  <code class="spec-swatch-val">#2a2e33</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#24282c"></span>
+  <code class="spec-swatch-name">--border-thin</code>
+  <code class="spec-swatch-val">#24282c</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#191d21"></span>
+  <code class="spec-swatch-name">--border-faint-thin</code>
+  <code class="spec-swatch-val">#191d21</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#151616"></span>
+  <code class="spec-swatch-name">--border-frame</code>
+  <code class="spec-swatch-val">#151616</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff14"></span>
+  <code class="spec-swatch-name">--header-border</code>
+  <code class="spec-swatch-val">#ffffff14</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e2e4e7"></span>
+  <code class="spec-swatch-name">--label-base</code>
+  <code class="spec-swatch-val">#e2e4e7</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#585a5c"></span>
+  <code class="spec-swatch-name">--label-faint</code>
+  <code class="spec-swatch-val">#585a5c</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#56cdff"></span>
+  <code class="spec-swatch-name">--blue</code>
+  <code class="spec-swatch-val">#56cdff</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ff7236"></span>
+  <code class="spec-swatch-name">--orange</code>
+  <code class="spec-swatch-val">#ff7236</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#f34f52"></span>
+  <code class="spec-swatch-name">--red</code>
+  <code class="spec-swatch-val">#f34f52</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#2e2e32"></span>
+  <code class="spec-swatch-name">--hero-line</code>
+  <code class="spec-swatch-val">#2e2e32</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#ffffff1f"></span>
+  <code class="spec-swatch-name">--edge-highlight-color</code>
+  <code class="spec-swatch-val">#ffffff1f</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#131415"></span>
+  <code class="spec-swatch-name">--timeline-backdrop</code>
+  <code class="spec-swatch-val">#131415</code>
+</li>
+<li class="spec-swatch">
+  <span class="spec-swatch-block" style="background:#e391cf"></span>
+  <code class="spec-swatch-name">--token-keyword</code>
+  <code class="spec-swatch-val">#e391cf</code>
+</li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Typography</h2>
+  <p class="spec-note">Typefaces named in its own stylesheets: none found in the CSS it links.</p>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Typography tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--font-size-micro</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--font-size-microPlus</code></td><td><code>.75rem</code></td><td></td></tr>
+<tr><td><code>--font-size-mini</code></td><td><code>.8125rem</code></td><td></td></tr>
+<tr><td><code>--font-size-miniPlus</code></td><td><code>.8125rem</code></td><td></td></tr>
+<tr><td><code>--font-size-small</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--font-size-smallPlus</code></td><td><code>.875rem</code></td><td></td></tr>
+<tr><td><code>--font-size-regular</code></td><td><code>1rem</code></td><td></td></tr>
+<tr><td><code>--font-size-regularPlus</code></td><td><code>1rem</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Radius, spacing &amp; size</h2>
+  <div class="spec-table-wrap"><table class="spec-table"><caption class="sr-only">Geometry tokens</caption>
+<thead><tr><th scope="col">Token</th><th scope="col">Value</th><th scope="col">Note</th></tr></thead>
+<tbody><tr><td><code>--inset</code></td><td><code>12px</code></td><td></td></tr>
+<tr><td><code>--padding-y</code></td><td><code>32px</code></td><td></td></tr>
+<tr><td><code>--padding-x</code></td><td><code>32px</code></td><td></td></tr>
+<tr><td><code>--width</code></td><td><code>1320px</code></td><td></td></tr>
+<tr><td><code>--height</code></td><td><code>720px</code></td><td></td></tr>
+<tr><td><code>--padding-bottom</code></td><td><code>112px</code></td><td></td></tr>
+<tr><td><code>--grid-gap</code></td><td><code>0</code></td><td></td></tr>
+<tr><td><code>--offset</code></td><td><code>16px</code></td><td></td></tr>
+<tr><td><code>--grid-columns</code></td><td><code>12</code></td><td></td></tr>
+<tr><td><code>--shine-beam-length</code></td><td><code>200px</code></td><td></td></tr>
+<tr><td><code>--button-height</code></td><td><code>24px</code></td><td></td></tr>
+<tr><td><code>--button-icon-size</code></td><td><code>12px</code></td><td></td></tr></tbody></table></div>
+</section>
+<section class="spec-section container">
+  <h2>Breakpoints</h2>
+  <ul class="spec-inline-list"><li><code>1024px</code></li><li><code>768px</code></li><li><code>640px</code></li><li><code>1536px</code></li><li><code>1280px</code></li><li><code>1439px</code></li><li><code>1281px</code></li></ul>
+</section>
+<section class="spec-section container">
+  <h2>Page structure</h2>
+  <pre class="spec-outline">Default theme: light.
+Title / description: Linear – The system for product development | Purpose-built for planning and building products with AI agents.
+Headings in DOM order: H1 The product development system for teams and agentsThe product developmentsystem for teams and agentsThe product development system for teams and agents | H3 Faster app launch | H2 A new species of product tool. Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products. | H2 Intakeand integrations | H2 Planningand monitoring | H2 AI andautomations | H2 Build, review,and ship | H2 Changelog | H2 Built for the future. Available today. | H3 Product | H3 Features | H3 Company | H3 Resources | H3 Connect | H3 Legal
+Navigation labels: Customers | Pricing | Now | Contact | Docs | Open app | Log in | Sign up
+Buttons / calls to action: Product | Resources | Open app | Linear | Search workspace | New issue | Pulse | Inbox | My issues | Reviews | Workspace | Initiatives | Projects | More | Favorites | Faster app launch
+Body copy: Purpose-built for planning and building products. Designed for the AI era. | Render UI before vehicle_state sync when minimum required state is present, instead of blocking on full refresh during iOS startup. | Powering the companies building the future | Linear is shaped by the practices and principles of world-class product teams. | Designed for workflows shared by humans and agents. From drafting PRDs to pushing PRs. | Reduces noise and restores momentum to help teams ship with high velocity and focus. | Automatically turn conversations and customer feedback into actionable issues that are instantly routed, labeled, and prioritized for the right team. | Plan and navigate from idea to launch. Align your team with product initiatives, strategic roadmaps, and clear, up-to-date PRDs. | Build and deploy AI agents that work alongside you as teammates. Work on complex tasks together or delegate entire issues end-to-end. | what are the three most important customer requests around permissions? add them to the Access Controls project
+Form fields: Edit code lines
+Footer links: Intake | Plan | AI | Build | Pricing | Security | Asks | Agents | Coding Sessions | Customer Requests | Insights | Mobile | Integrations | Changelog | About | Customers
+Element counts: 8 sections | 20 cards | 74 links | 38 images | 71 buttons | 10 lists</pre>
+</section>
+<section class="spec-section container">
+  <div class="build-prompt-card">
+    <div class="build-prompt-head">
+      <span class="build-prompt-label">Build prompt</span>
+      <button class="copy-prompt-btn" data-copy="spec-prompt">Copy prompt</button>
+    </div>
+    <pre id="spec-prompt" class="spec-prompt-text">Design spec — Linear
+Source: https://linear.app
+Extracted: 2026-09-12
+
+Build a page in this visual language. Use the exact tokens below.
+These values were read from the live site's own stylesheets, not guessed.
+
+COLOR TOKENS
+  --border-solid: #2a2e33
+  --border-thin: #24282c
+  --border-faint-thin: #191d21
+  --border-frame: #151616
+  --bg-base: #0f1011
+  --bg-shade: #191d20
+  --color-bg-panel: #161718
+  --edge-glow-tint: var(--edge-glow-color,#ffffff08)
+  --kbd-bg: #ffffff26
+  --header-border: #ffffff14
+  --header-bg: #fffc
+  --anchor-glass-bg: #ffffff14
+  --mask-start: linear-gradient(to right, #000 25%, #000000e6 50%, #0000) 15
+  --mask-end: linear-gradient(to right, #000 25%, #000000e6 50%, #0000) 0
+  --label-base: #e2e4e7
+  --label-faint: #585a5c
+  --blue: #56cdff
+  --orange: #ff7236
+  --red: #f34f52
+  --hero-line: #2e2e32
+  --edge-highlight-color: #ffffff1f
+  --row-bg: #111213
+  --timeline-backdrop: #131415
+  --token-keyword: #e391cf
+
+TYPE TOKENS
+  --font-size-micro: .75rem
+  --font-size-microPlus: .75rem
+  --font-size-mini: .8125rem
+  --font-size-miniPlus: .8125rem
+  --font-size-small: .875rem
+  --font-size-smallPlus: .875rem
+  --font-size-regular: 1rem
+  --font-size-regularPlus: 1rem
+
+GEOMETRY (radius / spacing / size)
+  --inset: 12px
+  --padding-y: 32px
+  --padding-x: 32px
+  --width: 1320px
+  --height: 720px
+  --padding-bottom: 112px
+  --grid-gap: 0
+  --offset: 16px
+  --grid-columns: 12
+  --shine-beam-length: 200px
+  --button-height: 24px
+  --button-icon-size: 12px
+
+BREAKPOINTS SEEN IN CSS
+  1024px, 768px, 640px, 1536px, 1280px, 1439px, 1281px
+
+PAGE STRUCTURE (headings in DOM order)
+  Default theme: light.
+  Title / description: Linear – The system for product development | Purpose-built for planning and building products with AI agents.
+  Headings in DOM order: H1 The product development system for teams and agentsThe product developmentsystem for teams and agentsThe product development system for teams and agents | H3 Faster app launch | H2 A new species of product tool. Purpose-built for modern teams with AI workflows at its core, Linear sets a new standard for planning and building products. | H2 Intakeand integrations | H2 Planningand monitoring | H2 AI andautomations | H2 Build, review,and ship | H2 Changelog | H2 Built for the future. Available today. | H3 Product | H3 Features | H3 Company | H3 Resources | H3 Connect | H3 Legal
+  Navigation labels: Customers | Pricing | Now | Contact | Docs | Open app | Log in | Sign up
+  Buttons / calls to action: Product | Resources | Open app | Linear | Search workspace | New issue | Pulse | Inbox | My issues | Reviews | Workspace | Initiatives | Projects | More | Favorites | Faster app launch
+  Body copy: Purpose-built for planning and building products. Designed for the AI era. | Render UI before vehicle_state sync when minimum required state is present, instead of blocking on full refresh during iOS startup. | Powering the companies building the future | Linear is shaped by the practices and principles of world-class product teams. | Designed for workflows shared by humans and agents. From drafting PRDs to pushing PRs. | Reduces noise and restores momentum to help teams ship with high velocity and focus. | Automatically turn conversations and customer feedback into actionable issues that are instantly routed, labeled, and prioritized for the right team. | Plan and navigate from idea to launch. Align your team with product initiatives, strategic roadmaps, and clear, up-to-date PRDs. | Build and deploy AI agents that work alongside you as teammates. Work on complex tasks together or delegate entire issues end-to-end. | what are the three most important customer requests around permissions? add them to the Access Controls project
+  Form fields: Edit code lines
+  Footer links: Intake | Plan | AI | Build | Pricing | Security | Asks | Agents | Coding Sessions | Customer Requests | Insights | Mobile | Integrations | Changelog | About | Customers
+  Element counts: 8 sections | 20 cards | 74 links | 38 images | 71 buttons | 10 lists
+
+Do not copy the site's logo, artwork, photography or brand name.
+Reproduce the visual language -- palette, type scale, spacing rhythm, radius.</pre>
+  </div>
+</section>
+<section class="spec-section container spec-more">
+  <h2>Get a spec for any site</h2>
+  <p>Paste a URL and uidconstruct reads its live stylesheets the same way it read these, then writes a build-ready spec for your AI editor.</p>
+  <p><a class="btn-primary" href="/">Try uidconstruct</a></p>
+</section><section class="spec-section container"><h2>Other specs</h2><ul class="spec-inline-list"><li><a href="/specs/tailwindcss">Tailwind CSS</a></li><li><a href="/specs/vercel">Vercel</a></li><li><a href="/specs/stripe">Stripe</a></li><li><a href="/specs/notion">Notion</a></li><li><a href="/specs/raycast">Raycast</a></li><li><a href="/specs/supabase">Supabase</a></li><li><a href="/specs/resend">Resend</a></li><li><a href="/specs/clerk">Clerk</a></li><li><a href="/specs/spotify">Spotify</a></li><li><a href="/specs/apple">Apple</a></li><li><a href="/specs/github">GitHub</a></li><li><a href="/specs/cloudflare">Cloudflare</a></li></ul></section></div>
+</main>
+<footer class="footer" role="contentinfo">
+  <div class="container">
+    <div class="footer-top">
+      <span class="logo">uid<span>construct</span></span>
+      <div class="links">
+        <a href="/specs/">Specs</a>
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+      </div>
+    </div>
+    <div class="author-note">
+      <span class="author-note-label">From the author</span>
+      <span>I build production UIs from specs like these &mdash; <a href="https://www.instagram.com/al7.ameen" target="_blank" rel="noopener noreferrer">get in touch</a>.</span>
+    </div>
+    <div class="footer-bottom">
+      <span class="tagline">Values read from each site's own public stylesheets. No tracking pixels. No cookies. Not affiliated with or endorsed by the sites analysed; all trademarks belong to their owners.</span>
+    <span class="made-with">Built by <a href="https://github.com/al7ameen" target="_blank" rel="noopener noreferrer">al7ameen</a> <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> &middot; <a href="https://www.instagram.com/al7.ameen" target="_blank" rel="noopener noreferrer">Instagram</a></span>
+    </div>
+  </div>
+</footer>
+<script>
+(function(){
+  var h=document.documentElement;
+  function paint(){var d=h.getAttribute('data-theme')==='dark';
+    var i=document.querySelector('[data-theme-icon]'),l=document.querySelector('[data-theme-label]');
+    if(i)i.textContent=d?'☀️':'🌙'; if(l)l.textContent=d?'Light':'Dark';}
+  paint();
+  Array.prototype.forEach.call(document.querySelectorAll('[data-theme-toggle]'),function(b){
+    b.addEventListener('click',function(){var d=h.getAttribute('data-theme')==='dark';
+      h.setAttribute('data-theme',d?'light':'dark');
+      try{localStorage.setItem('uid-theme',d?'light':'dark')}catch(e){} paint();});});
+  function flash(b,msg){var o=b.getAttribute('data-label')||b.textContent;b.setAttribute('data-label',o);
+    b.textContent=msg;setTimeout(function(){b.textContent=o},1800);}
+  function legacy(txt,b){var ta=document.createElement('textarea');ta.value=txt;
+    ta.style.position='fixed';ta.style.top='-1000px';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');flash(b,'Copied')}catch(e){flash(b,'Select + copy')}
+    document.body.removeChild(ta);}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-copy]'),function(b){
+    b.addEventListener('click',function(){var t=document.getElementById(b.getAttribute('data-copy'));
+      if(!t)return; var txt=t.textContent;
+      if(navigator.clipboard&&navigator.clipboard.writeText){
+        navigator.clipboard.writeText(txt).then(function(){flash(b,'Copied ✓')},function(){legacy(txt,b)});
+      } else legacy(txt,b);});});
+})();
+</script>
+</body>
+</html>

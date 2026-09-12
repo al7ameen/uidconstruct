@@ -44,6 +44,17 @@
     }
   },
   {
+    "slug": "linear",
+    "name": "Linear",
+    "blurb": "Dense product UI, dark-first, famously imitated.",
+    "stats": {
+      "colors": 21,
+      "type": 8,
+      "geometry": 12,
+      "total": 44
+    }
+  },
+  {
     "slug": "neon",
     "name": "Neon",
     "blurb": "Purple serverless Postgres identity.",
