@@ -880,6 +880,28 @@ test('author-note: text, label and link all pass WCAG AA in both themes', () => 
     }
 });
 
+
+// ---- generator/output drift guard (added 2026-09-12) ----------------------
+// Root cause of a silent regression: specs.css carried 14 lines that existed
+// only in the GENERATED file, not in the SPECS_CSS template in gen-specs.js.
+// Any regeneration deleted them. This test asserts template == output byte for
+// byte, so that class of drift cannot ship again.
+test('gen-specs SPECS_CSS template is byte-identical to specs/specs.css', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'gen-specs.js'), 'utf8');
+    const i = src.indexOf('const SPECS_CSS = `');
+    assert.ok(i >= 0, 'SPECS_CSS template not found in gen-specs.js');
+    const close = src.indexOf('`;', i);
+    const tpl = src.slice(i + 'const SPECS_CSS = `'.length, close);
+    const disk = fs.readFileSync(path.join(ROOT, 'specs', 'specs.css'), 'utf8');
+    if (tpl !== disk) {
+        const a = tpl.split('\n'), b = disk.split('\n');
+        let n = 0; while (n < Math.max(a.length, b.length) && a[n] === b[n]) n++;
+        assert.fail('generator template lacks what the committed CSS has at line '
+            + (n + 1) + ': TEMPLATE=' + JSON.stringify((a[n] || '<eof>').slice(0, 70))
+            + ' DISK=' + JSON.stringify((b[n] || '<eof>').slice(0, 70)));
+    }
+});
+
     const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }
