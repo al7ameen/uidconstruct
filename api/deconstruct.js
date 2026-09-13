@@ -21,7 +21,7 @@ const { ByokAuthError, FreeTierUnavailableError, ProviderRateLimitError, callAIW
 const { BROWSER_UA, BlockedUrlError, extractDomain, safeFetch, sanitizeUrl } = require('../lib/net.js');
 const { CssUnavailableError } = require('../lib/css.js');
 const { buildAnalysisPrompt } = require('../lib/pipeline.js');
-const { SYSTEM_PROMPT, USER_PROMPT } = require('../lib/prompts.js');
+const { SYSTEM_PROMPT, USER_PROMPT, assembleSpec } = require('../lib/prompts.js');
 const { RATE_LIMIT, getClientIp, rateLimit } = require('../lib/rate.js');
 const { cacheKey, get: cacheGet, remember } = require('../lib/cache.js');
 const { GateFullError, stats: gateStats, withAiGate } = require('../lib/gate.js');
@@ -250,11 +250,14 @@ async function analyse(cleanUrl, domain, byok, timings, deadlineAt) {
     ], byok, { deadlineAt }), { bypass: !!byok });
     timings.aiMs = Date.now() - tAI0;
     timings.aiChars = aiResponse.length;
+    // The model's answer is the narrative; the machine appends the verbatim
+    // data blocks. See assembleSpec() in lib/prompts.js for why detail that
+    // passes through the word budget gets dropped or invented.
 
     return {
         url: cleanUrl,
         domain,
-        prompt: aiResponse,
+        prompt: assembleSpec(aiResponse, analysis),
         // Honest partial answers: the byte/link caps in fetchCssFiles set this when a
         // large site could not be fully read. Without it a truncated spec is
         // indistinguishable from a genuinely minimal site.

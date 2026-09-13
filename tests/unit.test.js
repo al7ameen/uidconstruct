@@ -360,9 +360,13 @@ t('SYSTEM_PROMPT no longer asks for "not detectable"', () => {
     const sys = promptsSrc.slice(promptsSrc.indexOf('const SYSTEM_PROMPT'), promptsSrc.indexOf('const USER_PROMPT'));
     assert.ok(!/write 'not detectable'/.test(sys), 'system prompt still requests the placeholder');
     assert.ok(/DO NOT write "not detectable"/.test(sys), 'system prompt lacks the prohibition');
+t('system prompt defers data to appended blocks (Step 1 contract)', () => {
+    assert.ok(/VERBATIM DATA BLOCKS/.test(sys), 'system prompt no longer states the narrative/data split');
+    assert.ok(!/HARD LIMIT: 500 words/.test(sys), 'the 500-word cap is back \u2014 it is what dropped the copy');
+});
 });
 t('USER_PROMPT omits empty sections instead of printing Not detected', () => {
-    const up = promptsSrc.slice(promptsSrc.indexOf('const USER_PROMPT'));
+    const up = promptsSrc.slice(promptsSrc.indexOf('const USER_PROMPT'), promptsSrc.indexOf('// ============================================================\n// ASSEMBLY'));
     assert.ok(!/\|\| 'Not detected'/.test(up), 'still emits literal "Not detected"');
 });
 
@@ -455,16 +459,9 @@ t('pipeline slices from <body>, not from char 0', () => {
     assert.ok(!/stripStyles\(html\)\.substring\(0,\s*2500\)/.test(src), 'still slicing the document from char 0');
 });
 
-t('outline is actually sent to the model', () => {
-    const { USER_PROMPT } = require(path.join(ROOT, 'lib/prompts.js'));
-    const data = { url: 'https://x.com', domain: 'x.com', rawHtml: '<body></body>', cssStyles: '',
-        extracted: { fonts: [], fontSizes: [], colors: [], layoutPatterns: [], componentPatterns: [],
-                     responsiveBreakpoints: [], designTokens: ['--a: #fff'], cssFonts: [], cssBreakpoints: [],
-                     componentRules: [], pageOutline: 'Headings in DOM order: H1 The real headline' } };
-    const up = USER_PROMPT(data);
-    assert.ok(/The real headline/.test(up), 'pageOutline not included in the user prompt');
-    assert.ok(/what this site IS/i.test(up), 'outline is sent but not labelled as the identity source');
-});
+// "outline is actually sent to the model" and the assembly tests now live in
+// the async region above the summary (they exercise assembleSpec with real
+// model-shaped narratives).
 
 (async () => {
 
@@ -952,6 +949,154 @@ t('mineFonts: escaped name still matches its decoded @font-face for sorting', ()
 t('mineFonts: capped at 10', () => {
     const names = Array.from({ length: 12 }, (_, i) => "'Fam" + i + "'").join(',');
     assert.strictEqual(MINE.mineFonts('body{font-family:' + names + '}').length, 10);
+});
+
+// ============================================================
+// Step 1 assembly contract: narrative from the model, data from the machine.
+// Awaiting these matters: the old bug class here was tests that registered
+// but never executed, so run this suite only through the async tail.
+// ============================================================
+const t2 = async (name, fn) => {
+    try { await fn(); pass++; console.log('  ok   ' + name); }
+    catch (e) { fail++; console.log('  FAIL ' + name + '\n         ' + String(e && e.message || e).split('\n')[0]); }
+};
+section('spec assembly (narrative + verbatim data blocks)');
+
+const { assembleSpec } = require(path.join(ROOT, 'lib/prompts.js'));
+const fullExtracted = () => ({
+    colors: ['#0a0a0a', '#38bdf8'],
+    fonts: ['Inter'],
+    layoutPatterns: [],
+    componentPatterns: [],
+    responsiveBreakpoints: ['768px'],
+    designTokens: ['--bg: #0a0a0a', '--accent: #38bdf8'],
+    componentRules: ['.btn { background: var(--accent); border-radius: 8px }'],
+    cssFonts: ['Inter', 'IBM Plex Mono'],
+    fontSizes: ['16px', '14px'],
+    cssBreakpoints: ['768px', '1024px'],
+    pageOutline: 'Title / description: Acme | Headings in DOM order: H1 The real headline',
+    assets: 'img[hero]: /images/hero.avif alt="Launch screen"',
+    motion: '@keyframes fade {from{opacity:0}to{opacity:1}}'
+});
+const ANALYSIS = { domain: 'acme.test', extracted: fullExtracted() };
+const NARRATIVE = 'BUILD PROMPT\nRebuild acme.test with the attached tokens and copy.\n\n# UI Specification: acme.test\n\n## 1. Design Tokens\nDeferred to data block.\n\n## 8. Build Instructions for AI Editor\n1. Scaffold with data block 10.\n';
+
+await t2('outline is actually sent to the model', async () => {
+    const data = { url: 'https://x.com', domain: 'x.com', rawHtml: '<body></body>', cssStyles: '',
+        extracted: { fonts: [], fontSizes: [], colors: [], layoutPatterns: [], componentPatterns: [],
+                     responsiveBreakpoints: [], designTokens: ['--a: #fff'], cssFonts: [], cssBreakpoints: [],
+                     componentRules: [], pageOutline: 'Headings in DOM order: H1 The real headline' } };
+    const up = PROMPTS.USER_PROMPT(data);
+    assert.ok(/The real headline/.test(up), 'pageOutline not included in the user prompt');
+    assert.ok(/what this site IS/i.test(up), 'outline is sent but not labelled as the identity source');
+});
+
+await t2('the 500-word cap is gone from BOTH prompts', async () => {
+    const up = PROMPTS.USER_PROMPT(ANALYSIS);
+    assert.ok(!/500 words/.test(up), 'USER_PROMPT still caps at 500 words');
+    assert.ok(!/500 words/.test(PROMPTS.SYSTEM_PROMPT), 'SYSTEM_PROMPT still caps at 500 words');
+    assert.ok(!/Reproduce that table ONCE/.test(up), 'USER_PROMPT still asks the model to retype the token table');
+    assert.ok(/NEVER copy a data block/.test(up), 'USER_PROMPT no longer forbids restating data');
+});
+
+await t2('a model that drops the copy still ships it (the framer.com failure shape)', async () => {
+    // The narrative below deliberately contains NONE of the site's text, no
+    // hexes, no asset URLs \u2014 the exact way the capped model failed in
+    // production. The assembled deliverable must carry all of it anyway.
+    const spec = assembleSpec(NARRATIVE, ANALYSIS);
+    assert.ok(spec.includes('H1 The real headline'), 'verbatim copy missing from assembled spec');
+    assert.ok(spec.includes('--accent: #38bdf8'), 'design tokens missing from assembled spec');
+    assert.ok(spec.includes('hero.avif'), 'asset inventory missing from assembled spec');
+    assert.ok(spec.includes('@keyframes fade'), 'motion missing from assembled spec');
+    assert.ok(spec.indexOf('## 8. Build Instructions') < spec.indexOf('## 10. Design Tokens'),
+        'data blocks must come AFTER the narrative checklist');
+    assert.ok(spec.startsWith('BUILD PROMPT'), 'build prompt must stay first for extractBuildPrompt()');
+    // Block titles carry the "verbatim" instruction; the narrative must not.
+    const blocks = spec.slice(spec.indexOf('## 10.'));
+    assert.ok(/\(extracted from acme\.test \u2014 verbatim/.test(blocks), 'blocks lost their verbatim marker');
+    assert.ok(!/verbatim/.test(spec.slice(0, spec.indexOf('## 10.'))), 'narrative echoes the verbatim marker');
+});
+
+await t2('blocks 14/15 carry the producer output (no phantom promise)', async () => {
+    const spec = assembleSpec(NARRATIVE, ANALYSIS);
+    assert.ok(/## 14\. Assets/.test(spec), 'block 14 missing while prompt promises asset URLs');
+    assert.ok(/## 15\. Motion/.test(spec), 'block 15 missing while prompt promises keyframes');
+    assert.ok(spec.includes('hero.avif') && spec.includes('@keyframes fade'), 'block present but body empty');
+    // and the producers really are wired into the pipeline
+    const pipe = require('fs').readFileSync(path.join(ROOT, 'lib/pipeline.js'), 'utf8');
+    assert.ok(/assets: mineAssets\(\$, url\)/.test(pipe), 'pipeline no longer produces assets');
+    assert.ok(/motion: mineMotion\(css\)/.test(pipe), 'pipeline no longer produces motion');
+    // example.com shape: no css, no imgs -> both blocks absent, no empty headers
+    const sparse = assembleSpec('BUILD PROMPT\nx', { domain: 'e.test', extracted: { designTokens: ['--a: #1'], assets: [], motion: [] } });
+    assert.ok(!/## 14\./.test(sparse) && !/## 15\./.test(sparse), 'empty 14/15 emitted as headings');
+});
+
+await t2('mineMotion BEHAVIOUR: emits real keyframes, not just a call site', async () => {
+    // The source-grep guard above cannot fail if mineMotion's body is gutted —
+    // verified by mutation: replacing the body with `return []` left the suite
+    // green at 118/118. These assert on produced output instead.
+    const css = '@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}' +
+                '.hero{animation:fadeUp .8s cubic-bezier(.2,.8,.2,1) both}' +
+                '.btn{transition:transform 200ms ease}' +
+                '@media (prefers-reduced-motion:reduce){.hero{animation:none}}';
+    const lines = MINE.mineMotion(css);
+    assert.ok(Array.isArray(lines) && lines.length > 0, 'mineMotion returned nothing for CSS that has motion');
+    assert.ok(lines.some(l => /@keyframes\s+fadeUp:/.test(l) && /translateY\(20px\)/.test(l)), 'keyframe body lost: ' + JSON.stringify(lines));
+    assert.ok(lines.some(l => /\.hero\s*\{.*animation:fadeUp/.test(l) && /\.8s/.test(l)), 'animation shorthand + duration lost');
+    assert.ok(lines.some(l => /\.btn\s*\{.*transition:transform 200ms/.test(l)), 'transition duration lost');
+    assert.ok(lines.some(l => /prefers-reduced-motion/.test(l) && /animation:none/.test(l)), 'reduced-motion contract lost');
+    // dedupe by name, last definition wins (the cascade's own rule)
+    assert.strictEqual(MINE.mineMotion('@keyframes a{from{opacity:0}}@keyframes a{from{opacity:.5}}')
+        .filter(l => l.includes('@keyframes a')).length, 1, 'duplicate keyframe name not collapsed');
+    assert.deepStrictEqual(MINE.mineMotion(''), [], 'empty CSS must yield []');
+    assert.deepStrictEqual(MINE.mineMotion(undefined), [], 'undefined CSS must yield []');
+    // keyframe step selectors must never leak out as if they were components
+    assert.ok(!MINE.mineMotion(css).some(l => /^(from|to|\d+%)\s*\{/.test(l)), 'raw keyframe step leaked as a rule');
+});
+
+await t2('mineAssets BEHAVIOUR: real DOM yields real URLs, junk yields none', async () => {
+    const html = '<html><head><meta property="og:image" content="/og.png">' +
+        '<link rel="icon" href="data:image/x-icon;base64,AAAA"></head><body>' +
+        '<img src="/hero.avif" alt="Hero shot" width="1200" height="800">' +
+        '<img src="/hero.avif" alt="Hero shot">' +
+        '<svg><use href="/s.svg#star"></use></svg>' +
+        '<video poster="/teaser.jpg"></video></body></html>';
+    const $ = cheerio.load(html);
+    const a = EXTRACT.mineAssets($, 'https://acme.test/page');
+    assert.ok(a.length > 0, 'mineAssets returned nothing for a page with images');
+    assert.ok(a.some(l => l.includes('https://acme.test/og.png')), 'og:image missing or not absolutised');
+    assert.ok(a.some(l => l.includes('/hero.avif') && /1200x800/.test(l) && /Hero shot/.test(l)), 'img lost alt or dimensions');
+    assert.strictEqual(a.filter(l => l.includes('/hero.avif')).length, 1, 'duplicate img not collapsed');
+    assert.ok(a.some(l => l.includes('/s.svg#star')), 'icon sprite ref lost');
+    assert.ok(a.some(l => l.includes('/teaser.jpg')), 'video poster lost');
+    assert.ok(!a.some(l => /data:image/.test(l)), 'base64 asset leaked into the block (the example.com junk line)');
+    assert.deepStrictEqual(EXTRACT.mineAssets(cheerio.load('<html><body></body></html>'), 'https://e.test'), [],
+        'asset-free page must yield []');
+    // cap is honoured: 200 images must not produce an unbounded block
+    const many = cheerio.load('<body>' + Array.from({ length: 200 }, (_, i) => `<img src="/i${i}.png">`).join('') + '</body>');
+    const big = EXTRACT.mineAssets(many, 'https://acme.test');
+    assert.ok(big.length <= 40 && big.join('\n').length <= 1800, 'asset cap breached: ' + big.length + ' lines');
+});
+
+await t2('pipeline exposes motion + assets as populated arrays (no phantom promise)', async () => {
+    // Wires the contract end-to-end without network: a fake $ and css prove the
+    // fields are produced from real inputs, which the source grep cannot.
+    const { buildAnalysisPrompt } = require(path.join(ROOT, 'lib/pipeline.js'));
+    assert.ok(typeof MINE.mineMotion === 'function', 'mineMotion not exported from lib/mine.js');
+    assert.ok(typeof EXTRACT.mineAssets === 'function', 'mineAssets not exported from lib/extract.js');
+    assert.ok(typeof buildAnalysisPrompt === 'function', 'pipeline export drifted');
+    const pipe = require('fs').readFileSync(path.join(ROOT, 'lib/pipeline.js'), 'utf8');
+    assert.ok(/assets:\s*mineAssets\(/.test(pipe) && /motion:\s*mineMotion\(/.test(pipe), 'pipeline stopped wiring them');
+});
+
+await t2('empty data blocks never render as empty headings', async () => {
+    const spec = assembleSpec('BUILD PROMPT\nx\n', { domain: 'e.test', extracted: { designTokens: [], componentRules: '', pageOutline: '  ', assets: [], motion: '' } });
+    assert.strictEqual(spec.split('## ').length - 1, 0, 'an empty section was emitted: ' + spec);
+});
+
+await t2('a failed narrative still ships the data (assembly never throws)', async () => {
+    assert.strictEqual(assembleSpec('', ANALYSIS), '');
+    assert.ok(assembleSpec('BUILD PROMPT line', {}).includes('BUILD PROMPT line'), 'lost the narrative');
 });
 
 console.log(`\n${pass} passed, ${fail} failed`);
