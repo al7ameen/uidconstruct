@@ -255,6 +255,10 @@ async function analyse(cleanUrl, domain, byok, timings, deadlineAt) {
         url: cleanUrl,
         domain,
         prompt: aiResponse,
+        // Honest partial answers: the byte/link caps in fetchCssFiles set this when a
+        // large site could not be fully read. Without it a truncated spec is
+        // indistinguishable from a genuinely minimal site.
+        truncated: !!(analysis.cssStatus && analysis.cssStatus.truncated),
         signals: analysis.extracted,
         timings: {
             fetchMs: timings.fetchMs,
