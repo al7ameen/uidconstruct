@@ -969,6 +969,55 @@ test('gen-specs SPECS_CSS template is byte-identical to specs/specs.css', () => 
     }
 });
 
+// ---- spec description claim guard (added 2026-09-13) -----------------------
+// The spec pages claimed "Every <brand> colour, font-size and spacing value".
+// supabase.html ships 4 unique hex + 1 hsl, so the universal was visibly false
+// in the Google snippet. An edit alone can be undone by the next regen, so this
+// is asserted twice: the banned pattern must be absent everywhere, and the
+// replacement must be byte-identical between the generator template and every
+// rendered page. Note the phrase was META-ONLY (tag-strip = 0 body hits), which
+// is why the guard reads the meta attribute rather than visible text.
+test('no served page or generator claims "Every" value was captured', () => {
+    const BANNED = /Every\s+[A-Za-z]*\s*(colour|color)[^<"]*value/i;
+    const files = ['index.html', 'privacy.html', 'terms.html']
+        .map((f) => path.join(ROOT, f))
+        .concat(SPEC_PAGES.map((f) => path.join(ROOT, 'specs', f)))
+        .concat([path.join(ROOT, 'lib', 'gen-specs.js')]);
+    for (const file of files) {
+        assert.ok(!BANNED.test(fs.readFileSync(file, 'utf8')),
+            path.relative(ROOT, file) + ' still claims every value was captured');
+    }
+});
+
+test('spec meta description == gen-specs desc template, byte for byte', () => {
+    const src = fs.readFileSync(path.join(ROOT, 'lib', 'gen-specs.js'), 'utf8');
+    const i = src.indexOf('desc: `');
+    assert.ok(i >= 0, 'no desc template found in gen-specs.js');
+    const tpl = src.slice(i + 'desc: `'.length, src.indexOf('`,', i));
+    assert.ok(tpl.length > 40, 'desc template suspiciously short: ' + JSON.stringify(tpl.slice(0, 60)));
+    assert.ok(!tpl.includes('${'), 'desc template interpolates a variable, so per-page text would defeat this guard');
+    assert.ok(!/Every/i.test(tpl), 'desc template reintroduces the banned "Every" claim');
+    // specs/index.html is the HUB, emitted by renderIndex() from its own desc
+    // template (gen-specs.js:398) - a different string on a different render
+    // path, so byte-comparing it to the brand-page template is meaningless.
+    // It is NOT exempt because its claim is true: it makes no per-site capture
+    // claim at all. Do not "unify" the two descriptions. The banned-pattern
+    // test above still covers the hub, like every other served file.
+    // Banned-pattern coverage for the hub lives in the test above, which
+    // scans every served file.
+    const brandPages = SPEC_PAGES.filter((f) => f !== 'index.html');
+    assert.ok(brandPages.length >= 16, 'expected the generated brand pages, got ' + brandPages.length);
+    for (const f of brandPages) {
+        const body = fs.readFileSync(path.join(ROOT, 'specs', f), 'utf8');
+        const m = body.match(/<meta name="description" content="([^"]*)"/);
+        assert.ok(m, f + ' has no meta description');
+        assert.strictEqual(m[1], tpl,
+            f + ' drifted from the generator template\n      PAGE=' + JSON.stringify(m[1].slice(0, 70))
+            + '\n      TPL =' + JSON.stringify(tpl.slice(0, 70)));
+    }
+});
+
+
     const registeredAtStart = tests.length;
     for (const [name, fn] of tests) {
         try { await fn(); console.log('  ok  ' + name); }
