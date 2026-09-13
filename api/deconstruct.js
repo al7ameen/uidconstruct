@@ -101,10 +101,13 @@ module.exports = async (req, res) => {
 
     const timings = { start: Date.now(), fetchMs: 0, aiMs: 0, aiChars: 0 };
 
-    // Hard budget for everything downstream. maxDuration is 60s; stopping at 50s
+    // Hard budget for everything downstream. maxDuration is 180s; stopping at 150s
     // leaves room to serialise and send a real 429 rather than being killed by
-    // the platform, which is what turns a rate limit into an opaque 500.
-    const AI_DEADLINE_AT = timings.start + Number(process.env.AI_DEADLINE_MS || 50000);
+    // the platform, which is what turns a slow run into an opaque 500.
+    // Raised 50s -> 150s on 2026-09-13: Step 1 moved the 500-word hard cap to a
+    // 450-600 word narrative target, and heavy sites (framer) began exceeding the
+    // old budget -- a regression we had just caused ourselves.
+    const AI_DEADLINE_AT = timings.start + Number(process.env.AI_DEADLINE_MS || 150000);
 
     // One analysis per URL, not one per request. remember() serves a stored spec
     // or awaits the in-flight attempt started by a concurrent duplicate -- which
@@ -165,7 +168,7 @@ module.exports = async (req, res) => {
             // path omits reasoning_effort:'low' (non-reasoning models hard-400
             // on it) and so runs a reasoning model at full effort. The cause is
             // the model the user chose, and only they can change it.
-            const secs = Math.round((Number(process.env.AI_DEADLINE_MS || 50000)) / 1000);
+            const secs = Math.round((Number(process.env.AI_DEADLINE_MS || 150000)) / 1000);
             return res.status(504).json({
                 error: byok
                     ? 'Your model (' + byok.model + ') did not answer within ' + secs + 's. Reasoning models often need longer than this -- try a faster model, or leave the key fields empty to use the free tier.'
@@ -272,6 +275,7 @@ async function analyse(cleanUrl, domain, byok, timings, deadlineAt) {
     };
 }
 
-// Allow up to 60s on Vercel (reasoning models are slow)
-module.exports.maxDuration = 60;
+// Reasoning models are slow. Hobby allows maxDuration up to 300s, so 60s was
+// never the platform ceiling -- it was our own number from 2026-09-03.
+module.exports.maxDuration = 180;
 

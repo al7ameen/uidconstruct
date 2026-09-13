@@ -67,7 +67,7 @@ t('every lib module loads and exports something', () => {
 });
 t('the endpoint still exports maxDuration (Vercel kills the fn without it)', () => {
     const handler = require(path.join(ROOT, 'api', 'deconstruct.js'));
-    assert.strictEqual(handler.maxDuration, 60);
+    assert.strictEqual(handler.maxDuration, 180);
     assert.strictEqual(typeof handler, 'function');
 });
 t('the handler is thin again (regression guard against re-inlining)', () => {
