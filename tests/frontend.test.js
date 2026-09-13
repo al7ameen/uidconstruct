@@ -596,6 +596,131 @@ test('card headings are not inline-styled (inline styles outrank the audit)', ()
         'typography belongs in style.css, not the markup: ' + inline.join(' | '));
 });
 
+
+// ---- index.html head-string convergence guard --------------------------
+// index.html is the ONLY hand-written page. The 19 generated spec pages were
+// measured already internally consistent (0 og/twitter title mismatches, 0
+// description mismatches across all 19), so divergence is a property of this
+// one file and the guard covers this one file.
+//
+// WHY per-slot canonical values instead of one literal string compared
+// everywhere: <title> carries a brand prefix, the H1 carries load-bearing
+// markup (<br> + <span class="highlight"> = the italic), and punctuation
+// differs (H1 ends with a period, og:title does not). Byte-equality across
+// nine slots was never implementable - it only looked implementable while
+// "the string" was assumed to be one thing.
+//
+// WHY a declared slot list with a COUNT assertion rather than a grep:
+// a pattern discovers only what it is looking for. An earlier grep for
+// "description" returned 4 hits and was read as "4 kinds" - it could never
+// have found <h1>, .subhead, og:title, or the JSON-LD description, which is
+// the 9th slot. If a 10th is ever added, EXPECTED_SLOTS fails and names it.
+//
+// WHY there is NO banned-phrase sweep for the old headline: the headline was
+// kept, so that string is legitimately on the page in two slots. A guard that
+// can never fire is an undemonstrated guard, and an undemonstrated guard gets
+// relaxed the first time it becomes inconvenient. Convergence + completeness
+// are the properties that can actually break here.
+(() => {
+    const HEAD = {
+        docTitle: "uidconstruct \u2014 Turn URLs into buildable specs",
+        ogTitle: "uidconstruct \u2014 any website, turned into a build prompt",
+        h1Plain: "Any website, turned into a build prompt.",
+        subhead: "Paste a URL. Get the design spec behind it \u2014 real colors, type scale, spacing and layout, read from the live page \u2014 as a prompt you can drop straight into v0, Cursor, Bolt or Lovable.",
+        desc: "Paste a URL, get the design spec behind it. Real colors, type, spacing and layout from the live page, as a prompt for v0, Cursor, Bolt, Lovable."
+    };
+    // Dependency-free on purpose: jsdom costs >30s to require in this sandbox,
+    // so this is attribute-level extraction, not a DOM parse. The protection is
+    // the count assertion + mutation verification, not parser sophistication.
+    const flat = (x) => (x || "").replace(/\s+/g, " ").trim();
+    const deTag = (h) => flat(String(h).replace(/<[^>]*>/g, " "));
+    const attr = (name) => {
+        const out = [];
+        const a = new RegExp('<meta\\b[^>]*?(?:name|property)="' + name + '"[^>]*?content="([^"]*)"', "gi");
+        const b = new RegExp('<meta\\b[^>]*?content="([^"]*)"[^>]*?(?:name|property)="' + name + '"', "gi");
+        let m;
+        while ((m = a.exec(HTML))) out.push(flat(m[1]));
+        while ((m = b.exec(HTML))) out.push(flat(m[1]));
+        return out;
+    };
+
+    const found = { docTitle: [], ogTitle: [], twTitle: [], desc: [], h1: [], subhead: [], ld: [] };
+    const t = HTML.match(/<title>([\s\S]*?)<\/title>/i);
+    if (t) found.docTitle.push(flat(t[1]));
+    found.ogTitle = attr("og:title");
+    found.twTitle = attr("twitter:title");
+    found.desc = attr("description").concat(attr("og:description"), attr("twitter:description"));
+    const h1m = HTML.match(/<h1[^>]*id="hero-headline"[^>]*>([\s\S]*?)<\/h1>/i);
+    if (h1m) found.h1.push(deTag(h1m[1]));
+    const shm = HTML.match(/<p[^>]*class="subhead[^"]*"[^>]*>([\s\S]*?)<\/p>/i);
+    if (shm) found.subhead.push(deTag(shm[1]));
+    const ldm = HTML.match(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/i);
+    if (ldm) { try { const o = JSON.parse(ldm[1]); if (o && o.description) found.ld.push(flat(o.description)); } catch (e) { } }
+
+    // 9 slots: 1 <title>, 3 meta descriptions, 2 titles for share cards,
+    // 1 h1, 1 subhead, 1 JSON-LD description.
+    const TOTAL_SLOTS = 9;
+    const actual = found.docTitle.length + found.ogTitle.length + found.twTitle.length
+        + found.desc.length + found.h1.length + found.subhead.length + found.ld.length;
+
+    test("index.html: head-string slot inventory is complete (9, no silent additions)", () => {
+        assert.deepStrictEqual(
+            { docTitle: found.docTitle.length, ogTitle: found.ogTitle.length, twTitle: found.twTitle.length,
+              desc: found.desc.length, h1: found.h1.length, subhead: found.subhead.length, ld: found.ld.length },
+            { docTitle: 1, ogTitle: 1, twTitle: 1, desc: 3, h1: 1, subhead: 1, ld: 1 },
+            "slot shape changed - a new head string was added and the canonical block does not cover it");
+        assert.strictEqual(actual, TOTAL_SLOTS, "found " + actual + " head-string slots, expected " + TOTAL_SLOTS);
+    });
+
+    test("index.html: all four description slots carry one sentence", () => {
+        const all = found.desc.concat(found.ld);
+        assert.strictEqual(all.length, 4, "expected 4 description slots, got " + all.length);
+        all.forEach((v, n) => assert.strictEqual(v, HEAD.desc,
+            "description slot " + n + " diverged from the canonical sentence\n      GOT =" + JSON.stringify(v.slice(0, 64))
+            + "\n      WANT=" + JSON.stringify(HEAD.desc.slice(0, 64))));
+    });
+
+    test("index.html: og:title == twitter:title (one share card, two tags)", () => {
+        assert.strictEqual(found.ogTitle.length, 1);
+        assert.strictEqual(found.twTitle.length, 1);
+        assert.strictEqual(found.ogTitle[0], found.twTitle[0],
+            "og:title and twitter:title disagree, so the share card contradicts itself");
+        assert.strictEqual(found.ogTitle[0], HEAD.ogTitle, "share title drifted off canonical");
+    });
+
+    test("index.html: H1 text + the load-bearing italic are both present", () => {
+        assert.strictEqual(found.h1[0], HEAD.h1Plain, "H1 wording changed - make it deliberately, against the block");
+        const raw = (h1m || [])[1] || "";
+        // Semantic, not byte-exact: the source is pretty-printed, so <br /> is
+        // followed by a newline + indent and any byte pin breaks on a reformat.
+        // What must survive is the ITALIC on the tail, and the two-line shape.
+        assert.ok(/<span class="highlight">\s*turned into a build prompt\.\s*<\/span>/.test(raw),
+            "the H1 tail lost its <span class=\"highlight\"> - the italic is the design, not decoration");
+        assert.ok(/<br\s*\/?>/.test(raw), "H1 lost its line break - it is a two-line headline by design");
+    });
+
+    test("index.html: subhead stays the sentence the description was built from", () => {
+        assert.strictEqual(found.subhead[0], HEAD.subhead, "subhead drifted - update the block deliberately if intended");
+    });
+
+    test("index.html: <title> stays distinct (search surface, not a copy of the H1)", () => {
+        assert.strictEqual(found.docTitle[0], HEAD.docTitle, "<title> drifted");
+        assert.notStrictEqual(found.docTitle[0], found.h1[0],
+            "<title> and H1 were forced identical - the brand prefix is intentional");
+    });
+
+    test("index.html: no head string over-claims modality or completeness", () => {
+        const prose = found.docTitle.concat(found.ogTitle, found.twTitle, found.desc, found.h1, found.subhead, found.ld);
+        prose.forEach((v, n) => {
+            assert.ok(!/screenshot|upload an image|paste an image/i.test(v),
+                "slot " + n + " claims image input; the tool is URL-only: " + JSON.stringify(v.slice(0, 50)));
+            assert.ok(!/every .*?value|all .*?values/i.test(v),
+                "slot " + n + " claims complete capture: " + JSON.stringify(v.slice(0, 50)));
+        });
+    });
+})();
+
+
 (async () => {
     const unhandled = [];
     process.on('unhandledRejection', r => unhandled.push(String((r && r.message) || r)));
