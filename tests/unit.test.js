@@ -136,6 +136,18 @@ t('resolves var inside calc', () => {
     const tk = API.collectTokens(':root{--sp:.25rem}');
     assert.strictEqual(API.resolveVars('calc(var(--sp) * 4)', tk, 0), '1rem');
 });
+t('adjacent var() calls keep their separator after substitution', () => {
+    // Minified CSS legally omits the space between two functions:
+    // padding:var(--a)var(--b). Substitute both values with no separator and you
+    // get `8px12px` \u2014 ONE malformed token, not two lengths. This shipped to a
+    // builder inside a block our own header calls "verbatim, use exact values".
+    const tk = API.collectTokens(':root{--sp-8:8px;--sp-12:12px;--sp-0:0}');
+    assert.strictEqual(API.resolveVars('var(--sp-8)var(--sp-12)', tk, 0), '8px 12px');
+    assert.strictEqual(API.resolveVars('var(--sp-8)var(--sp-0)', tk, 0), '8px 0');
+    // and no spurious space when the var() is not adjacent to a function
+    assert.strictEqual(API.resolveVars('var(--sp-8)', tk, 0), '8px');
+});
+
 
 section('design-token mining');
 const TAILWINDISH = `:root{
@@ -462,6 +474,61 @@ t('pipeline slices from <body>, not from char 0', () => {
 // "outline is actually sent to the model" and the assembly tests now live in
 // the async region above the summary (they exercise assembleSpec with real
 // model-shaped narratives).
+
+section('spec fidelity: the three bugs a reviewer caught in a built page');
+// All three shipped inside blocks labelled "verbatim, use exact values", which
+// means the builder had no reason to distrust them. Each test below asserts on
+// PRODUCED OUTPUT and was mutation-checked: neutralising the corresponding fix
+// in lib/ must turn this suite red. A green suite that cannot go red is not a
+// test (four prior instances in this repo).
+t('mineMotion keeps the parenthesised reduced-motion condition', () => {
+    const css = '@media (prefers-reduced-motion:reduce){.hero{animation:none}*{transition-duration:.01ms!important}}';
+    const lines = API.mineMotion(css).filter(l => /prefers-reduced-motion/.test(l));
+    assert.ok(lines.length >= 1, 'reduced-motion contract dropped entirely');
+    for (const l of lines) {
+        assert.ok(/@media\s*\(\s*prefers-reduced-motion\s*:/i.test(l),
+            'media condition lost its parens: ' + l);
+    }
+});
+t('a global animation kill is never emitted outside an @media', () => {
+    // Without the wrapper, `*{animation:none!important}` stops being an
+    // accessibility rule and becomes a site-wide animation kill for every
+    // visitor. This is exactly what the reviewer saw in the built page.
+    const css = '@media (prefers-reduced-motion:reduce){*{animation:none!important}}' +
+        '@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}';
+    const out = API.mineMotion(css);
+    assert.ok(out.length > 0, 'mineMotion produced nothing for a motion-bearing page');
+    let nukes = 0;
+    for (const l of out) {
+        if (!/\*\s*\{[^}]*animation:\s*none/i.test(l)) continue;
+        nukes++;
+        assert.ok(/@media\s*\(/.test(l), 'site-wide kill escaped its media query: ' + l);
+    }
+    assert.strictEqual(nukes, 1, 'expected the universal kill to be present, got ' + nukes);
+});
+t('oversized copy is cut on a word boundary and MARKED, never mid-word', () => {
+    const para = Array.from({ length: 200 }, (_, i) => 'token' + i).join(' ');
+    const html = '<html><head><title>T</title></head><body><section><p>' + para + '</p></section></body></html>';
+    const out = EXTRACT.extractPageOutline(cheerio.load(html));
+    const m = out.match(/Body copy: ([^\n]*)/);
+    assert.ok(m, 'body copy vanished: ' + out.slice(0, 120));
+    const line = m[1].trim();
+    assert.ok(/token\d+ \[\u2026\]$/.test(line),
+        'copy cut mid-word or unmarked, ends: ' + JSON.stringify(line.slice(-30)));
+});
+t('a group that cannot fit says so instead of silently vanishing', () => {
+    // The old rule dropped the WHOLE group when it did not fit, so a spec could
+    // contain zero body copy and look complete. A builder that cannot see the
+    // hole invents one: prices, feature lists, footer links.
+    let body = '';
+    for (let i = 0; i < 300; i++) body += '<h2>Heading ' + i + ' ' + 'tail '.repeat(22) + '</h2>';
+    for (let i = 0; i < 40; i++) body += '<section><p>' + Array.from({ length: 70 }, (_, j) => 'para' + i + 'word' + j).join(' ') + '</p></section>';
+    const out = EXTRACT.extractPageOutline(cheerio.load('<html><head><title>T</title></head><body>' + body + '</html>'));
+    assert.ok(out.length <= 6600, 'outline blew the budget: ' + out.length);
+    assert.ok(/\[\d+ more\]|NOT CAPTURED \(budget\)/.test(out),
+        'content was dropped with no signal to the builder');
+});
+
 
 (async () => {
 
