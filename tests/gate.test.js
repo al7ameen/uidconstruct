@@ -2,7 +2,16 @@
 // DIFFERENT urls (the cache can't help there), so it needs its own proof.
 // Env is set before require because lib/gate.js reads it at module load.
 const MAX = Number(process.env.MAX_CONCURRENT_AI || 2);
-const WAIT = Number(process.env.AI_QUEUE_WAIT_MS || 250);
+const WAIT = Number(process.env.AI_QUEUE_WAIT_MS || 400);
+// WAIT is read by lib/gate.js at require time, so it can't just be any number:
+// section 1 needs ceil(10/MAX) * TASK_MS to FIT inside the queue budget, while
+// section 3 needs its hold to OUTLAST that same budget. A single literal used to
+// satisfy both (250) left 200 < 250 < 700 -- a 1.25x margin on a loaded ARM core,
+// which slipped and threw GateFullError out of Promise.all on run 2 and 3 of 3.
+// Every timing below is now DERIVED from WAIT so there is one source of truth and
+// the two requirements can never be tuned against each other again.
+const TASK_MS = Math.max(5, Math.floor(WAIT / 8));   // 5 rounds -> 1.25x headroom
+const HOLD_MS = WAIT * 2;                            // always outlasts the budget
 process.env.MAX_CONCURRENT_AI = String(MAX);
 process.env.AI_QUEUE_WAIT_MS = String(WAIT);
 
@@ -27,7 +36,7 @@ function tracker(delay) {
 
     // 1. The whole point: 10 simultaneous free-tier calls must not become 10
     //    simultaneous provider requests.
-    const a = tracker(40);
+    const a = tracker(TASK_MS);
     await Promise.all(Array.from({ length: 10 }, (_, i) => withAiGate(a.fn(i))));
     ok('never runs more than MAX_CONCURRENT_AI at once', a.peak <= MAX_CONCURRENT_AI, 'peak=' + a.peak);
     // With a generous limit the gate is effectively off: everything should run
@@ -39,14 +48,14 @@ function tracker(delay) {
 
     // 2. BYOK users pay for their own quota; making them queue behind our free
     //    key would punish exactly the users we want to keep.
-    const b = tracker(40);
+    const b = tracker(TASK_MS);
     await Promise.all(Array.from({ length: 8 }, (_, i) => withAiGate(b.fn(i), { bypass: true })));
     ok('BYOK bypasses the queue entirely', b.peak === 8, 'peak=' + b.peak);
     ok('bypass leaked no slots', stats().active === 0, JSON.stringify(stats()));
 
     // 3. When the queue itself overflows we must fail FAST and HONESTLY rather
     //    than hold a request until the platform kills it (the original 500).
-    const hold = () => sleep(700);           // outlasts AI_QUEUE_WAIT_MS
+    const hold = () => sleep(HOLD_MS);       // outlasts AI_QUEUE_WAIT_MS by design
     // MAX + 1: MAX of them occupy every slot, the extra one sits in the queue
     // and is the caller that must time out into a GateFullError. The count has
     // to be derived from MAX -- with a literal [0,1,2] this section silently
@@ -68,7 +77,7 @@ function tracker(delay) {
 
     // 4. Hand-off fairness: a fresh arrival must not cut ahead of someone who
     //    has already been waiting.
-    const c = tracker(30);
+    const c = tracker(TASK_MS);
     const ps = [];
     for (let i = 0; i < 6; i++) { ps.push(withAiGate(c.fn(i))); await sleep(4); }
     await Promise.all(ps);

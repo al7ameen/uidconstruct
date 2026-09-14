@@ -1166,6 +1166,47 @@ await t2('a failed narrative still ships the data (assembly never throws)', asyn
     assert.ok(assembleSpec('BUILD PROMPT line', {}).includes('BUILD PROMPT line'), 'lost the narrative');
 });
 
+
+// --- content extraction: the "half the page's text is missing" report -------
+// These exist because the reviewer's complaint was measured, not guessed:
+// on a real marketing page the footer is ~43% of visible text and our flat
+// 16-item cap kept ~47% of everything. Each test below was mutation-checked
+// (neuter the fix in lib/extract.js, require the suite to go RED).
+
+await t2('footer list groups keep their heading (structure, not a blob)', async () => {
+    const cols = ['Products', 'Features', 'Company'].map((h, i) =>
+        '<div><h3>' + h + '</h3><ul>' +
+        ['One', 'Two', 'Three'].map(x => '<li><a href="#">' + x + i + '</a></li>').join('') +
+        '</ul></div>').join('');
+    const out = extractPageOutline(cheerio.load(
+        '<html><head><title>T</title></head><body><footer>' + cols + '</footer></body></html>'));
+    const line = (out.match(/Footer links: ([\s\S]*?)(?:\nElement counts|\nNOT CAPTURED|$)/) || [])[1] || '';
+    for (const h of ['Products:', 'Features:', 'Company:'])
+        assert.ok(line.includes(h), 'column heading lost, so a builder must invent it: ' + line.slice(0, 160));
+});
+
+await t2('group boundary and item separator are distinguishable', async () => {
+    // Same delimiter at both levels made 21 groups read as one undifferentiated
+    // list - the exact defect this change exists to remove.
+    const out = extractPageOutline(cheerio.load('<html><head><title>T</title></head><body><footer>' +
+        '<div><h3>Products</h3><ul><li><a>Claude</a></li><li><a>Code</a></li></ul></div>' +
+        '<div><h3>Company</h3><ul><li><a>About</a></li><li><a>Careers</a></li></ul></div>' +
+        '</footer></body></html>'));
+    const line = (out.match(/Footer links: ([^\n]*)/) || [])[1] || '';
+    assert.ok(/Products: Claude, Code \| Company: About, Careers/.test(line),
+        'levels not separable: ' + JSON.stringify(line));
+});
+
+await t2('list item text is captured, not merely counted', async () => {
+    // Pricing feature lists are <li>. We used to emit "64 lists" and nothing
+    // of what they said, which is how invented plan features got blamed on us.
+    const feats = ['Unlimited projects', 'Priority support', 'Team seats'].map(t => '<li>' + t + '</li>').join('');
+    const out = extractPageOutline(cheerio.load('<html><head><title>T</title></head><body>' +
+        '<section><ul>' + feats + '</ul></section></body></html>'));
+    assert.ok(/List items: .*Unlimited projects/.test(out), 'li text dropped: ' + out.slice(0, 200));
+    assert.ok(/lists/.test(out), 'element counts lost their list entry');
+});
+
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);
 })();
